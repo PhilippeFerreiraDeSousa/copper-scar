@@ -1,0 +1,24 @@
+{
+  "id": "clearance",
+  "label": "Sub-min clearance U1/U2",
+  "notes": "Parts do not overlap but sit 0.2 mm apart (min 0.5 mm). Scar should separate them.",
+  "expected": {
+    "drc_ok": true,
+    "score_upper_bound": 25000,
+    "scar_should_fire": true,
+    "score_should_improve": true
+  },
+  "board": {
+    "label": "clearance",
+    "width": 48.0,
+    "height": 36.0,
+    "thickness_mm": 1.6,
+    "vias": 8,
+    "layers": 4,
+    "parts": [
+      {"ref": "U1", "x": 4.0, "y": 4.0, "w": 10.0, "h": 8.0},
+      {"ref": "U2", "x": 14.2, "y": 4.0, "w": 10.0, "h": 8.0},
+      {"ref": "C1", "x": 32.0, "y": 20.0, "w": 3.0, "h": 2.0}
+    ]
+  }
+}

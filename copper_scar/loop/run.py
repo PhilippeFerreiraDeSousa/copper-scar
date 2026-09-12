@@ -9,6 +9,24 @@ from typing import Any
 
 from copper_scar.harness.gates import evaluate_gates
 from copper_scar.harness.score import compute_score
+from copper_scar.loop.weave_trace import (
+    POLICY_VERSION,
+    SPAN_ACT,
+    SPAN_ACT_APPLY_SCAR,
+    SPAN_ACT_PLAN,
+    SPAN_EVALUATE,
+    SPAN_EVAL_DRC,
+    SPAN_EVAL_GATES,
+    SPAN_EVAL_SCORE,
+    SPAN_IMPROVE,
+    SPAN_IMPROVE_WRITE,
+    SPAN_OBSERVE,
+    SPAN_OBSERVE_LOAD,
+    WeaveTracer,
+    get_tracer,
+    init_tracer,
+    reset_tracer,
+)
 from copper_scar.scars.store import list_scars, load_scar, save_scar
 from copper_scar.sim.board import MIN_CLEARANCE_MM, BoardState, render_svg
 
@@ -178,6 +196,23 @@ def _apply_scars(board: BoardState, scars: list[dict[str, Any]]) -> list[str]:
     return credits
 
 
+def _pass_span_ids(pass_n: int) -> list[str]:
+    return [
+        f"loop.pass.{pass_n}",
+        SPAN_OBSERVE,
+        SPAN_OBSERVE_LOAD,
+        SPAN_ACT,
+        SPAN_ACT_PLAN,
+        SPAN_ACT_APPLY_SCAR,
+        SPAN_EVALUATE,
+        SPAN_EVAL_DRC,
+        SPAN_EVAL_GATES,
+        SPAN_EVAL_SCORE,
+        SPAN_IMPROVE,
+        SPAN_IMPROVE_WRITE,
+    ]
+
+
 def observe(
     *,
     baseline_path: Path,
@@ -185,20 +220,33 @@ def observe(
     seed_board: BoardState | None = None,
 ) -> tuple[BoardState, list[dict[str, Any]], list[str]]:
     spans: list[str] = []
-    if seed_board is not None:
-        board = seed_board.copy()
-    else:
-        with baseline_path.open(encoding="utf-8") as f:
-            raw = json.load(f)
-        board = BoardState.from_dict(raw)
-    spans.append("observe.load")
-    scars: list[dict[str, Any]] = []
-    for path in list_scars(scars_dir):
-        scars.append(load_scar(path))
-    if scars:
-        spans.append(f"observe.scars n={len(scars)}")
-    else:
-        spans.append("observe.scars n=0")
+    tracer = get_tracer()
+    with tracer.span(
+        SPAN_OBSERVE,
+        inputs={"baseline": str(baseline_path)},
+        attributes={"policy_version": POLICY_VERSION, "scar_id": tracer.last_scar_id},
+    ) as observe_span:
+        with tracer.span(
+            SPAN_OBSERVE_LOAD,
+            inputs={"baseline": str(baseline_path)},
+            attributes={"policy_version": POLICY_VERSION, "scar_id": tracer.last_scar_id},
+        ) as load_span:
+            if seed_board is not None:
+                board = seed_board.copy()
+            else:
+                with baseline_path.open(encoding="utf-8") as f:
+                    raw = json.load(f)
+                board = BoardState.from_dict(raw)
+            load_span.set_output({"label": board.label, "parts": len(board.parts)})
+        spans.append("observe.load")
+        scars: list[dict[str, Any]] = []
+        for path in list_scars(scars_dir):
+            scars.append(load_scar(path))
+        if scars:
+            spans.append(f"observe.scars n={len(scars)}")
+        else:
+            spans.append("observe.scars n=0")
+        observe_span.set_output({"parts": len(board.parts), "n_scars": len(scars)})
     return board, scars, spans
 
 
@@ -206,35 +254,115 @@ def act(board: BoardState, scars: list[dict[str, Any]]) -> tuple[BoardState, lis
     """Apply scars if present; else heuristics. Returns board, span details, plan notes."""
     spans: list[str] = []
     plan: list[str] = []
-    if scars:
-        plan.append("plan=apply_scars+tight_shrink")
-        spans.append("act.plan apply_scars")
-        credits = _apply_scars(board, scars)
-        for c in credits:
-            if c.startswith("scar."):
-                spans.append(f"act.{c}")
-            elif "→" in c:
-                spans.append(f"act.apply_scar {c}")
-            else:
-                spans.append(f"act.apply_scar {c}")
-    else:
-        plan.append("plan=heuristics_only")
-        spans.append("act.plan heuristics")
-        actions = _heuristic_fix(board)
-        for a in actions:
-            spans.append(f"act.{a}")
-        if not actions:
-            spans.append("act.noop")
+    tracer = get_tracer()
+    applied_ids = [str(s.get("scar_id", "?")) for s in scars]
+    primary = applied_ids[0] if applied_ids else tracer.last_scar_id
+    with tracer.span(
+        SPAN_ACT,
+        inputs={"n_scars": len(scars)},
+        attributes={"policy_version": POLICY_VERSION, "scar_id": primary},
+    ):
+        return _act_body(board, scars, spans, plan, tracer, applied_ids, primary)
+
+
+def _act_body(
+    board: BoardState,
+    scars: list[dict[str, Any]],
+    spans: list[str],
+    plan: list[str],
+    tracer: WeaveTracer,
+    applied_ids: list[str],
+    primary: str,
+) -> tuple[BoardState, list[str], list[str]]:
+    with tracer.span(
+        SPAN_ACT_PLAN,
+        inputs={"n_scars": len(scars)},
+        attributes={"policy_version": POLICY_VERSION, "scar_id": primary},
+    ) as plan_span:
+        if scars:
+            plan.append("plan=apply_scars+tight_shrink")
+            spans.append("act.plan apply_scars")
+            with tracer.span(
+                SPAN_ACT_APPLY_SCAR,
+                inputs={"scar_ids": applied_ids},
+                attributes={"policy_version": POLICY_VERSION, "scar_id": primary},
+            ) as apply_span:
+                credits = _apply_scars(board, scars)
+                apply_span.set_output({"credits": credits, "scar_id": primary})
+            for c in credits:
+                if c.startswith("scar."):
+                    spans.append(f"act.{c}")
+                elif "→" in c:
+                    spans.append(f"act.apply_scar {c}")
+                else:
+                    spans.append(f"act.apply_scar {c}")
+        else:
+            plan.append("plan=heuristics_only")
+            spans.append("act.plan heuristics")
+            actions = _heuristic_fix(board)
+            for a in actions:
+                spans.append(f"act.{a}")
+            if not actions:
+                spans.append("act.noop")
+        plan_span.set_output({"plan": list(plan), "scar_id": primary})
     return board, spans, plan
 
 
 def evaluate(board: BoardState) -> tuple[dict[str, Any], list[str]]:
     spans: list[str] = []
-    issues = board.check_drc()
-    flags = _gate_flags_from_board(board)
-    report = evaluate_gates(flags)
-    metrics = board.metrics()
-    score = compute_score(metrics["volume_mm3"], metrics["vias"], metrics["copper_layers"])
+    tracer = get_tracer()
+    with tracer.span(
+        SPAN_EVALUATE,
+        attributes={"policy_version": POLICY_VERSION, "scar_id": tracer.last_scar_id},
+    ) as eval_span:
+        result, spans = _evaluate_body(board, spans, tracer)
+        eval_span.set_output(
+            {
+                "score": result["score"],
+                "drc_ok": result["drc_ok"],
+                "gates_ok": result["gates_ok"],
+                "drc_count": len(result["drc_issues"]),
+            }
+        )
+        return result, spans
+
+
+def _evaluate_body(
+    board: BoardState,
+    spans: list[str],
+    tracer: WeaveTracer,
+) -> tuple[dict[str, Any], list[str]]:
+    with tracer.span(
+        SPAN_EVAL_DRC,
+        attributes={"policy_version": POLICY_VERSION, "scar_id": tracer.last_scar_id},
+    ) as drc_span:
+        issues = board.check_drc()
+        drc_span.merge_attributes({"drc_count": len(issues)})
+        drc_span.set_output({"drc_count": len(issues), "issues": list(issues)})
+
+    with tracer.span(
+        SPAN_EVAL_GATES,
+        attributes={"policy_version": POLICY_VERSION, "scar_id": tracer.last_scar_id},
+    ) as gates_span:
+        flags = _gate_flags_from_board(board)
+        report = evaluate_gates(flags)
+        gates_span.merge_attributes({"gates_ok": report.ok, "drc_count": len(issues)})
+        gates_span.set_output({"gates_ok": report.ok, "gates": {r.name: r.passed for r in report.results}})
+
+    with tracer.span(
+        SPAN_EVAL_SCORE,
+        attributes={"policy_version": POLICY_VERSION, "scar_id": tracer.last_scar_id},
+    ) as score_span:
+        metrics = board.metrics()
+        score = compute_score(metrics["volume_mm3"], metrics["vias"], metrics["copper_layers"])
+        attrs = tracer.note_eval(
+            score=score,
+            drc_count=len(issues),
+            gates_ok=report.ok,
+        )
+        score_span.merge_attributes(attrs)
+        score_span.set_output(attrs)
+
     spans.append(f"evaluate.drc issues={len(issues)}")
     spans.append(f"evaluate.gates ok={report.ok}")
     spans.append(f"evaluate.score score={score:.1f}")
@@ -256,12 +384,37 @@ def improve(
     pass_n: int,
 ) -> tuple[dict[str, Any] | None, list[str]]:
     spans: list[str] = []
+    tracer = get_tracer()
+    with tracer.span(
+        SPAN_IMPROVE,
+        inputs={"pass": pass_n},
+        attributes={"policy_version": POLICY_VERSION, "scar_id": tracer.last_scar_id},
+    ) as improve_span:
+        scar, spans = _improve_body(board, eval_result, scars_dir, pass_n, spans, tracer)
+        improve_span.set_output({"scar_id": scar["scar_id"] if scar else None})
+        return scar, spans
+
+
+def _improve_body(
+    board: BoardState,
+    eval_result: dict[str, Any],
+    scars_dir: Path,
+    pass_n: int,
+    spans: list[str],
+    tracer: WeaveTracer,
+) -> tuple[dict[str, Any] | None, list[str]]:
     if eval_result["gates_ok"] and eval_result["drc_ok"]:
         spans.append("improve.skip gates_ok")
         return None, spans
 
     scar_id = _next_scar_id(scars_dir)
     rule = _scar_rule_from_failure(board)
+    write_attrs = tracer.note_eval(
+        score=eval_result["score"],
+        drc_count=len(eval_result["drc_issues"]),
+        gates_ok=eval_result["gates_ok"],
+        scar_id=scar_id,
+    )
     scar = {
         "scar_id": scar_id,
         "created_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -273,14 +426,20 @@ def improve(
         "gates_ok": eval_result["gates_ok"],
         "rule": rule,
         "weave": {
-            "project": "copper-scar",
+            "project": tracer.project or "copper-scar",
             "run_id": f"pass-{pass_n}-{scar_id}",
-            "span_ids": ["observe", "act", "evaluate", "improve"],
+            "span_ids": _pass_span_ids(pass_n),
         },
         "tools_used": ["sim.board"],
         "notes": f"Typed {rule.get('type')} scar from DRC: {eval_result['drc_issues'][:3]}",
     }
-    path = save_scar(scar, scars_dir / f"{scar_id}.json")
+    with tracer.span(
+        SPAN_IMPROVE_WRITE,
+        inputs={"scar_id": scar_id, "pass": pass_n},
+        attributes=write_attrs,
+    ) as write_span:
+        path = save_scar(scar, scars_dir / f"{scar_id}.json")
+        write_span.set_output({"scar_id": scar_id, "path": str(path), **write_attrs})
     spans.append(f"improve.scar.write {scar_id}")
     spans.append(f"improve.scar.path {path}")
     return scar, spans
@@ -292,49 +451,100 @@ def run_pass(
     baseline_path: Path,
     scars_dir: Path,
     seed_board: BoardState | None = None,
+    quiet: bool = False,
 ) -> dict[str, Any]:
     """Run one observe→act→evaluate→improve cycle. Always reloads stock + applies all scars."""
-    log: list[str] = []
-    board, scars, obs_spans = observe(
+    tracer = get_tracer()
+    impl = tracer.as_op("copper_scar.agent_pass", _run_pass_impl)
+    return impl(
+        pass_n,
         baseline_path=baseline_path,
         scars_dir=scars_dir,
         seed_board=seed_board,
+        quiet=quiet,
     )
-    for s in obs_spans:
-        line = _span(pass_n, s)
-        log.append(line)
+
+
+def _emit(log: list[str], line: str, quiet: bool) -> None:
+    log.append(line)
+    if not quiet:
         print(line)
 
-    board, act_spans, plan = act(board, scars)
-    for s in act_spans:
-        line = _span(pass_n, s)
-        log.append(line)
-        print(line)
 
-    eval_result, eval_spans = evaluate(board)
-    for s in eval_spans:
-        line = _span(pass_n, s)
-        log.append(line)
-        print(line)
+def _run_pass_impl(
+    pass_n: int,
+    *,
+    baseline_path: Path,
+    scars_dir: Path,
+    seed_board: BoardState | None,
+    quiet: bool,
+) -> dict[str, Any]:
+    from copper_scar.eval.scorers import score_online_signals
 
-    scar, imp_spans = improve(board, eval_result, scars_dir, pass_n)
-    for s in imp_spans:
-        line = _span(pass_n, s)
-        log.append(line)
-        print(line)
+    log: list[str] = []
+    tracer = get_tracer()
+    with tracer.span(
+        f"loop.pass.{pass_n}",
+        inputs={"pass": pass_n},
+        attributes={"policy_version": POLICY_VERSION, "scar_id": tracer.last_scar_id},
+    ) as pass_span:
+        board, scars, obs_spans = observe(
+            baseline_path=baseline_path,
+            scars_dir=scars_dir,
+            seed_board=seed_board,
+        )
+        baseline_score = board.official_score()
+        for s in obs_spans:
+            _emit(log, _span(pass_n, s), quiet)
 
-    scars_applied = []
-    for sc in scars:
-        rule = sc.get("rule") or {}
-        sid = sc.get("scar_id", "?")
-        rtype = rule.get("type", "?")
-        target = rule.get("ref") or ",".join(rule.get("parts") or [])
-        scars_applied.append(f"{sid}→{rtype}" + (f" {target}" if target else ""))
+        board, act_spans, plan = act(board, scars)
+        for s in act_spans:
+            _emit(log, _span(pass_n, s), quiet)
 
+        eval_result, eval_spans = evaluate(board)
+        for s in eval_spans:
+            _emit(log, _span(pass_n, s), quiet)
+
+        scar, imp_spans = improve(board, eval_result, scars_dir, pass_n)
+        for s in imp_spans:
+            _emit(log, _span(pass_n, s), quiet)
+
+        scars_applied = []
+        for sc in scars:
+            rule = sc.get("rule") or {}
+            sid = sc.get("scar_id", "?")
+            rtype = rule.get("type", "?")
+            target = rule.get("ref") or ",".join(rule.get("parts") or [])
+            scars_applied.append(f"{sid}→{rtype}" + (f" {target}" if target else ""))
+
+        pass_attrs = tracer.note_eval(
+            score=eval_result["score"],
+            drc_count=len(eval_result["drc_issues"]),
+            gates_ok=eval_result["gates_ok"],
+            scar_id=scar["scar_id"] if scar else (scars[-1].get("scar_id") if scars else tracer.last_scar_id),
+        )
+        pass_output = {
+            **pass_attrs,
+            "pass": pass_n,
+            "baseline_score": baseline_score,
+            "drc_ok": eval_result["drc_ok"],
+            "scar_applied": bool(scars_applied),
+            "scar_written": scar["scar_id"] if scar else None,
+            "scars_applied": list(scars_applied),
+        }
+        signals = score_online_signals(pass_output)
+        pass_output["signals"] = signals
+        pass_span.merge_attributes(pass_attrs)
+        pass_span.update_summary({"signals": signals})
+        pass_span.set_output(pass_output)
+        tracer.queue_signals(pass_span, pass_output)
+
+    tracer.apply_signals()
     return {
         "pass": pass_n,
         "board": board,
         "score": eval_result["score"],
+        "baseline_score": baseline_score,
         "drc_ok": eval_result["drc_ok"],
         "drc_issues": eval_result["drc_issues"],
         "gates_ok": eval_result["gates_ok"],
@@ -343,6 +553,8 @@ def run_pass(
         "scar_written": scar["scar_id"] if scar else None,
         "log": log,
         "metrics": eval_result["metrics"],
+        "signals": signals,
+        "policy_version": POLICY_VERSION,
     }
 
 
@@ -353,6 +565,9 @@ def run_demo(
     scars_dir: Path | None = None,
     out_dir: Path | None = None,
     seed: int = 0,
+    weave_project: str | None = None,
+    enable_weave: bool | None = None,
+    tracer: WeaveTracer | None = None,
 ) -> dict[str, Any]:
     """Deterministic 3-pass closed loop demo."""
     _ = seed  # reserved for future RNG; layout is fully deterministic
@@ -362,6 +577,34 @@ def run_demo(
     out_dir.mkdir(parents=True, exist_ok=True)
     scars_dir.mkdir(parents=True, exist_ok=True)
 
+    token = init_tracer(
+        project=weave_project,
+        enable=enable_weave,
+        tracer=tracer,
+        announce=tracer is None,
+    )
+    bound = get_tracer()
+    try:
+        return _run_demo_body(
+            n_passes=n_passes,
+            baseline_path=baseline_path,
+            scars_dir=scars_dir,
+            out_dir=out_dir,
+            tracer=bound,
+        )
+    finally:
+        bound.finish()
+        reset_tracer(token)
+
+
+def _run_demo_body(
+    *,
+    n_passes: int,
+    baseline_path: Path,
+    scars_dir: Path,
+    out_dir: Path,
+    tracer: WeaveTracer,
+) -> dict[str, Any]:
     # Fresh scar store for a clean demo
     for old in list_scars(scars_dir):
         old.unlink()
@@ -412,11 +655,16 @@ def run_demo(
     print(f"\nwrote {timeline_path}")
     for i in range(1, n_passes + 1):
         print(f"wrote {out_dir / f'board_pass_{i}.svg'}")
+    if tracer.enabled and tracer.ui_url:
+        print(f"\nWeave UI: {tracer.ui_url}")
 
     return {
         "results": results,
         "timeline_path": str(timeline_path),
         "summary_lines": lines,
+        "weave_enabled": tracer.enabled,
+        "weave_project": tracer.project if tracer.enabled else None,
+        "weave_url": tracer.ui_url if tracer.enabled else None,
     }
 
 
@@ -473,11 +721,14 @@ def run_loop_cli(args: Any) -> int:
 
 
 def run_demo_cli(args: Any) -> int:
+    enable_weave = False if getattr(args, "no_weave", False) else None
     run_demo(
         n_passes=getattr(args, "passes", 3),
         baseline_path=Path(args.baseline) if getattr(args, "baseline", None) else None,
         scars_dir=Path(args.scars_dir) if getattr(args, "scars_dir", None) else None,
         out_dir=Path(args.out_dir) if getattr(args, "out_dir", None) else None,
         seed=getattr(args, "seed", 0),
+        weave_project=getattr(args, "weave_project", None),
+        enable_weave=enable_weave,
     )
     return 0

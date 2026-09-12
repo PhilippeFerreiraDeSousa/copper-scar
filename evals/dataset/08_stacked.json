@@ -1,0 +1,24 @@
+{
+  "id": "stacked",
+  "label": "Three stacked parts",
+  "notes": "U1/U2/U3 all collide. Scar from the first failure pair should unstick the pile.",
+  "expected": {
+    "drc_ok": true,
+    "score_upper_bound": 26000,
+    "scar_should_fire": true,
+    "score_should_improve": true
+  },
+  "board": {
+    "label": "stacked",
+    "width": 45.0,
+    "height": 40.0,
+    "thickness_mm": 1.6,
+    "vias": 10,
+    "layers": 4,
+    "parts": [
+      {"ref": "U1", "x": 8.0, "y": 8.0, "w": 10.0, "h": 8.0},
+      {"ref": "U2", "x": 10.0, "y": 9.0, "w": 10.0, "h": 8.0},
+      {"ref": "U3", "x": 12.0, "y": 10.0, "w": 10.0, "h": 8.0}
+    ]
+  }
+}

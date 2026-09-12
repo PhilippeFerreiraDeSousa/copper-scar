@@ -9,6 +9,7 @@ from pathlib import Path
 
 from copper_scar.harness.schema import BaselineFile, ScoreOutput
 from copper_scar.harness.score import score_from_metrics
+from copper_scar.eval.run import run_eval_cli
 from copper_scar.loop.run import run_demo_cli, run_loop_cli
 from copper_scar.sim.board import BoardState
 
@@ -78,7 +79,33 @@ def build_parser() -> argparse.ArgumentParser:
     dp.add_argument("--scars-dir", default=None, help="Scar store directory (default scars_out)")
     dp.add_argument("--out-dir", default=None, help="Demo artifacts dir (default demos/out)")
     dp.add_argument("--seed", type=int, default=0, help="Deterministic seed (reserved)")
+    dp.add_argument(
+        "--weave-project",
+        default=None,
+        help="W&B Weave project (default: WEAVE_PROJECT or copper-scar)",
+    )
+    dp.add_argument(
+        "--no-weave",
+        action="store_true",
+        help="Disable Weave even if WANDB_API_KEY is set",
+    )
     dp.set_defaults(func=run_demo_cli)
+
+    ep = sub.add_parser("eval", help="Run the built BoardState dataset (Weave Evaluation when live)")
+    ep.add_argument("--dataset", default=None, help="Fixture directory (default evals/dataset)")
+    ep.add_argument("--passes", type=int, default=3, help="Loop passes per fixture (default 3)")
+    ep.add_argument("--out-dir", default=None, help="Working dir for per-row boards/scars")
+    ep.add_argument(
+        "--weave-project",
+        default=None,
+        help="W&B Weave project (default: WEAVE_PROJECT or copper-scar)",
+    )
+    ep.add_argument(
+        "--no-weave",
+        action="store_true",
+        help="Disable Weave even if WANDB_API_KEY is set",
+    )
+    ep.set_defaults(func=run_eval_cli)
 
     return p
 

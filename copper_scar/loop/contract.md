@@ -15,16 +15,19 @@ One **scar** = one closed agent attempt against PCBGolf metrics.
 
 ## Weave spans (minimum)
 
-| Span        | Purpose                          |
-|-------------|----------------------------------|
-| `plan`      | Intent + tool selection          |
-| `place`     | Component / footprint placement  |
-| `route`     | Net routing / via decisions      |
-| `gates`     | Hard-gate evaluation             |
-| `score`     | Official score computation       |
-| `scar_write`| Persist scar document            |
+| Span | Purpose |
+|------|---------|
+| `loop.pass.{i}` | One closed-loop pass |
+| `observe.load` | Load baseline |
+| `act.plan` / `act.apply_scar` | Intent + scar application |
+| `evaluate.drc` / `evaluate.gates` / `evaluate.score` | DRC, gates, official score |
+| `improve.scar.write` | Persist scar document |
 
-Optional weave install: `pip install -e ".[weave]"`.
+Attributes on live spans: `score`, `best_score`, `drc_count`, `gates_ok`, `scar_id`, `policy_version`.
+
+Optional live tracing: `pip install -e ".[weave]"` and set `WANDB_API_KEY`. Default project is `copper-scar` (`WEAVE_PROJECT` / `--weave-project`). Without the key or package, the loop is identical and offline.
+
+Built eval dataset: `evals/dataset/` via `copper-scar eval` (Weave Evaluation when live). Online Signals: `copper_scar.eval.scorers` applied to each pass trace; attach the same criteria under Weave → Monitors.
 
 ## Hard gates
 

@@ -44,14 +44,67 @@ Minimum spans recorded on each scar / demo pass:
 
 | Span | Role |
 |------|------|
-| `plan` / `act.plan` | Intent + tool selection |
-| `place` | Placement |
-| `route` | Routing / vias |
-| `gates` / `evaluate.gates` | Hard-gate eval |
-| `score` / `evaluate.score` | Official score |
-| `scar_write` / `improve.scar.write` | Persist scar |
+| `loop.pass.{i}` | One observe → act → evaluate → improve cycle |
+| `observe.load` | Load stock baseline |
+| `act.plan` / `act.apply_scar` | Intent + apply typed scar |
+| `evaluate.drc` / `evaluate.gates` / `evaluate.score` | DRC, hard gates, official score |
+| `improve.scar.write` | Persist scar |
 
-Optional: `pip install -e ".[weave]"`
+Each live span carries attributes: `score`, `best_score`, `drc_count`, `gates_ok`, `scar_id`, `policy_version`.
+
+### Live Weave — 90s Best Use of Weave script
+
+Judges look for **all three**: (1) an agent that is actually instrumented, (2) a real eval on a dataset you built, (3) an online Signal on live traces.
+
+The offline demo is unchanged without Weave. Live tracing is a no-op unless the extra is installed **and** `WANDB_API_KEY` is set.
+
+```bash
+pip install -e ".[weave]"
+export WANDB_API_KEY=...          # https://wandb.ai/authorize
+export WEAVE_PROJECT=copper-scar  # default project name
+
+# W&B Inference credits (kickoff form): fill the form circulated at
+# CoreWeave Hacks so Serverless Inference can power UI Signals/Monitors.
+# Event page: https://wandb.ai/site/resources/events/coreweave-hacks-agent-loops-hackathon-with-weights-biases-and-agi-house/
+
+copper-scar demo                  # 1. explicit weave.init + loop spans/ops
+copper-scar eval                  # 2. built dataset → Weave Evaluation
+```
+
+`--weave-project` overrides `WEAVE_PROJECT`. `--no-weave` forces the offline path even if a key is present.
+
+When tracing is on, commands print a Weave UI URL:
+
+`https://wandb.ai/<entity>/copper-scar/weave`
+
+**90s film beats**
+
+| t | Show |
+|---|------|
+| 0–25 | `copper-scar demo` — Traces: `copper_scar.agent_pass` / `loop.pass.{i}` → `observe` → `act` → `evaluate` → `improve` |
+| 25–55 | Expand pass 2: `act.apply_scar`, `evaluate.drc` / `gates` / `score`, attributes `score`, `best_score`, `drc_count`, `gates_ok`, `scar_id`, `policy_version` |
+| 55–75 | `copper-scar eval` — Evaluations → `copper-scar-loop-eval` on dataset `copper-scar-boards` (`evals/dataset/`, 8 BoardState fixtures we built) |
+| 75–90 | **Signal:** Traces → Scores column (live `apply_scorer`), then Monitors (below) |
+
+**Attach / enable the online Signal in the Weave UI**
+
+Code already applies three programmatic Signals to every `loop.pass.{i}` call:
+
+- `score_improves_vs_baseline` — official score dropped vs the fixture/stock baseline
+- `gates_ok_when_scar_applied` — after a scar is applied, hard gates pass
+- `drc_cleared_after_scar` — after a scar is applied, DRC is clean
+
+To attach the same criteria as a live Monitor / UI Signal (uses W&B Inference credits):
+
+1. Run `copper-scar demo` once so ops appear
+2. Weave sidebar → **Monitors** → **New Monitor** (or **Browse signals** → **Create custom signal**)
+3. Operations: `copper_scar.agent_pass` and/or `loop.pass.1` (repeat for `.2` / `.3` if listed separately)
+4. Sampling: 100%
+5. Judge model: a **Serverless Inference** model (credits from the kickoff form)
+6. Scoring prompt: see `SIGNAL_UI_PROMPT` in [`copper_scar/eval/scorers.py`](copper_scar/eval/scorers.py)
+7. Create → re-run `copper-scar demo` → Traces shows the Signal tags / Scores column
+
+Without the key or without the weave extra, `copper-scar demo` and `copper-scar eval` still run identically offline (no network, no crash).
 
 ## Scar schema
 
@@ -83,6 +136,7 @@ cd /workspace/copper-scar
 python3 -m venv .venv
 .venv/bin/pip install -e ".[dev]"
 .venv/bin/copper-scar demo
+.venv/bin/copper-scar eval
 ```
 
 What you should see:
@@ -90,6 +144,7 @@ What you should see:
 1. **Pass 1** — stock board with DRC issues; Weave-style spans; writes typed scar (`scar_001`)
 2. **Pass 2** — loads/applies scar with credit `scar_001 → keepout U1`; plan changes
 3. **Pass 3** — gates OK and official score **lower** than pass 1
+4. **Eval** — 8 built fixtures in [`evals/dataset/`](evals/dataset/); table of expected vs loop output
 
 Artifacts:
 
@@ -109,10 +164,11 @@ See [`demos/pass_timeline.md`](demos/pass_timeline.md) for the narrated beat she
 
 **Ship (CoreWeave Hacks)**
 
-- `copper-scar score` / `copper-scar loop` / `copper-scar demo`
+- `copper-scar score` / `copper-scar loop` / `copper-scar demo` / `copper-scar eval`
 - Exact official score
 - Deterministic sim closed loop → scar JSON + SVG timeline
-- Weave-style span names on scars
+- Explicit Weave spans/ops around observe/act/evaluate/improve
+- Built eval dataset + Weave Evaluation + online Signals
 - Hard gates module + schema
 
 **Cut**
@@ -140,6 +196,7 @@ cd /workspace/copper-scar
 .venv/bin/copper-scar score baselines/stock.json
 .venv/bin/copper-scar loop --scar-id scar_000 --out-dir scars_out
 .venv/bin/copper-scar demo
+.venv/bin/copper-scar eval
 ```
 
 Requires Python ≥ 3.11.

@@ -1,0 +1,23 @@
+{
+  "id": "outline_violation",
+  "label": "Part hangs off the outline",
+  "notes": "U2 extends past the right edge. Heuristics clamp it; DRC clears without a scar.",
+  "expected": {
+    "drc_ok": true,
+    "score_upper_bound": 22000,
+    "scar_should_fire": false,
+    "score_should_improve": true
+  },
+  "board": {
+    "label": "outline_violation",
+    "width": 20.0,
+    "height": 16.0,
+    "thickness_mm": 1.6,
+    "vias": 6,
+    "layers": 4,
+    "parts": [
+      {"ref": "U1", "x": 1.0, "y": 1.0, "w": 8.0, "h": 6.0},
+      {"ref": "U2", "x": 16.0, "y": 2.0, "w": 8.0, "h": 6.0}
+    ]
+  }
+}

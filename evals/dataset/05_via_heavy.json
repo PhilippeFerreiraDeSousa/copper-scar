@@ -1,0 +1,24 @@
+{
+  "id": "via_heavy",
+  "label": "Clean layout, via-heavy score",
+  "notes": "Legal board whose official score is dominated by vias. No scar; score stays high.",
+  "expected": {
+    "drc_ok": true,
+    "score_upper_bound": 16000,
+    "scar_should_fire": false,
+    "score_should_improve": false
+  },
+  "board": {
+    "label": "via_heavy",
+    "width": 21.5,
+    "height": 13.0,
+    "thickness_mm": 1.6,
+    "vias": 80,
+    "layers": 2,
+    "parts": [
+      {"ref": "U1", "x": 0.5, "y": 0.5, "w": 10.0, "h": 8.0},
+      {"ref": "U2", "x": 11.0, "y": 0.5, "w": 10.0, "h": 8.0},
+      {"ref": "C1", "x": 0.5, "y": 9.5, "w": 4.0, "h": 3.0}
+    ]
+  }
+}

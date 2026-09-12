@@ -1,0 +1,23 @@
+{
+  "id": "multilayer",
+  "label": "8-layer overlap",
+  "notes": "Overlap plus copper_layers=8. Official score is layer-heavy; scar should still fire.",
+  "expected": {
+    "drc_ok": true,
+    "score_upper_bound": 45000,
+    "scar_should_fire": true,
+    "score_should_improve": true
+  },
+  "board": {
+    "label": "multilayer",
+    "width": 40.0,
+    "height": 32.0,
+    "thickness_mm": 1.6,
+    "vias": 12,
+    "layers": 8,
+    "parts": [
+      {"ref": "U1", "x": 4.0, "y": 4.0, "w": 12.0, "h": 10.0},
+      {"ref": "U2", "x": 10.0, "y": 6.0, "w": 12.0, "h": 10.0}
+    ]
+  }
+}
