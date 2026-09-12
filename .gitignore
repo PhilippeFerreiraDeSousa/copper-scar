@@ -11,3 +11,6 @@ build/
 .DS_Store
 scars/store/*.json
 !scars/store/.gitkeep
+scars_out/
+demos/out/*
+!demos/out/.gitkeep

@@ -1,4 +1,4 @@
-"""copper-scar CLI: score baselines and run the stub agent loop."""
+"""copper-scar CLI: score baselines, stub loop, and demo closed loop."""
 
 from __future__ import annotations
 
@@ -9,7 +9,8 @@ from pathlib import Path
 
 from copper_scar.harness.schema import BaselineFile, ScoreOutput
 from copper_scar.harness.score import score_from_metrics
-from copper_scar.loop.run import run_loop_cli
+from copper_scar.loop.run import run_demo_cli, run_loop_cli
+from copper_scar.sim.board import BoardState
 
 
 def cmd_score(args: argparse.Namespace) -> int:
@@ -17,10 +18,32 @@ def cmd_score(args: argparse.Namespace) -> int:
     with path.open(encoding="utf-8") as f:
         raw = json.load(f)
 
+    # Prefer full BoardState serialization when present
+    if "width" in raw and "height" in raw and "thickness_mm" in raw:
+        board = BoardState.from_dict(raw)
+        metrics_dict = board.metrics()
+        score = score_from_metrics(metrics_dict)
+        from copper_scar.harness.schema import Metrics
+
+        metrics = Metrics.model_validate(metrics_dict)
+        out = ScoreOutput(score=score, metrics=metrics)
+        payload = out.model_dump()
+        payload["label"] = board.label
+        payload["placeholder"] = board.placeholder
+        if board.notes:
+            payload["notes"] = board.notes
+        payload["board"] = {
+            "width": board.width,
+            "height": board.height,
+            "thickness_mm": board.thickness_mm,
+            "parts": len(board.parts),
+        }
+        print(json.dumps(payload, indent=2))
+        return 0
+
     baseline = BaselineFile.model_validate(raw)
     score = score_from_metrics(baseline.metrics.model_dump())
     out = ScoreOutput(score=score, metrics=baseline.metrics)
-
     payload = out.model_dump()
     payload["label"] = baseline.label
     payload["placeholder"] = baseline.placeholder
@@ -28,7 +51,6 @@ def cmd_score(args: argparse.Namespace) -> int:
         payload["warning"] = "PLACEHOLDER metrics — not fab-measured"
     if baseline.notes:
         payload["notes"] = baseline.notes
-
     print(json.dumps(payload, indent=2))
     return 0
 
@@ -36,7 +58,7 @@ def cmd_score(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="copper-scar",
-        description="Copper Scar — PCBGolf score + stub agent loop",
+        description="Copper Scar — PCBGolf score + sim agent loop",
     )
     sub = p.add_subparsers(dest="command", required=True)
 
@@ -49,6 +71,14 @@ def build_parser() -> argparse.ArgumentParser:
     lp.add_argument("--out-dir", default="scars_out", help="Output directory for scar JSON")
     lp.add_argument("--label", default="stub loop run", help="Scar label")
     lp.set_defaults(func=run_loop_cli)
+
+    dp = sub.add_parser("demo", help="Run deterministic 3-pass sim closed loop")
+    dp.add_argument("--passes", type=int, default=3, help="Number of passes (default 3)")
+    dp.add_argument("--baseline", default=None, help="BoardState JSON (default baselines/stock.json)")
+    dp.add_argument("--scars-dir", default=None, help="Scar store directory (default scars_out)")
+    dp.add_argument("--out-dir", default=None, help="Demo artifacts dir (default demos/out)")
+    dp.add_argument("--seed", type=int, default=0, help="Deterministic seed (reserved)")
+    dp.set_defaults(func=run_demo_cli)
 
     return p
 

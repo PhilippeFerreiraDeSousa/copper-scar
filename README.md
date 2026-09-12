@@ -6,7 +6,7 @@
 
 1. Observe baseline / last scar  
 2. Plan (Weave `plan`)  
-3. Act via tool forge (`place` / `route`)  
+3. Act via tool forge (`place` / `route`) or **sim board** scars  
 4. Check hard gates (fail-closed)  
 5. Score with the **official** formula  
 6. Write a scar JSON  
@@ -18,6 +18,7 @@ Contract: [`copper_scar/loop/contract.md`](copper_scar/loop/contract.md)
 
 ```
 score = volume_mm3 + 50 * vias + 5000 * copper_layers
+volume = bbox_width * bbox_height * thickness_mm
 ```
 
 Source: [comma.ai leaderboard — PCBGolf](https://comma.ai/leaderboard#pcbgolf_challenge)  
@@ -39,16 +40,16 @@ Do not ship a scar to the “best” board unless `gates_ok` is true.
 
 ## Weave spans
 
-Minimum spans recorded on each scar:
+Minimum spans recorded on each scar / demo pass:
 
 | Span | Role |
 |------|------|
-| `plan` | Intent + tool selection |
+| `plan` / `act.plan` | Intent + tool selection |
 | `place` | Placement |
 | `route` | Routing / vias |
-| `gates` | Hard-gate eval |
-| `score` | Official score |
-| `scar_write` | Persist scar |
+| `gates` / `evaluate.gates` | Hard-gate eval |
+| `score` / `evaluate.score` | Official score |
+| `scar_write` / `improve.scar.write` | Persist scar |
 
 Optional: `pip install -e ".[weave]"`
 
@@ -58,7 +59,17 @@ JSON Schema: [`copper_scar/scars/schema.json`](copper_scar/scars/schema.json)
 Example: [`copper_scar/scars/examples/scar_012.json`](copper_scar/scars/examples/scar_012.json)  
 Store helpers: `copper_scar.scars.store`
 
-A scar holds `scar_id`, `metrics`, `score`, `gates`, optional `weave.span_ids`, and `tools_used`.
+A scar holds `scar_id`, `metrics`, `score`, `gates`, optional typed `rule` (`keepout` / `min_clearance`), `weave.span_ids`, and `tools_used`.
+
+## Sim board (no KiCad)
+
+`copper_scar.sim.board` provides a deterministic AABB board:
+
+- Parts + outline DRC (min 0.5 mm clearance)
+- Actions: `shrink_outline`, `move_part`, `apply_keepout_scar`
+- Official score from `volume_mm3 = w * h * thickness`
+
+Stock baseline: [`baselines/stock.json`](baselines/stock.json) (overlapping parts + oversized outline).
 
 ## Tool forge
 
@@ -67,22 +78,46 @@ Empty at ship; fill during the hack. Loop calls only registered tools.
 
 ## 90s demo
 
-See [`demos/pass_timeline.md`](demos/pass_timeline.md) — hook → score CLI → stub loop → scar → gates → forge → ship/cut.
+```bash
+cd /workspace/copper-scar
+python3 -m venv .venv
+.venv/bin/pip install -e ".[dev]"
+.venv/bin/copper-scar demo
+```
+
+What you should see:
+
+1. **Pass 1** — stock board with DRC issues; Weave-style spans; writes typed scar (`scar_001`)
+2. **Pass 2** — loads/applies scar with credit `scar_001 → keepout U1`; plan changes
+3. **Pass 3** — gates OK and official score **lower** than pass 1
+
+Artifacts:
+
+- `demos/out/pass_timeline.txt` — summary table + spans
+- `demos/out/board_pass_{1,2,3}.svg` — board snapshots
+
+Also:
+
+```bash
+.venv/bin/pytest -q
+.venv/bin/copper-scar score baselines/stock.json
+```
+
+See [`demos/pass_timeline.md`](demos/pass_timeline.md) for the narrated beat sheet.
 
 ## Ship / cut
 
 **Ship (CoreWeave Hacks)**
 
-- `copper-scar score` / `copper-scar loop`
+- `copper-scar score` / `copper-scar loop` / `copper-scar demo`
 - Exact official score
-- Stub loop → scar JSON
-- Weave span names on scars
+- Deterministic sim closed loop → scar JSON + SVG timeline
+- Weave-style span names on scars
 - Hard gates module + schema
 
 **Cut**
 
 - Full PCBGolf / KiCad automation
-- Measured (non-placeholder) stock baseline
 - Mentra paths
 
 ## Dual timeline
@@ -100,13 +135,14 @@ Mentra / AR glasses integration is **out of scope** for Copper Scar. Do not bloc
 
 ```bash
 cd /workspace/copper-scar
-pip install -e ".[dev]"
-pytest -q
-copper-scar score baselines/stock.json
-copper-scar loop --scar-id scar_000 --out-dir scars_out
+.venv/bin/pip install -e ".[dev]"
+.venv/bin/pytest -q
+.venv/bin/copper-scar score baselines/stock.json
+.venv/bin/copper-scar loop --scar-id scar_000 --out-dir scars_out
+.venv/bin/copper-scar demo
 ```
 
-Requires Python ≥ 3.11. Baseline metrics in `baselines/stock.json` are **PLACEHOLDER** — labeled as such; replace before claiming leaderboard deltas.
+Requires Python ≥ 3.11.
 
 ## License
 

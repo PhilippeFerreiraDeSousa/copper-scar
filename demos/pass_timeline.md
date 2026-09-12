@@ -5,32 +5,32 @@ Target: ~90 seconds live, narrated.
 | t (s) | Beat | What to show |
 |------:|------|--------------|
 | 0–10  | Hook | One-liner: agent loop that scars PCBGolf attempts with Weave + official score |
-| 10–20 | Score | `copper-scar score baselines/stock.json` → formula on screen |
-| 20–35 | Loop | `copper-scar loop --scar-id scar_demo` → scar file appears |
-| 35–50 | Scar schema | Open `scar_*.json`: metrics, gates, weave.span_ids |
-| 50–65 | Gates | Hard gates fail-closed; ship only when `gates_ok` |
-| 65–80 | Tool forge | Point at `tools/registry/` + contract.md spans |
-| 80–90 | Ship/cut | Dual timeline: CoreWeave hack ship vs Oct 12 $1k track; Mentra out of scope |
+| 10–25 | Demo | `.venv/bin/copper-scar demo` — 3-pass sim loop |
+| 25–40 | Pass 1 | Stock DRC fail → typed scar write; spans like `[loop.pass.1] improve.scar.write` |
+| 40–55 | Pass 2 | `scar_001 → keepout U1` credit; plan = apply_scars; SVG changes |
+| 55–70 | Pass 3 | Gates OK + score lower than pass 1; open `demos/out/pass_timeline.txt` |
+| 70–80 | Score | Formula: `volume_mm3 + 50*vias + 5000*copper_layers` |
+| 80–90 | Ship/cut | Dual timeline; Mentra out of scope |
+
+## Commands
+
+```bash
+.venv/bin/pip install -e ".[dev]"
+.venv/bin/copper-scar demo
+.venv/bin/pytest -q
+```
 
 ## Ship / cut
 
 **Ship for CoreWeave Hacks**
 
-- Runnable `copper-scar` CLI
+- Runnable `copper-scar demo`
 - Official score exact match
-- Stub loop writing scars
-- Weave span names wired in scar docs
+- Sim loop writing typed scars + SVGs
+- Weave-style span names
 - Hard gates module
 
 **Cut / defer**
 
 - Full KiCad / PCBGolf clone integration
 - Mentra / glasses UX
-- Non-placeholder measured baselines
-
-## Dual timeline
-
-| Track | Date / venue | Goal |
-|-------|----------------|------|
-| CoreWeave Hacks | This weekend | Working harness, demo, Weave story |
-| $1k track | Oct 12 | Measured deltas vs stock, gates-ok scars on real boards |

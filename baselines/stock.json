@@ -1,9 +1,20 @@
 {
-  "label": "stock baseline (PLACEHOLDER)",
-  "placeholder": true,
-  "notes": "PLACEHOLDER metrics only — replace with measured PCBGolf stock board numbers before claiming leaderboard deltas. Not fab-verified.",
+  "label": "stock sim board (overlapping + oversized)",
+  "placeholder": false,
+  "notes": "Deterministic sim baseline: U1/U2 clearance violation and oversized outline. No KiCad.",
+  "width": 50.0,
+  "height": 40.0,
+  "thickness_mm": 1.6,
+  "vias": 10,
+  "layers": 4,
+  "parts": [
+    {"ref": "U1", "x": 5.0, "y": 5.0, "w": 10.0, "h": 8.0},
+    {"ref": "U2", "x": 12.0, "y": 7.0, "w": 10.0, "h": 8.0},
+    {"ref": "C1", "x": 30.0, "y": 20.0, "w": 4.0, "h": 3.0}
+  ],
+  "drc_issues": [],
   "metrics": {
-    "volume_mm3": 1000.0,
+    "volume_mm3": 3200.0,
     "vias": 10,
     "copper_layers": 4
   },
@@ -15,10 +26,5 @@
     "min_trace_clearance": false,
     "via_annular_ok": false,
     "outline_closed": true
-  },
-  "extra": {
-    "source": "PLACEHOLDER — align with comma.ai PCBGolf stock when available",
-    "leaderboard": "https://comma.ai/leaderboard#pcbgolf_challenge",
-    "pcbgolf": "https://github.com/commaai/PCBGolf"
   }
 }
