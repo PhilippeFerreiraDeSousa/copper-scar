@@ -61,7 +61,7 @@ The offline demo is unchanged without Weave. Live tracing is a no-op unless the 
 ```bash
 pip install -e ".[weave]"
 export WANDB_API_KEY=...          # https://wandb.ai/authorize
-export WEAVE_PROJECT=copper-scar  # default project name
+export WEAVE_PROJECT=philippe-fdesousa/copper-scar  # user entity (org blocks bare project names)
 
 # W&B Inference credits (kickoff form): fill the form circulated at
 # CoreWeave Hacks so Serverless Inference can power UI Signals/Monitors.

@@ -89,7 +89,7 @@ def test_missing_weave_extra_does_not_crash(monkeypatch: pytest.MonkeyPatch) -> 
 
 
 def test_resolve_project_default() -> None:
-    assert resolve_project(None) == "copper-scar"
+    assert resolve_project(None) == "philippe-fdesousa/copper-scar"
 
 
 def test_import_weave_is_optional() -> None:

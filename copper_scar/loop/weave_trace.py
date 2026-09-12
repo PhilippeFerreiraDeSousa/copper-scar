@@ -22,7 +22,7 @@ from typing import Any, Iterator, TypeVar
 
 F = TypeVar("F", bound=Callable[..., Any])
 
-DEFAULT_PROJECT = "copper-scar"
+DEFAULT_PROJECT = "philippe-fdesousa/copper-scar"
 POLICY_VERSION = "copper-scar-sim-v1"
 
 # Logged / traced span names (must stay aligned with demo stdout).
@@ -49,6 +49,31 @@ ATTR_KEYS = (
     "scar_id",
     "policy_version",
 )
+
+def _json_safe(value: Any, *, _depth: int = 0) -> Any:
+    """Coerce values Weave can serialize (no BoardState / call refs)."""
+    if _depth > 8:
+        return str(value)
+    if value is None or isinstance(value, (bool, int, float, str)):
+        return value
+    if isinstance(value, dict):
+        return {str(k): _json_safe(v, _depth=_depth + 1) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(v, _depth=_depth + 1) for v in value]
+    # dataclasses / pydantic-like
+    if hasattr(value, "model_dump"):
+        try:
+            return _json_safe(value.model_dump(), _depth=_depth + 1)
+        except Exception:
+            pass
+    if hasattr(value, "__dict__") and not isinstance(value, type):
+        try:
+            data = {k: v for k, v in vars(value).items() if not k.startswith("_")}
+            return _json_safe(data, _depth=_depth + 1)
+        except Exception:
+            pass
+    return str(value)
+
 
 _current: ContextVar[WeaveTracer | None] = ContextVar("copper_scar_weave_tracer", default=None)
 
@@ -281,8 +306,8 @@ class WeaveTracer:
         try:
             call = self._client.create_call(
                 op=name,
-                inputs=inputs or {},
-                attributes=attrs,
+                inputs=_json_safe(inputs or {}),
+                attributes=_json_safe(attrs),
             )
         except Exception as exc:
             self._disable(exc)
@@ -304,28 +329,18 @@ class WeaveTracer:
             if handle.summary:
                 handle.update_summary(handle.summary)
             try:
-                self._client.finish_call(call, output=handle.output)
+                self._client.finish_call(call, output=_json_safe(handle.output))
             except Exception as exc:
                 self._disable(exc)
 
     def as_op(self, name: str, fn: F, *, display_name: str | None = None) -> F:
-        """Wrap ``fn`` with ``weave.op`` once; identity when tracing is off."""
-        if not self.enabled or self._weave is None:
-            return fn
-        cached = self._ops.get(name)
-        if cached is not None:
-            return cached
-        try:
-            weave = self._weave
-            kwargs: dict[str, Any] = {"name": name}
-            if display_name:
-                kwargs["call_display_name"] = display_name
-            wrapped = weave.op(**kwargs)(fn)
-        except Exception as exc:
-            self._disable(exc)
-            return fn
-        self._ops[name] = wrapped
-        return wrapped
+        """Return ``fn`` unchanged.
+
+        We instrument via ``span()`` / ``create_call`` with JSON-safe payloads.
+        ``weave.op`` wrapping is avoided because returning BoardState objects
+        currently crashes Weave's ``finish_call`` (str.project AttributeError).
+        """
+        return fn
 
     def queue_signals(self, handle: SpanHandle, output: dict[str, Any]) -> None:
         if handle.call is not None:
