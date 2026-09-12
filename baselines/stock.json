@@ -1,0 +1,24 @@
+{
+  "label": "stock baseline (PLACEHOLDER)",
+  "placeholder": true,
+  "notes": "PLACEHOLDER metrics only — replace with measured PCBGolf stock board numbers before claiming leaderboard deltas. Not fab-verified.",
+  "metrics": {
+    "volume_mm3": 1000.0,
+    "vias": 10,
+    "copper_layers": 4
+  },
+  "gates": {
+    "drc_clean": false,
+    "erc_clean": false,
+    "netlist_match": false,
+    "fab_stackup_ok": true,
+    "min_trace_clearance": false,
+    "via_annular_ok": false,
+    "outline_closed": true
+  },
+  "extra": {
+    "source": "PLACEHOLDER — align with comma.ai PCBGolf stock when available",
+    "leaderboard": "https://comma.ai/leaderboard#pcbgolf_challenge",
+    "pcbgolf": "https://github.com/commaai/PCBGolf"
+  }
+}

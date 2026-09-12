@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://copper-scar.local/scars/schema.json",
+  "title": "CopperScar",
+  "description": "A scar is one agent-loop attempt: metrics, gates, Weave span ids, and tool forge notes.",
+  "type": "object",
+  "required": ["scar_id", "created_at", "metrics", "score", "gates"],
+  "properties": {
+    "scar_id": {
+      "type": "string",
+      "pattern": "^scar_[0-9]{3,}$",
+      "description": "Stable id, e.g. scar_012"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "label": { "type": "string" },
+    "metrics": {
+      "type": "object",
+      "required": ["volume_mm3", "vias", "copper_layers"],
+      "properties": {
+        "volume_mm3": { "type": "number", "minimum": 0 },
+        "vias": { "type": "integer", "minimum": 0 },
+        "copper_layers": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "score": {
+      "type": "number",
+      "description": "Official: volume_mm3 + 50*vias + 5000*copper_layers"
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": { "type": "boolean" },
+      "description": "Hard-gate pass map (fail-closed if missing)"
+    },
+    "gates_ok": { "type": "boolean" },
+    "weave": {
+      "type": "object",
+      "properties": {
+        "project": { "type": "string" },
+        "run_id": { "type": "string" },
+        "span_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "tools_used": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Tool forge registry names invoked this loop"
+    },
+    "notes": { "type": "string" },
+    "placeholder": {
+      "type": "boolean",
+      "description": "True if metrics are placeholders, not fab-measured"
+    }
+  },
+  "additionalProperties": true
+}

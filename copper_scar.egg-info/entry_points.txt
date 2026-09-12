@@ -1,0 +1,2 @@
+[console_scripts]
+copper-scar = copper_scar.cli:main
