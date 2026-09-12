@@ -1,6 +1,15 @@
 # Copper Scar
 
-**One-liner:** Agent loop that scars PCBGolf attempts — Weave spans, hard gates, official comma.ai score — for CoreWeave Hacks.
+**Current work:** Real KiCad candidate validation for PCBGolf, with persistent failure evidence.
+
+The [native setup and checker](docs/native-checks.md) preserve the official board,
+run KiCad ERC/DRC, check input integrity and measure eligible assembly STEP files.
+The official starting board is unrouted and fails validation. Whole-project
+schematic coverage and a complete routing engine remain unresolved; no valid PCB
+or real assembled-board score has been produced.
+
+The demo below is the earlier deterministic **simulation prototype**. Its
+geometric gates and score improvements do not establish real PCB validity.
 
 ## Loop
 

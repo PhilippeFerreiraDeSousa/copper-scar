@@ -1,0 +1,16 @@
+{
+  "name": "copper-scar-tools",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Pinned local Copperhead tooling for native KiCad checks",
+  "scripts": {
+    "copperhead": "copperhead"
+  },
+  "devDependencies": {
+    "@openai/codex-sdk": "0.144.6",
+    "copperhead": "0.10.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

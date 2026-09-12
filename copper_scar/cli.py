@@ -63,6 +63,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sub = p.add_subparsers(dest="command", required=True)
 
+    from copper_scar.real import run_real_cli
+    rp = sub.add_parser("real-check", help="Check a real KiCad candidate and persist native failure evidence")
+    rp.add_argument("--project", required=True, help="Candidate .kicad_pro")
+    rp.add_argument("--reference", required=True, help="Original .kicad_pro with unchanged rules and schematics")
+    rp.add_argument("--out-dir", default=".local/checks")
+    rp.add_argument("--kicad", default="kicad-cli")
+    rp.add_argument("--copperhead", default=None, help="Optional pinned Copperhead executable")
+    rp.add_argument("--qualification", help="Candidate-bound engineering review JSON")
+    rp.add_argument("--promote-to", help="New destination; only copied after all gates pass")
+    rp.set_defaults(func=run_real_cli)
+
     sp = sub.add_parser("score", help="Score a baseline or metrics JSON file")
     sp.add_argument("path", help="Path to baselines/*.json or metrics JSON")
     sp.set_defaults(func=cmd_score)

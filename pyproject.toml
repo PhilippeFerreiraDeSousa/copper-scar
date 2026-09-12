@@ -15,8 +15,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+pcb = ["sexpdata==1.0.2", "cadquery-ocp==7.8.1.1"]
 weave = ["weave>=0.51"]
-dev = ["pytest>=8.0", "copper-scar[weave]"]
+dev = ["pytest>=8.0", "sexpdata==1.0.2", "copper-scar[weave]"]
 
 [project.scripts]
 copper-scar = "copper_scar.cli:main"
