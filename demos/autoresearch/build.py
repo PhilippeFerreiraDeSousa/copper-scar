@@ -129,7 +129,7 @@ def build(source,out):
   policy['route_wall_seconds']=sum(p.get('route_elapsed_seconds') or 0 for p in policy['points'] if p['index']!=0)
  state['full_evidence_receipts']=json.loads((out/'remote/complete-evidence-verified.json').read_text()) if (out/'remote/complete-evidence-verified.json').exists() else []
  state['decision_artifacts']=[]
- for relative in ['decision.json','selected-policy.json','next-campaign/consumed-decision.json','next-campaign/screens.json','next-campaign/result.json']:
+ for relative in ['decision.json','selected-policy.json','next-campaign/consumed-decision.json','next-campaign/screens.json','next-campaign/result.json','next-campaign/lower.command.json']:
   source_file=source/relative
   if source_file.exists():
    artifact_raw=source_file.read_bytes()
@@ -143,6 +143,14 @@ def build(source,out):
   result=artifacts.get('next-campaign/result.json',{}).get('payload');next_state={'consumed':consumed,'result':result,'stages':[]}
   if consumed.get('input_board_path') and consumed.get('input_board_sha256'):next_state['stages'].append({'name':'Selected policy campaign input',**asset(consumed['input_board_path'],consumed['input_board_sha256'],out)})
   chosen=(result or {}).get('selected') or {}
+  command=artifacts.get('next-campaign/lower.command.json',{}).get('payload')
+  if command:
+   next_state['runtime']={k:command.get(k) for k in ['state','started_at','heartbeat_at','elapsed_seconds','returncode']}
+   argv=command.get('argv',[])
+   if not chosen and '--proposal' in argv:
+    proposal_path=Path(argv[argv.index('--proposal')+1]);proposal=json.loads(proposal_path.read_text());screens=artifacts.get('next-campaign/screens.json',{}).get('payload',[])
+    chosen=next((row for row in screens if canon(row.get('action'))==canon(proposal) and row.get('input_board_sha256')==consumed.get('input_board_sha256')),{});next_state['selected_preview_verified']=bool(chosen)
+
   if chosen.get('preview_after_board_path') and chosen.get('preview_after_board_sha256'):next_state['stages'].append({'name':'Actual selected update before routing',**asset(chosen['preview_after_board_path'],chosen['preview_after_board_sha256'],out)})
   rp=Path(result['receipt_path']) if result and result.get('receipt_path') else None
   if rp and rp.exists():
@@ -150,6 +158,7 @@ def build(source,out):
    for name in ['final-pad-partitions.json','final-via-geometry.json']:
     if (rp.parent/name).exists():shutil.copy2(rp.parent/name,dest/name)
    if record.get('after'):next_state['stages'].append({'name':'After separate campaign routing',**asset(Path(record['candidate'])/'pcbgolf.kicad_pcb',record['after']['files']['pcbgolf.kicad_pcb'],out)})
+  if not result:next_state['stages'].append({'name':'After separate campaign routing','missing':'PENDING: no completed native result'})
   focus_stages(next_state['stages'],out);state['next_campaign']=next_state
  state['remote_receipts']=json.loads((out/'remote/verified.json').read_text()) if (out/'remote/verified.json').exists() else None
  atomic(out/'data.json',json.dumps(state,indent=2));atomic(out/'data.js','window.EXPERIMENT='+json.dumps(state)+';');shutil.copy2(Path(__file__).with_name('index.html'),out/'index.html')

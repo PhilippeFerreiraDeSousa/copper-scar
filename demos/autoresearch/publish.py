@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Event-sourced W&B/Weave adapter. Credentials stay in protected process memory."""
-import argparse,datetime,fcntl,hashlib,json,os,subprocess,uuid
+import argparse,datetime,fcntl,hashlib,json,os,subprocess,uuid,time
 from pathlib import Path
 from trace_io import finish, read as read_trace, start
 from model import read_events,canon,sha
@@ -93,13 +93,20 @@ def main():
   if pid in policies:
    p=policies[pid];run.summary.update({'completed_decisions':p['completed_decisions'],'routed_dispatch_count':p['routed_dispatch_count'],'routed_completed':p['routed_completed'],'cost_at_N_decisions':p['cost_at_n'],'decision_wall_seconds':p['decision_wall_seconds'],'router_wall_seconds':p['route_wall_seconds'],'policy_state':p['state']})
   else:run.summary.update({'policy_decisions':state['decisions'],'common_protocol_sha256':hashlib.sha256(canon(state['common_protocol']).encode()).hexdigest()})
-  run.finish();fresh=api.run(run_path);history=list(fresh.scan_history());files={f.name for f in fresh.files()}
+  run.finish()
+  for retry in range(12):
+   api.flush();fresh=api.run(run_path);history=list(fresh.scan_history());files={f.name for f in fresh.files()}
+   missing=[event['event_id'] for _,event in items if not any(row.get('event_id')==event['event_id'] for row in history)]
+   if not missing:break
+   if retry==11:raise AssertionError('Remote history did not become visible: '+repr(missing))
+   time.sleep(2)
+
   for row in history:
    if row.get('preview/key'):
     for name in ['board/input','board/pre_route']:
      if name in row:assert row[name]['path'] in files and row[name].get('sha256'),'Missing remote pre-route media'
   for _,event in items:
-   digest=hashlib.sha256(canon(event).encode()).hexdigest();matches=[x for x in history if x.get('event_id')==event['event_id']];assert matches and all(x['event_sha256']==digest for x in matches)
+   digest=hashlib.sha256(canon(event).encode()).hexdigest();matches=[x for x in history if x.get('event_id')==event['event_id']];assert matches and all(x['event_sha256']==digest for x in matches),('Conflicting remote event',event['event_id'])
    for row in matches:
     for name in ['board/attempted','board/best']:
      if name in row:assert row[name]['path'] in files and row[name].get('sha256')
