@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">Copper Scar — an improvement loop with a native referee</title>
+<desc id="desc">Placement proposals enter bounded routing, then native KiCad evaluation, then diagnostic writeback. Accepted and rejected evidence is saved. The real product board remains incomplete. The JITX fixture is a separate proof.</desc>
+<defs>
+ <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0a1724"/><stop offset="1" stop-color="#10121b"/></linearGradient>
+ <linearGradient id="cu"><stop stop-color="#fbaf77"/><stop offset="1" stop-color="#cf754a"/></linearGradient>
+ <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#efab79"/></marker>
+ <style>text{font-family:Arial,Helvetica,sans-serif;fill:#eef2f7}.eyebrow{font-size:17px;letter-spacing:3px;fill:#eeaa7e}.heading{font-size:25px;font-weight:bold}.body{font-size:20px;fill:#b9c6d4}.small{font-size:17px;fill:#94a8bd}.card{fill:#142333;stroke:#304559;stroke-width:1.5}.line{fill:none;stroke:#efab79;stroke-width:3;marker-end:url(#arrow)}</style>
+</defs>
+<rect width="1600" height="900" fill="url(#bg)"/>
+<g opacity=".11" stroke="#77a5b0" fill="none"><path d="M1240 0v60h120v70h240M1320 0v30h110v150h170M0 745h55v65h110v90M0 780h25v60h110v60"/><circle cx="1360" cy="130" r="7"/><circle cx="165" cy="810" r="7"/></g>
+<rect x="64" y="59" width="8" height="87" rx="4" fill="url(#cu)"/>
+<text x="96" y="80" class="eyebrow">COPPER SCAR / SYSTEM ARCHITECTURE</text>
+<text x="94" y="137" font-size="44" font-weight="bold">An improvement loop with a native referee.</text>
+<text x="96" y="181" class="body">Propose → realize → evaluate → remember. Preserve the evidence behind every decision.</text>
+
+<rect x="64" y="240" width="335" height="236" rx="18" class="card"/>
+<text x="89" y="278" class="eyebrow">01 / OUTER LOOP</text><text x="89" y="322" class="heading">Placement proposal</text>
+<text x="89" y="363" class="body">Exact parent + component poses</text><text x="89" y="397" class="body">Connected neighborhood changes</text><text x="89" y="441" class="small">Proxy ranking proposes; CAD decides.</text>
+<path d="M403 357h30" class="line"/>
+
+<rect x="441" y="240" width="335" height="236" rx="18" class="card"/>
+<text x="466" y="278" class="eyebrow">02 / INNER LOOP</text><text x="466" y="322" class="heading">Bounded realization</text>
+<text x="466" y="363" class="body">Routing / repair effort per pose</text><text x="466" y="397" class="body">Native board export + tool logs</text><text x="466" y="441" class="small">Timeout is not infeasibility.</text>
+<path d="M780 357h30" class="line"/>
+
+<rect x="818" y="240" width="335" height="236" rx="18" class="card"/>
+<text x="843" y="278" class="eyebrow">03 / INDEPENDENT CHECK</text><text x="843" y="322" class="heading">Native KiCad evaluation</text>
+<text x="843" y="363" class="body">Opens / errors / warnings</text><text x="843" y="397" class="body">Identity + constraint preservation</text><text x="843" y="441" class="small">Evaluate the saved CAD bytes.</text>
+<path d="M1157 357h30" class="line"/>
+
+<rect x="1195" y="240" width="341" height="236" rx="18" class="card"/>
+<text x="1220" y="278" class="eyebrow">04 / DECISION + MEMORY</text><text x="1220" y="322" class="heading">Write a scar</text>
+<text x="1220" y="363" class="body">Retain, reject, or record failure</text><text x="1220" y="397" class="body">Specific diagnostics → next action</text><text x="1220" y="441" class="small">A failed attempt remains evidence.</text>
+<path d="M1364 482v50H230v-49" class="line"/>
+<rect x="564" y="514" width="472" height="36" rx="18" fill="#101b28"/><text x="800" y="539" text-anchor="middle" font-size="19" fill="#efab79">Diagnostic writeback shapes the next proposal</text>
+
+<rect x="64" y="593" width="1472" height="104" rx="15" fill="#162b36" stroke="#335461"/>
+<text x="89" y="632" class="heading">Evidence plane</text><text x="320" y="632" class="body">Parent hash · exact board · native report · decision · matching image</text>
+<text x="89" y="671" class="small">Local replay works offline. W&amp;B / Weave references appear only where recorded upload/readback evidence exists.</text>
+
+<rect x="64" y="741" width="714" height="95" rx="14" fill="#32251e" stroke="#785337"/>
+<circle cx="92" cy="773" r="6" fill="#efab79"/><text x="110" y="780" font-size="22" font-weight="bold">Real PCBGolf board: incomplete</text>
+<text x="89" y="814" class="small">Routing progress ≠ placement optimization ≠ product qualification.</text>
+<rect x="802" y="741" width="734" height="95" rx="14" fill="#172a2a" stroke="#355c58"/>
+<circle cx="830" cy="773" r="6" fill="#7bd6bc"/><text x="848" y="780" font-size="22" font-weight="bold">JITX fixture: separate bounded integration proof</text>
+<text x="827" y="814" class="small">Explicit via / Route proposals; does not qualify the original board.</text>
+</svg>
