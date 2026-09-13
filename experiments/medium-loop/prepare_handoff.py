@@ -4,7 +4,7 @@ import argparse,hashlib,json,shutil,subprocess,sys
 import sexpdata as sx
 from campaign import command,KIPY,KICAD,ROOT,write,sha,now
 from audit import nodes,first,audit
-ap=argparse.ArgumentParser();ap.add_argument('base',type=Path);ap.add_argument('source',type=Path);a=ap.parse_args();base=a.base.resolve();src=a.source.resolve();parent=base/'relay-group-01';out=base/'accepted-handoff';out.mkdir();assert json.loads((parent/'evaluation.json').read_text())['accepted']
+ap=argparse.ArgumentParser();ap.add_argument('base',type=Path);ap.add_argument('source',type=Path);ap.add_argument('--parent',default='relay-group-01');ap.add_argument('--output',default='accepted-handoff');a=ap.parse_args();base=a.base.resolve();src=a.source.resolve();parent=base/a.parent;out=base/a.output;out.mkdir();assert json.loads((parent/'evaluation.json').read_text())['accepted']
 for filename in ['pcbgolf.kicad_pcb','pcbgolf.kicad_pro','pcbgolf.kicad_sch','pcbgolf.kicad_sym','sym-lib-table','fp-lib-table'] :shutil.copy2(parent/filename,out/filename)
 shutil.copytree(parent/'pcbgolf.pretty',out/'pcbgolf.pretty');shutil.copy2(base/'input/circuit.json',out/'circuit.json');(out/'models').mkdir();shutil.copy2(ROOT/'experiments/medium-loop/assets/M20-9980446-nominal.step',out/'models')
 p=out/'pcbgolf.kicad_pcb';d=sx.loads(p.read_text());model=sx.loads('(model "${KIPRJMOD}/models/M20-9980446-nominal.step" (offset (xyz 0 0 0)) (scale (xyz 1 1 1)) (rotate (xyz 0 0 0)))');coverage=[]
