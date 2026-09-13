@@ -11,7 +11,11 @@ for r in d['history']:
  assert sha(board)==r['board_sha256']==e['files']['pcbgolf.kicad_pcb'],r['id']
  assert [r[k] for k in ['opens','errors','warnings']]==[e[k] for k in ['unconnected','errors','warnings']],r['id']
  assert (root/r['receipt']).is_file()
- if r.get('image'): assert (root/r['image']).is_file()
+ if r.get('image'):
+  assert (root/r['image']).is_file()
+  receipt=(root/r['image']).parent/'render-receipt.json'
+  if receipt.exists():
+   rendered=json.loads(receipt.read_text()); assert rendered['board_sha256']==r['board_sha256']; assert rendered['image_sha256']==sha(root/r['image'])
  checked+=1
 for f in ['index.html','data.js','docs/3-minute-demo-script.md','docs/submission-draft.md','docs/architecture.svg','docs/copperhead-placement-results.md','docs/jitx-topology-capture-integration-report.md','jitx/index.html']:
  assert (root/f).is_file(),f

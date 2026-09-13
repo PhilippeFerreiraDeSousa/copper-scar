@@ -29,20 +29,24 @@ def main():
   dest=out/'evidence'/name; dest.mkdir(parents=True,exist_ok=True)
   write(dest/'evaluation.json',e)
   # Keep exact action, parent, decision and source fingerprints; omit bulky command logs.
-  receipt={k:d[k] for k in ['attempt','policy','started_at','finished_at','status','input','candidate','action','action_level','comparison_kind','incumbent_before','incumbent_after','became_incumbent','constraint_scope','routing_scope','classification','tool_source_hashes'] if k in d}
+  receipt={k:d[k] for k in ['attempt','policy','started_at','finished_at','status','input','candidate','action','action_level','comparison_kind','incumbent_before','incumbent_after','became_incumbent','constraint_scope','routing_scope','classification','diagnostic_improved','tool_source_hashes'] if k in d}
   write(dest/'attempt.json',receipt)
   shutil.copy2(board,dest/board.name)
   img=None
-  if a.kicad and (not svg.exists() or a.rerender):
+  render_receipt=dest/'render-receipt.json'
+  if render_receipt.exists() and (dest/'board.svg').exists():
+   prior=json.loads(render_receipt.read_text())
+   if prior.get('board_sha256')==expected and prior.get('image_sha256')==sha(dest/'board.svg'): img=f'evidence/{name}/board.svg'
+  if a.kicad and ((not svg.exists() and not img) or a.rerender):
    subprocess.run([str(a.kicad),'pcb','export','svg','--layers','F.Cu,B.Cu,F.SilkS,Edge.Cuts','--mode-single','--page-size-mode','2','--exclude-drawing-sheet','-o',str(dest/'board.svg'),str(dest/board.name)],check=True,capture_output=True)
    img=f'evidence/{name}/board.svg'
    write(dest/'render-receipt.json',dict(board_sha256=expected,image_sha256=sha(dest/'board.svg'),method='kicad-cli pcb export svg; F.Cu,B.Cu,F.SilkS,Edge.Cuts; page-size-mode 2',source='packaged board bytes',note='Internal copper omitted in presentation view'))
-  if svg.exists() and not a.rerender: shutil.copy2(svg,dest/'board.svg'); img=f'evidence/{name}/board.svg'
+  if svg.exists() and not img: shutil.copy2(svg,dest/'board.svg'); img=f'evidence/{name}/board.svg'
   inc=d.get('incumbent_after') or {}; priority=inc.get('priority') or []
   failed=d.get('status')!='completed'
   if not failed and e.get('invariants_ok') and e.get('errors')==0 and e.get('unconnected') is not None:
    best_observed=min(best_observed if best_observed is not None else e['unconnected'],e['unconnected'])
-  history.append(dict(id=name,time=d['finished_at'],kind=d.get('action_level','historical action'),action=d.get('action',{}).get('kind','unknown'),status=d.get('status'),failed=failed,classification=d.get('classification'),opens=e.get('unconnected'),errors=e.get('errors'),warnings=e.get('warnings'),valid=e.get('validity_gate'),invariants=e.get('invariants_ok'),retained=d.get('became_incumbent',False),best=best_observed,retained_best=priority[5] if len(priority)>5 else None,image=img,board_sha256=expected,evaluation=f'evidence/{name}/evaluation.json',receipt=f'evidence/{name}/attempt.json',board=f'evidence/{name}/pcbgolf.kicad_pcb',reason=d.get('action',{}).get('reason',''),hypothesis=d.get('action',{}).get('hypothesis',''),comparison=d.get('comparison_kind',''),source=str(path)))
+  history.append(dict(id=name,time=d['finished_at'],kind=d.get('action_level','historical action'),action=d.get('action',{}).get('kind','unknown'),status=d.get('status'),failed=failed,classification=d.get('classification'),opens=e.get('unconnected'),errors=e.get('errors'),warnings=e.get('warnings'),valid=e.get('validity_gate'),invariants=e.get('invariants_ok'),retained=d.get('became_incumbent'),best=best_observed,retained_best=priority[5] if len(priority)>5 else None,image=img,board_sha256=expected,evaluation=f'evidence/{name}/evaluation.json',receipt=f'evidence/{name}/attempt.json',board=f'evidence/{name}/pcbgolf.kicad_pcb',reason=d.get('action',{}).get('reason',''),hypothesis=d.get('action',{}).get('hypothesis',''),comparison=d.get('comparison_kind',''),source=str(path)))
  data=dict(schema=1,built_at=datetime.datetime.now(datetime.timezone.utc).isoformat(),history=history,excluded=skipped,disclosure='Completed native snapshots. Opens are missing endpoint pairs, not a score. Inner routing is not placement optimization. No qualified product board.',source=str(a.source))
  write(out/'data.json',data); (out/'data.js').write_text('window.DEMO = '+json.dumps(data)+';\n')
  docs=Path(__file__).parent/'docs'
