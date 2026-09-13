@@ -4,6 +4,7 @@ from pathlib import Path
 from urllib.parse import unquote,urlparse,parse_qs
 from datetime import datetime,timezone
 import argparse,json,mimetypes,os,statistics,time
+from .records import load_record
 ROOT=Path(__file__).resolve().parents[3];LOCAL=ROOT/'.local/copperhead'
 def read(p,default=None):
  try:return json.loads(p.read_text())
@@ -12,7 +13,7 @@ def read(p,default=None):
 def state():
  rows=[]
  for p in sorted((LOCAL/'runs').glob('stage1-*/attempt.json')):
-  r=read(p)
+  r=load_record(p)
   if not r:continue
   row={k:r.get(k) for k in ['attempt','status','stage','started_at','finished_at','action','candidate','error','stop_reason','diagnostic_improved','metric_version','constraint_scope','diagnostic_priority_before','diagnostic_priority_after','placement_delta','classification','became_incumbent','incumbent_before','incumbent_after','comparison_kind','routing_scope','action_level','policy']}
   row['mtime']=p.stat().st_mtime;row['record']=str(p.relative_to(LOCAL));row['running_process']=False

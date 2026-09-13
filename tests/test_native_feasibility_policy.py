@@ -47,6 +47,23 @@ def test_identical_design_cannot_promote_on_airwire_measurement_variation():
     assert classify_action(before,after)==(True,True,False,'measurement_variation')
     assert classify_action(before,dict(after,design_sha256='changed'))==(False,True,True,'improvement')
 
+def test_stale_incumbent_airwire_cannot_promote_fresh_parent_regression():
+    from copper_scar.tools.copperhead.stage1 import should_retain, priority
+    from copper_scar.tools.copperhead.metrics import measure
+    cost=measure(dict(violations=[],schematic_parity=[],unconnected_items=[]))
+    cost.update(missing_endpoint_pairs=54,total_missing_endpoint_distance_mm=1026.721)
+    stored=dict(design_sha256='parent',invariants_ok=True,search_cost=cost)
+    fresh=dict(stored,search_cost=dict(cost,total_missing_endpoint_distance_mm=1023.898))
+    after=dict(stored,design_sha256='trial',search_cost=dict(cost,total_missing_endpoint_distance_mm=1026.044))
+    incumbent={'priority':priority(stored)}
+    assert priority(after)<tuple(incumbent['priority'])
+    assert not should_retain(fresh,after,incumbent)
+    improved=dict(after,search_cost=dict(cost,total_missing_endpoint_distance_mm=1020))
+    stale_low=dict(stored,search_cost=dict(cost,total_missing_endpoint_distance_mm=1000))
+    matched={'priority':priority(stale_low),'design_sha256':'parent'}
+    assert should_retain(fresh,improved,matched)
+    assert not should_retain(fresh,improved,{**matched,'design_sha256':'different incumbent'})
+
 def test_placement_change_resets_stagnation_and_tried_nets():
     old=[dict(feedback('route_continue',False),geometry_scope='old')]*2
     old.append(dict(feedback('krt_reconnect',False),geometry_scope='old',action_parameters={'net':'BTN'}))

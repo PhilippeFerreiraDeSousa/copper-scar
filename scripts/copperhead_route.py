@@ -11,3 +11,6 @@ with (f/'router.log').open('w') as log:
 result.update(elapsed_seconds=time.monotonic()-t,session_exists=(f/'pcbgolf.ses').exists());(f/'execution.json').write_text(json.dumps(result,indent=2));
 from copperhead_route_evidence import evidence
 result['coverage']=evidence(f);(f/'routing-coverage.json').write_text(json.dumps(result['coverage'],indent=2));(f/'execution.json').write_text(json.dumps(result,indent=2));print(json.dumps(result))
+if result['timeout']:raise SystemExit(124)
+if result['returncode']!=0:raise SystemExit(result['returncode'] or 1)
+if not result['session_exists']:raise SystemExit('Backend returned without an importable session')

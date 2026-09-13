@@ -2,6 +2,7 @@
 import json,hashlib,shutil,subprocess,argparse
 from pathlib import Path
 from datetime import datetime,timezone
+from copper_scar.tools.copperhead.records import load_record
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -13,7 +14,7 @@ cutoff=datetime.fromisoformat(snapshot['cutoff']) if snapshot else datetime.now(
 kicad='/Users/philippe/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli'
 records=[]
 for p in ([] if snapshot else sorted((LOCAL/'runs').glob('stage1-*/attempt.json'))):
- a=json.loads(p.read_text())
+ a=load_record(p)
  if a.get('status') in ('completed','failed') and a.get('before'):
   records.append((p,a))
 if snapshot:records=[(Path(x['path']),x['record']) for x in snapshot['records']]

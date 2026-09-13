@@ -22,6 +22,7 @@ from copper_scar.real import design_files, design_digest, board_inventory, nativ
 from copper_scar.loop.weave_trace import WeaveTracer
 from .metrics import measure, ordering, VERSION
 from .effects import compare as compare_effects, missing_by_net, geometry_scope
+from .manufacturing import findings as manufacturing_findings
 
 ROOT = Path(__file__).resolve().parents[3]
 LOCAL = ROOT / '.local/copperhead'
@@ -87,6 +88,13 @@ def classify_action(initial, after):
            else 'no_progress' if priority(after)==priority(initial) else 'regression')
     return same,decreased,improved,label
 
+def should_retain(initial, after, incumbent):
+    # A stale incumbent tie-break must not override the fresh same-parent result.
+    incumbent_priority=(priority(initial) if incumbent and incumbent.get('design_sha256')==initial['design_sha256']
+                        else tuple(incumbent['priority']) if incumbent else None)
+    return (classify_action(initial,after)[2] and after['invariants_ok']
+            and (incumbent_priority is None or priority(after)<incumbent_priority))
+
 def choose_action(result, feedback, scope):
     all_feedback=feedback
     if result.get('geometry_scope'):
@@ -135,6 +143,9 @@ def evaluate(candidate, run, label, frozen_support):
     items=raw['violations']+raw['schematic_parity'];counts=dict(collections.Counter(v['type'] for v in items))
     inventory=board_inventory(candidate/'pcbgolf.kicad_pcb')
     result=dict(geometry_scope=geometry_scope(candidate/'pcbgolf.kicad_pcb'),native_kicad_version=raw.get('kicad_version'),search_cost=measure(raw),design_sha256=design_digest(before),invariants_ok=invariant,counts=counts,unconnected=len(raw['unconnected_items']),errors=sum(v['severity']=='error' for v in items),warnings=sum(v['severity']=='warning' for v in items),erc_ok=erc['ok'],native_cad_ok=erc['ok'] and drc['ok'] and invariant,missing_model_assignments=inventory['missing_models'],engineering_review='unknown',hardware_proof='unknown',assembly_completeness='unknown',validity_gate=False,stage2_enabled=False,official_score=None,report=str(d/'drc.json'),files=before,violations=items+raw['unconnected_items'])
+    manufacturing=manufacturing_findings(raw)
+    result.update(manufacturing_findings=manufacturing,manufacturing_findings_count=len(manufacturing),manufacturing_rules_clear=not manufacturing)
+    result['native_cad_ok']=result['native_cad_ok'] and not manufacturing
     # This implementation has no authority to invent engineering acceptance.
     write(d/'evaluation.json',result)
     return result
@@ -200,6 +211,9 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                 initial=evaluate(run/'input',run,'before',frozen);span.set_output({k:v for k,v in initial.items() if k not in ['files','violations']})
             if not state.get('best_feasibility') or state['best_feasibility'].get('scope')!=scope:
                 state['best_feasibility']=dict(candidate=str(current),priority=priority(initial),scope=scope,metric_version=VERSION,design_sha256=initial['design_sha256']) if initial['invariants_ok'] else None
+            if initial['invariants_ok'] and state.get('best_feasibility',{}).get('design_sha256')==initial['design_sha256']:
+                record['incumbent_measurement_refresh']=dict(stored_priority=state['best_feasibility']['priority'],fresh_priority=priority(initial),design_sha256=initial['design_sha256'])
+                state['best_feasibility']=dict(state['best_feasibility'],priority=priority(initial))
             record['incumbent_before']=state.get('best_feasibility')
             if not legacy_inner and (not initial['invariants_ok'] or initial['errors']):raise ValueError('Whole-board routing requires preserved native invariants and no physical errors')
             action=validate_proposal(proposal,initial) if proposal else choose_action(initial,feedback,scope) if legacy_inner else dict(kind='initial_route',reason='Initial whole-board autoroute from preserved starting placement',hypothesis='Attempt all remaining connections with legal multilayer vias and explicit effort limit',feedback_used=[]);record.update(action=action,before=initial,metric_version=VERSION)
@@ -242,6 +256,10 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                     if name in ('route','krt_reconnect','ground_escape'):
                         record['inner_effort'].append(dict(command=name,elapsed_seconds=item['elapsed_seconds'],returncode=item['returncode'],timed_out=item.get('timed_out',False)))
                     if item['returncode']!=0:raise RuntimeError(name+' failed; see command record')
+                    if name=='route':
+                        execution=json.loads((candidate/'execution.json').read_text())
+                        if execution.get('returncode')!=0 or execution.get('timeout') or not execution.get('session_exists'):
+                            raise RuntimeError('Router backend failed or exceeded external timeout; preserve partial session without promotion')
                     if name=='fanout_import':
                         record['fanout_result']=json.loads((candidate/'terminal-fanout/result.json').read_text())
                         snapshot=run/'fanout-project';copy_project(candidate,snapshot)
@@ -276,7 +294,7 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
             if (candidate/'krt-provenance.json').exists():record['backend_provenance']=dict(path=str(candidate/'krt-provenance.json'),sha256=hashlib.sha256((candidate/'krt-provenance.json').read_bytes()).hexdigest())
             record.update(status='completed',after=after,diagnostic_improved=improved,diagnostic_priority_before=priority(initial),diagnostic_priority_after=priority(after),official_score=None,validity_gate=False,finished_at=now())
             oldbest=state.get('best_feasibility')
-            if not same_design and after['invariants_ok'] and (oldbest is None or priority(after)<tuple(oldbest['priority'])):
+            if should_retain(initial,after,oldbest):
                 state['best_feasibility']=dict(candidate=str(candidate),priority=priority(after),attempt=uid,scope=scope,metric_version=VERSION,design_sha256=after['design_sha256'])
                 record['became_incumbent']=True
             record['incumbent_after']=state.get('best_feasibility')
@@ -296,6 +314,14 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
             state['exploration_used']=explore
             current=candidate if explore else Path(state['best_feasibility']['candidate']) if state.get('best_feasibility') else current
         except Exception as exc:
+            if record.get('status')=='completed':
+                # Native evaluation/selection has finished. A viewer, publication,
+                # or delivery-budget failure must not rewrite that native result.
+                record['postprocessing_error']=repr(exc)
+                write(run/'attempt.json',record)
+                if str(run) not in state['attempts']:state['attempts'].append(str(run))
+                state['stop_reason']='native evaluation completed; postprocessing needs retry'
+                break
             # A producer failure still gets a fresh inspection when budget permits.
             # Failed actions never promote, even if partial copper looks better.
             record.update(status='failed',error=repr(exc))
