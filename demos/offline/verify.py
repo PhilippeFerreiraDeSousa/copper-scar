@@ -30,6 +30,10 @@ for r in d['history']:
   assert [historical['before'][k] for k in ['unconnected','errors','warnings']]==[53,0,19] and [r[k] for k in ['opens','errors','warnings']]==[53,0,18]
   remote=json.loads((original.parent/'observability-verified.json').read_text());row=next(row for run in remote['runs'] for row in run['rows'] if row['attempt_id']==r['id'])
   assert row['board_sha256']==r['board_sha256'] and [row[k] for k in ['missing_pairs','physical_errors','warnings']]==[r[k] for k in ['opens','errors','warnings']] and row['media_verified'] and row['weave_verified']
+ if r.get('scope_correction'):
+  original=root/r['original_attempt'];historical=json.loads(original.read_text());scope=json.loads((root/r['scope_correction']).read_text())
+  assert sha(original)==r['original_attempt_sha256'] and scope['original_proposal_preserved']
+  assert scope['historical_proposal_nets']==historical['action']['nets'] and scope['actual_terminal_nets']==['GND','CAN0_H','CH4_D_P']
  if r.get('image'):
   assert (root/r['image']).is_file()
   receipt=(root/r['image']).parent/'render-receipt.json'
@@ -38,6 +42,17 @@ for r in d['history']:
  checked+=1
 for f in ['index.html','data.js','docs/3-minute-demo-script.md','docs/submission-draft.md','docs/architecture.svg','docs/copperhead-placement-results.md','docs/jitx-topology-capture-integration-report.md','jitx/index.html']:
  assert (root/f).is_file(),f
+selector=root/'selector-audit/selector-feedback-audit.json'
+if selector.exists():
+ audit=json.loads(selector.read_text())
+ for path,digest in audit['hashes'].items():assert sha(selector.parent/'source'/path)==digest
+ assert audit['without_R71']['eligible'] is True and audit['with_R71']['eligible'] is False
+ assert abs(audit['with_R71']['score']-audit['without_R71']['score']-100000)<1e-6
+ assert all(row['with_R71']==row['without_R71'] for row in audit['live_checks'])
+via=root/'via-gain/summary.json'
+if via.exists():
+ from package_via_gain import verify as verify_via
+ v=verify_via(via.parent);assert v['final_board_sha256'] in {r.get('board_sha256') for r in d['history']}
 placement=root/'placement-gain/summary.json'
 if placement.exists():
  p=json.loads(placement.read_text());assert p['final_board_sha256'] in {r.get('board_sha256') for r in d['history']}
@@ -63,7 +78,7 @@ if feedback.exists():
  for key in ['prior_id','following_id']:assert (root/'evidence'/chain[key]/'evaluation.json').exists()
 for f in ['copper-scar-demo-normal.mp4','copper-scar-demo-5x.mp4']:
  m=json.loads((root/'video-manifest.json').read_text());assert sha(root/f)==m['video_sha256'][f]
-report=dict(selection_confirmations_verified=sum(bool(r.get('selection_confirmation')) for r in d['history']),placement_pose_graph_verified=placement.exists(),retention_corrections_verified=sum(bool(r.get('retention_correction')) for r in d['history']),final_topology_graph_verified=gain.exists(),additive_diagnostic_pairs_verified=32 if diagnostics.exists() else None,board_evaluation_joins_verified=checked,completed_records=len(d['history']),excluded=d['excluded'],native_checks='Stored native evaluation reports; packaging does not rerun DRC.',status='pass')
+report=dict(selector_private_replay_verified=selector.exists(),new_via_independent_proof_verified=via.exists(),selection_confirmations_verified=sum(bool(r.get('selection_confirmation')) for r in d['history']),placement_pose_graph_verified=placement.exists(),retention_corrections_verified=sum(bool(r.get('retention_correction')) for r in d['history']),final_topology_graph_verified=gain.exists(),additive_diagnostic_pairs_verified=32 if diagnostics.exists() else None,board_evaluation_joins_verified=checked,completed_records=len(d['history']),excluded=d['excluded'],native_checks='Stored native evaluation reports; packaging does not rerun DRC.',status='pass')
 (root/'package-QA.json').write_text(json.dumps(report,indent=2)+'\n')
 files={str(f.relative_to(root)):sha(f) for f in sorted(root.rglob('*')) if f.is_file() and f != root/'SHA256SUMS.json'}
 (root/'SHA256SUMS.json').write_text(json.dumps(files,indent=2)+'\n');print(json.dumps(report))

@@ -43,6 +43,9 @@ def main():
   expected=e.get('files',{}).get('pcbgolf.kicad_pcb')
   if not board.exists() or not expected or sha(board)!=expected:
    skipped.append(dict(id=name,reason='Missing board or native evaluation hash mismatch')); continue
+  scope_path=path.parent/'terminal-scope-correction.json';scope_correction=json.loads(scope_path.read_text()) if scope_path.exists() else None
+  if scope_correction:
+   assert scope_correction['original_proposal_preserved'] and scope_correction['historical_proposal_nets']==d['action']['nets']
   dest=out/'evidence'/name; dest.mkdir(parents=True,exist_ok=True)
   write(dest/'evaluation.json',e)
   # Keep exact action, parent, decision and source fingerprints; omit bulky command logs.
@@ -50,6 +53,8 @@ def main():
   write(dest/'attempt.json',receipt)
   if correction:
    shutil.copy2(path,dest/'original-attempt.json');shutil.copy2(correction_path,dest/'retention-correction.json')
+  if scope_correction:
+   shutil.copy2(path,dest/'original-attempt.json');shutil.copy2(scope_path,dest/'terminal-scope-correction.json')
   if confirmation:
    shutil.copy2(path,dest/'original-attempt.json');shutil.copy2(correction_path,dest/'selection-confirmation.json')
    for filename in ['final-pad-partitions.json','via-consolidation-proposal.json']:shutil.copy2(path.parent/filename,dest/filename)
@@ -73,7 +78,7 @@ def main():
   failed=d.get('status')!='completed'
   if not failed and e.get('invariants_ok') and e.get('errors')==0 and e.get('unconnected') is not None:
    best_observed=min(best_observed if best_observed is not None else e['unconnected'],e['unconnected'])
-  history.append(dict(id=name,time=d['finished_at'],kind=d.get('action_level','historical action'),action=d.get('action',{}).get('kind','unknown'),status=d.get('status'),failed=failed,classification=d.get('classification'),opens=e.get('unconnected'),errors=e.get('errors'),warnings=e.get('warnings'),valid=e.get('validity_gate'),invariants=e.get('invariants_ok'),historical_retained=d.get('became_incumbent'),retained=False if correction else d.get('became_incumbent'),retention_correction=f'evidence/{name}/retention-correction.json' if correction else None,selection_confirmation=f'evidence/{name}/selection-confirmation.json' if confirmation else None,pad_partition_proof=f'evidence/{name}/final-pad-partitions.json' if confirmation else None,original_attempt=f'evidence/{name}/original-attempt.json' if correction or confirmation else None,original_attempt_sha256=sha(path) if correction or confirmation else None,best=best_observed,retained_best=priority[5] if len(priority)>5 else None,image=img,board_sha256=expected,evaluation=f'evidence/{name}/evaluation.json',receipt=f'evidence/{name}/attempt.json',board=f'evidence/{name}/pcbgolf.kicad_pcb',reason=d.get('action',{}).get('reason',''),hypothesis=d.get('action',{}).get('hypothesis',''),comparison=d.get('comparison_kind',''),source=str(path)))
+  history.append(dict(id=name,time=d['finished_at'],kind=d.get('action_level','historical action'),action=d.get('action',{}).get('kind','unknown'),status=d.get('status'),failed=failed,classification=d.get('classification'),opens=e.get('unconnected'),errors=e.get('errors'),warnings=e.get('warnings'),valid=e.get('validity_gate'),invariants=e.get('invariants_ok'),historical_retained=d.get('became_incumbent'),retained=False if correction else d.get('became_incumbent'),retention_correction=f'evidence/{name}/retention-correction.json' if correction else None,selection_confirmation=f'evidence/{name}/selection-confirmation.json' if confirmation else None,pad_partition_proof=f'evidence/{name}/final-pad-partitions.json' if confirmation else None,scope_correction=f'evidence/{name}/terminal-scope-correction.json' if scope_correction else None,original_attempt=f'evidence/{name}/original-attempt.json' if correction or confirmation or scope_correction else None,original_attempt_sha256=sha(path) if correction or confirmation or scope_correction else None,best=best_observed,retained_best=priority[5] if len(priority)>5 else None,image=img,board_sha256=expected,evaluation=f'evidence/{name}/evaluation.json',receipt=f'evidence/{name}/attempt.json',board=f'evidence/{name}/pcbgolf.kicad_pcb',reason=d.get('action',{}).get('reason',''),hypothesis=d.get('action',{}).get('hypothesis',''),comparison=d.get('comparison_kind',''),source=str(path)))
  data=dict(schema=1,built_at=datetime.datetime.now(datetime.timezone.utc).isoformat(),history=history,excluded=skipped,disclosure='Completed native snapshots. Opens are missing endpoint pairs, not a score. Inner routing is not placement optimization. No qualified product board.',source=str(a.source))
  write(out/'data.json',data); (out/'data.js').write_text('window.DEMO = '+json.dumps(data)+';\n')
  if a.feedback_chain:
@@ -85,6 +90,7 @@ def main():
   diagnostics_build(a.diagnostic_source,out)
  elif not (out/'diagnostics-data.js').exists(): (out/'diagnostics-data.js').write_text('window.DIAGNOSTICS=null;\n')
  if not (out/'gain-data.js').exists(): (out/'gain-data.js').write_text('window.GAIN=null;\n')
+ if not (out/'via-data.js').exists(): (out/'via-data.js').write_text('window.VIA=null;\n')
  if not (out/'placement-data.js').exists(): (out/'placement-data.js').write_text('window.PLACEMENT=null;\n')
  docs=Path(__file__).parent/'docs'
  if docs.exists(): shutil.copytree(docs,out/'docs',dirs_exist_ok=True)
