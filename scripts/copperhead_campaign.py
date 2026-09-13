@@ -112,6 +112,13 @@ def main():
             label=prefix+'-'+spec['id'];proposal=LOCAL/'proposals'/('campaign-'+label+'.json')
             if spec['kind'] in ('terminal_fanout','via_seed'):
                 action={**spec['action'],'parent_board_sha256':board_hash,'feedback_used':sorted(set(feedback_ids+spec['action']['feedback_used']))}
+                if spec.get('requires_successful_seed'):
+                    precedent=next((r for r in records if r['attempt']==spec['requires_successful_seed']),None)
+                    proof_path=LOCAL/'runs'/spec['requires_successful_seed']/'final-seed-connectivity.json'
+                    proof=json.loads(proof_path.read_text()) if proof_path.exists() else {}
+                    if not precedent or not precedent.get('became_incumbent') or precedent.get('after',{}).get('unconnected',99999)>=precedent.get('before',{}).get('unconnected',0) or not proof.get('all_seed_targets_connected') or proof.get('board_sha256')!=precedent['after']['files']['pcbgolf.kicad_pcb']:
+                        state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,reason='Required retained seed connection gain is not proved'));continue
+                    action['strategy_evidence']=dict(attempt=precedent['attempt'],before_opens=precedent['before']['unconnected'],after_opens=precedent['after']['unconnected'],target_attachment_proof=str(proof_path),board_sha256=proof['board_sha256'],rule='Expand the successfully realized explicit-seed strategy to currently isolated connector pads only after joint native geometry revalidation.')
                 if spec['kind']=='via_seed':
                     write(proposal,action);target_proof=work/(label+'-target-revalidation.json')
                     if run([KIPY,str(ROOT/'scripts/copperhead_seed_targets.py'),str(parent/'pcbgolf.kicad_pcb'),'--proposal',str(proposal),'--output',str(target_proof)],label+'-targets',60):
