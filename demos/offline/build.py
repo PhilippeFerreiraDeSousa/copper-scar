@@ -23,11 +23,20 @@ def main():
  for path,d in entries:
   if not d.get('finished_at'): continue
   e=d.get('after'); name=d['attempt']; candidate=Path(d.get('candidate',''))
-  correction=None; correction_path=path.parent/'retention-correction.json'
+  correction=None; confirmation=None; correction_path=path.parent/'retention-correction.json'
   if correction_path.exists() and name!='starting-six-layer-checkpoint':
    correction=json.loads(correction_path.read_text());assert correction['attempt']==name
-   assert correction['fresh_before']==d['diagnostic_priority_before'] and correction['after']==d['diagnostic_priority_after']
-   assert correction['fresh_before']<correction['after'] and correction['restored']['attempt']!=name
+   if correction.get('correction_kind')=='selection_basis_confirmation':
+    confirmation=correction;correction=None
+    assert confirmation['effective_retained'] is True and d['became_incumbent'] is True
+    decision=confirmation['selection_decision'];assert decision['eligible'] and all(decision['checks'].values())
+    proof=json.loads((path.parent/'final-pad-partitions.json').read_text())
+    assert proof['before']['board_sha256']==d['before']['files']['pcbgolf.kicad_pcb'] and proof['after']['board_sha256']==e['files']['pcbgolf.kicad_pcb']
+    assert {frozenset(x) for x in proof['before']['groups']}=={frozenset(x) for x in proof['after']['groups']}
+    assert proof['before']['project_sha256']==proof['after']['project_sha256']
+   else:
+    assert correction['fresh_before']==d['diagnostic_priority_before'] and correction['after']==d['diagnostic_priority_after']
+    assert correction['fresh_before']<correction['after'] and correction['restored']['attempt']!=name
   if not isinstance(e,dict):
    history.append(dict(id=name,time=d['finished_at'],kind=d.get('action_level','historical action'),action=d.get('action',{}).get('kind','unknown'),status=d.get('status'),failed=True,note=d.get('error','No completed native after-evaluation'),best=None)); continue
   board=candidate/'pcbgolf.kicad_pcb'; svg=candidate/'board.svg'
@@ -41,6 +50,14 @@ def main():
   write(dest/'attempt.json',receipt)
   if correction:
    shutil.copy2(path,dest/'original-attempt.json');shutil.copy2(correction_path,dest/'retention-correction.json')
+  if confirmation:
+   shutil.copy2(path,dest/'original-attempt.json');shutil.copy2(correction_path,dest/'selection-confirmation.json')
+   for filename in ['final-pad-partitions.json','via-consolidation-proposal.json']:shutil.copy2(path.parent/filename,dest/filename)
+   remote_path=a.source/'observability/verified.json';remote=json.loads(remote_path.read_text())
+   row=next(row for run in remote['runs'] for row in run['rows'] if row['attempt_id']==name)
+   assert row['board_sha256']==expected and [row[k] for k in ['missing_pairs','physical_errors','warnings']]==[e[k] for k in ['unconnected','errors','warnings']]
+   assert row['media_verified'] and row['weave_verified']
+   shutil.copy2(remote_path,dest/'observability-verified.json')
   shutil.copy2(board,dest/board.name)
   img=None
   render_receipt=dest/'render-receipt.json'
@@ -56,7 +73,7 @@ def main():
   failed=d.get('status')!='completed'
   if not failed and e.get('invariants_ok') and e.get('errors')==0 and e.get('unconnected') is not None:
    best_observed=min(best_observed if best_observed is not None else e['unconnected'],e['unconnected'])
-  history.append(dict(id=name,time=d['finished_at'],kind=d.get('action_level','historical action'),action=d.get('action',{}).get('kind','unknown'),status=d.get('status'),failed=failed,classification=d.get('classification'),opens=e.get('unconnected'),errors=e.get('errors'),warnings=e.get('warnings'),valid=e.get('validity_gate'),invariants=e.get('invariants_ok'),historical_retained=d.get('became_incumbent'),retained=False if correction else d.get('became_incumbent'),retention_correction=f'evidence/{name}/retention-correction.json' if correction else None,original_attempt=f'evidence/{name}/original-attempt.json' if correction else None,original_attempt_sha256=sha(path) if correction else None,best=best_observed,retained_best=priority[5] if len(priority)>5 else None,image=img,board_sha256=expected,evaluation=f'evidence/{name}/evaluation.json',receipt=f'evidence/{name}/attempt.json',board=f'evidence/{name}/pcbgolf.kicad_pcb',reason=d.get('action',{}).get('reason',''),hypothesis=d.get('action',{}).get('hypothesis',''),comparison=d.get('comparison_kind',''),source=str(path)))
+  history.append(dict(id=name,time=d['finished_at'],kind=d.get('action_level','historical action'),action=d.get('action',{}).get('kind','unknown'),status=d.get('status'),failed=failed,classification=d.get('classification'),opens=e.get('unconnected'),errors=e.get('errors'),warnings=e.get('warnings'),valid=e.get('validity_gate'),invariants=e.get('invariants_ok'),historical_retained=d.get('became_incumbent'),retained=False if correction else d.get('became_incumbent'),retention_correction=f'evidence/{name}/retention-correction.json' if correction else None,selection_confirmation=f'evidence/{name}/selection-confirmation.json' if confirmation else None,pad_partition_proof=f'evidence/{name}/final-pad-partitions.json' if confirmation else None,original_attempt=f'evidence/{name}/original-attempt.json' if correction or confirmation else None,original_attempt_sha256=sha(path) if correction or confirmation else None,best=best_observed,retained_best=priority[5] if len(priority)>5 else None,image=img,board_sha256=expected,evaluation=f'evidence/{name}/evaluation.json',receipt=f'evidence/{name}/attempt.json',board=f'evidence/{name}/pcbgolf.kicad_pcb',reason=d.get('action',{}).get('reason',''),hypothesis=d.get('action',{}).get('hypothesis',''),comparison=d.get('comparison_kind',''),source=str(path)))
  data=dict(schema=1,built_at=datetime.datetime.now(datetime.timezone.utc).isoformat(),history=history,excluded=skipped,disclosure='Completed native snapshots. Opens are missing endpoint pairs, not a score. Inner routing is not placement optimization. No qualified product board.',source=str(a.source))
  write(out/'data.json',data); (out/'data.js').write_text('window.DEMO = '+json.dumps(data)+';\n')
  if a.feedback_chain:
