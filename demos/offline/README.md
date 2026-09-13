@@ -26,3 +26,9 @@ The builder reads completed attempts, verifies native evaluation board hashes, a
 - `docs/submission-draft.md`: primary-source requirements and unknown form fields.
 
 The full historical trajectory is compressed into the video’s 0:50–1:20 chapter; the dashboard preserves every attempt for inspection. The later placement chapter revisits historical rejected trials. Video timing is an editorial choice, not claimed routing performance.
+
+## Refresh and freeze
+
+The optional `--feedback-chain /path/to/copperhead-feedback-chain` argument on `build.py` verifies and packages the concrete native feedback → changed proposal → rejected result chain. Automatic exclusion of a failed pose is a separate mechanism from circuit reasoning; neither implies a retained placement win.
+
+After rebuilding, regenerate the normal and accelerated videos with `render_video.py PACKAGE`, run `verify_browser.py PACKAGE`, then `freeze.py PACKAGE` to verify source joins, record the current source commit and atomically replace the portable ZIP. Browser/video tools need Playwright, Chrome/Chromium and FFmpeg; presentation playback does not. The freeze rejects stale browser coverage or a video missing current attempt IDs. Existing ZIP stays intact until the replacement passes integrity checks.

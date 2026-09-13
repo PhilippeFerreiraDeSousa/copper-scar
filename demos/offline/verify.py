@@ -19,6 +19,11 @@ for r in d['history']:
  checked+=1
 for f in ['index.html','data.js','docs/3-minute-demo-script.md','docs/submission-draft.md','docs/architecture.svg','docs/copperhead-placement-results.md','docs/jitx-topology-capture-integration-report.md','jitx/index.html']:
  assert (root/f).is_file(),f
+feedback=root/'feedback-chain/portable.json'
+if feedback.exists():
+ chain=json.loads(feedback.read_text())
+ for ref in chain['files'].values():assert sha(root/ref['path'])==ref['sha256']
+ for key in ['prior_id','following_id']:assert (root/'evidence'/chain[key]/'evaluation.json').exists()
 for f in ['copper-scar-demo-normal.mp4','copper-scar-demo-5x.mp4']:
  m=json.loads((root/'video-manifest.json').read_text());assert sha(root/f)==m['video_sha256'][f]
 report=dict(board_evaluation_joins_verified=checked,completed_records=len(d['history']),excluded=d['excluded'],native_checks='Stored native evaluation reports; packaging does not rerun DRC.',status='pass')

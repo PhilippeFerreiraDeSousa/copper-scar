@@ -6,7 +6,7 @@ from pathlib import Path
 def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
 def write(p,d): p.write_text(json.dumps(d,indent=2)+'\n')
 def main():
- p=argparse.ArgumentParser(); p.add_argument('--kicad',type=Path); p.add_argument('--rerender',action='store_true'); p.add_argument('--source',type=Path,required=True); p.add_argument('--output',type=Path,required=True); a=p.parse_args()
+ p=argparse.ArgumentParser(); p.add_argument('--kicad',type=Path); p.add_argument('--rerender',action='store_true'); p.add_argument('--feedback-chain',type=Path); p.add_argument('--source',type=Path,required=True); p.add_argument('--output',type=Path,required=True); a=p.parse_args()
  out=a.output.resolve(); out.mkdir(parents=True,exist_ok=True)
  for f in ['index.html','README.md','serve.py']:
   src=Path(__file__).parent/f
@@ -49,6 +49,10 @@ def main():
   history.append(dict(id=name,time=d['finished_at'],kind=d.get('action_level','historical action'),action=d.get('action',{}).get('kind','unknown'),status=d.get('status'),failed=failed,classification=d.get('classification'),opens=e.get('unconnected'),errors=e.get('errors'),warnings=e.get('warnings'),valid=e.get('validity_gate'),invariants=e.get('invariants_ok'),retained=d.get('became_incumbent'),best=best_observed,retained_best=priority[5] if len(priority)>5 else None,image=img,board_sha256=expected,evaluation=f'evidence/{name}/evaluation.json',receipt=f'evidence/{name}/attempt.json',board=f'evidence/{name}/pcbgolf.kicad_pcb',reason=d.get('action',{}).get('reason',''),hypothesis=d.get('action',{}).get('hypothesis',''),comparison=d.get('comparison_kind',''),source=str(path)))
  data=dict(schema=1,built_at=datetime.datetime.now(datetime.timezone.utc).isoformat(),history=history,excluded=skipped,disclosure='Completed native snapshots. Opens are missing endpoint pairs, not a score. Inner routing is not placement optimization. No qualified product board.',source=str(a.source))
  write(out/'data.json',data); (out/'data.js').write_text('window.DEMO = '+json.dumps(data)+';\n')
+ if a.feedback_chain:
+  from package_feedback import build as feedback_build
+  feedback_build(a.feedback_chain,out)
+ elif not (out/'feedback-data.js').exists(): (out/'feedback-data.js').write_text('window.FEEDBACK=null;\n')
  docs=Path(__file__).parent/'docs'
  if docs.exists(): shutil.copytree(docs,out/'docs',dirs_exist_ok=True)
  hashes={str(f.relative_to(out)):sha(f) for f in sorted(out.rglob('*')) if f.is_file() and f != out/'SHA256SUMS.json'}
