@@ -6,11 +6,33 @@ from audit import audit,inventory,nodes,first
 from campaign import command,KIPY,KICAD,ROOT,now,write
 from copper_scar.real import step_volume,board_inventory
 
+def assembly_clearance(f):
+    # Conservative box-intersection screen of every populated model, independent
+    # of missing KiCad courtyard settings. A box overlap rejects, never proves collision.
+    boxes={}
+    d=sx.loads((f/'pcbgolf.kicad_pcb').read_text())
+    for fp in nodes(d,'footprint'):
+        ref=next(v[2] for v in nodes(fp,'property') if v[1]=='Reference');at=first(fp,'at');fx,fy=at[1:3]
+        assert len(at)<4 or at[3]==0,'Rotation extension requires independent transform qualification'
+        model=first(fp,'model');off=first(first(model,'offset'),'xyz')[1:];scale=first(first(model,'scale'),'xyz')[1:];rot=first(first(model,'rotate'),'xyz')[1:]
+        assert scale==[1,1,1] and rot[:2]==[0,0]
+        v=step_volume(Path(model[1].replace('${KIPRJMOD}',str(f))))['bounds_mm'];angle=math.radians(rot[2]);corners=[]
+        for x,y in [(v[0],v[1]),(v[0],v[4]),(v[3],v[1]),(v[3],v[4])]:
+            xx=x*math.cos(angle)-y*math.sin(angle)+off[0];yy=x*math.sin(angle)+y*math.cos(angle)+off[1];corners.append((fx+xx,-fy+yy))
+        boxes[ref]=[min(x for x,y in corners),min(y for x,y in corners),v[2]+off[2],max(x for x,y in corners),max(y for x,y in corners),v[5]+off[2]]
+    overlaps=[]
+    import itertools
+    for a,b in itertools.combinations(boxes,2):
+        u,v=boxes[a],boxes[b];depth=[min(u[i+3],v[i+3])-max(u[i],v[i]) for i in range(3)]
+        if all(q>1e-5 for q in depth):overlaps.append({'components':[a,b],'bbox_overlap_mm':depth})
+    return {'ok':not overlaps,'model_boxes_mm':boxes,'conservative_overlap_findings':overlaps}
+
 def score(f):
  inv=board_inventory(f/'pcbgolf.kicad_pcb');assert not inv['missing_models'];e=step_volume(f/'assembly.step');a=json.loads((f/'acceptance.json').read_text());d=json.loads((f/'drc.json').read_text());erc=json.loads((f/'erc.json').read_text());ercviolations=[v for s in erc['sheets'] for v in s['violations']]
- valid=a['accepted'] and not d['violations'] and not d['unconnected_items'] and not d['schematic_parity'] and not ercviolations
+ assembly_check=assembly_clearance(f)
+ valid=assembly_check['ok'] and a['accepted'] and not d['violations'] and not d['unconnected_items'] and not d['schematic_parity'] and not ercviolations
  terms={'pcba_bbox_volume_mm3':e['volume_mm3'],'via_count':inv['vias'],'via_penalty':50*inv['vias'],'copper_layers':inv['copper_layers'],'layer_penalty':5000*inv['copper_layers']}
- result={'valid':valid,'official_formula_score':sum(terms[k] for k in ['pcba_bbox_volume_mm3','via_penalty','layer_penalty']) if valid else None,'terms':terms,'assembly':e,'board_sha256':hashlib.sha256((f/'pcbgolf.kicad_pcb').read_bytes()).hexdigest(),'model_coverage':{'populated_components':15,'resolved_models':15,'missing':[]},'native':{'opens':len(d['unconnected_items']),'violations':len(d['violations']),'parity_findings':len(d['schematic_parity']),'erc_findings':len(ercviolations)},'qualification':'Official formula applied to PCB Golf-inspired reduced circuit and complete nominal assembly model. Not an official competition submission; no powered hardware qualification.'};write(f/'score.json',result);return result
+ result={'valid':valid,'official_formula_score':sum(terms[k] for k in ['pcba_bbox_volume_mm3','via_penalty','layer_penalty']) if valid else None,'terms':terms,'assembly':e,'assembly_clearance':assembly_check,'board_sha256':hashlib.sha256((f/'pcbgolf.kicad_pcb').read_bytes()).hexdigest(),'model_coverage':{'populated_components':15,'resolved_models':15,'missing':[]},'native':{'opens':len(d['unconnected_items']),'violations':len(d['violations']),'parity_findings':len(d['schematic_parity']),'erc_findings':len(ercviolations)},'qualification':'Official formula applied to PCB Golf-inspired reduced circuit and complete nominal assembly model. Not an official competition submission; no powered hardware qualification.'};write(f/'score.json',result);return result
 
 def proposal(template,factor):
  d=sx.loads(template.read_text());poses={};bounds=[]
