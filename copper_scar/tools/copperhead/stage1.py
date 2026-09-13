@@ -46,7 +46,7 @@ def copy_project(source, dest):
                     '*-backups', 'router-userdata', '*.ses', '*.dsn', 'router.log',
                     'router-result.json', 'execution.json', 'board.svg', 'board.png',
                     'erc.json', 'reference.net.xml', 'reference-check.json',
-                    'stage1-drc.json', 'placement-collisions', 'krt-*.json', 'placement-search.json', 'ground-escape.json'))
+                    'stage1-drc.json', 'placement-collisions', 'terminal-fanout', 'krt-*.json', 'placement-search.json', 'ground-escape.json'))
 def command(argv, directory, label, timeout):
     if DEADLINE is not None:
         remaining = DEADLINE-time.monotonic()
@@ -140,7 +140,7 @@ def evaluate(candidate, run, label, frozen_support):
     return result
 
 def validate_proposal(proposal, result):
-    if proposal.get('kind') not in ('krt_reconnect','placement_repair','placement_group','placement_trial','global_expand','group_pose') or not isinstance(proposal.get('net'),str):
+    if proposal.get('kind') not in ('krt_reconnect','placement_repair','placement_group','placement_trial','global_expand','group_pose','terminal_fanout') or not isinstance(proposal.get('net'),str):
         raise ValueError('Only a scoped native repair proposal is supported')
     if not result['invariants_ok'] or result['errors']:
         raise ValueError('Backend proposal requires preserved invariants and no physical errors')
@@ -175,7 +175,7 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
         uid='stage1-'+datetime.now().strftime('%Y%m%d-%H%M%S')+'-'+uuid.uuid4().hex[:6]
         run=LOCAL/'runs'/uid;run.mkdir();candidate=LOCAL/'candidates'/uid
         record=dict(schema_version=1,attempt=uid,policy=POLICY,stage=1,started_at=now(),input=str(current),constraint_scope=scope,status='running',candidate=str(candidate))
-        source_paths=[Path(__file__)]+sorted((ROOT/'scripts').glob('copperhead_*.py'))
+        source_paths=[Path(__file__)]+sorted((ROOT/'scripts').glob('copperhead_*.py'))+sorted((ROOT/'scripts/native').glob('Copperhead*.java'))
         record['implementation_sources']={}
         for source in source_paths:
             relative=source.relative_to(ROOT);snapshot=run/'implementation'/relative;snapshot.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,snapshot)
@@ -224,11 +224,16 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
             if not legacy_inner:
                 full_commands=[('export',[KIPY,'-c',"import pcbnew as p,sys;b=p.LoadBoard(sys.argv[1]);assert p.ExportSpecctraDSN(b,sys.argv[2])",str(candidate/'pcbgolf.kicad_pcb'),str(candidate/'pcbgolf.dsn')],60),('route',[PYTHON,str(ROOT/'scripts/copperhead_route.py'),str(candidate),'--seconds',str(route_seconds),'--passes','100','--whole-board','--skip-fanout'],route_seconds+40),('import',[KIPY,str(ROOT/'scripts/copperhead_native_board.py'),'import',str(candidate)],60)]
                 commands=[c for c in commands if c[0]=='placement']+full_commands
+                if action['kind']=='terminal_fanout':
+                    fanout_proposal=run/'terminal-fanout-proposal.json';write(fanout_proposal,action)
+                    commands=[('fanout_export',full_commands[0][1],60),('terminal_fanout',[PYTHON,str(ROOT/'scripts/copperhead_terminal_fanout.py'),str(candidate),'--proposal',str(fanout_proposal)],420),('fanout_import',full_commands[2][1],60)]+full_commands
                 record['comparison_kind']='initial_routed_placement' if action['kind']=='initial_route' else 'routed_placement'
+                if action['kind']=='terminal_fanout':record['comparison_kind']='terminal_topology_then_full_routing'
                 record['routing_scope']=dict(kind='whole_board',net_filter=None,fanout_enabled=False,via_count_limit=None,effort_limit_seconds=route_seconds,pass_limit=100,completion='pending')
             else:record['comparison_kind']='legacy_inner'
             record['action_level']='outer_placement' if action['kind'] in ('placement_repair','placement_group','placement_trial','global_expand','group_pose') else 'inner_routing'
-            record['outer_candidate']=uid if record['action_level']=='outer_placement' else 'geometry:'+initial['geometry_scope']
+            if action['kind']=='terminal_fanout':record['action_level']='outer_topology'
+            record['outer_candidate']=uid if record['action_level'] in ('outer_placement','outer_topology') else 'geometry:'+initial['geometry_scope']
             record['inner_effort']=[]
             record['commands']=[]
             with tracer.span('native.stage1.act',attributes={'attempt':uid,'action':action['kind'],'policy_version':POLICY}) as span:
@@ -237,6 +242,12 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                     if name in ('route','krt_reconnect','ground_escape'):
                         record['inner_effort'].append(dict(command=name,elapsed_seconds=item['elapsed_seconds'],returncode=item['returncode'],timed_out=item.get('timed_out',False)))
                     if item['returncode']!=0:raise RuntimeError(name+' failed; see command record')
+                    if name=='fanout_import':
+                        record['fanout_result']=json.loads((candidate/'terminal-fanout/result.json').read_text())
+                        snapshot=run/'fanout-project';copy_project(candidate,snapshot)
+                        record['fanout_evaluation']=evaluate(snapshot,run,'after_fanout',frozen)
+                        write(run/'attempt.json',record)
+                        if not record['fanout_evaluation']['invariants_ok'] or record['fanout_evaluation']['errors']:raise RuntimeError('Fanout failed native physical/invariant check before routing')
                     if name=='placement':
                         if action.get('copper_policy')=='detach_moved_pad_incident':
                             clearance=command([KIPY,str(ROOT/'scripts/copperhead_clear_placement_collisions.py'),str(candidate)],run,'placement_collision_ripup',300)

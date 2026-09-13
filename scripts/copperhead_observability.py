@@ -18,6 +18,24 @@ def unique_remote_rows(rows):
   if key not in seen:seen.add(key);unique.append(row)
  return unique
 
+def verify_repeated_publications(rows):
+ """Allow repeated uploads only when every evidence value and image hash agrees.
+
+ Keep all upload rows in receipts; only upload timing/step and content-addressed
+ media paths may differ. Conflicting native results or images remain failures.
+ """
+ assert rows, 'Missing remote history row'
+ def evidence(row):
+  result={k:v for k,v in row.items() if k not in ('_step','_runtime','_timestamp')}
+  for key in ('board/attempted','board/incumbent'):
+   if key in result:
+    assert result[key].get('sha256'), 'Remote media lacks content hash'
+    result[key]={k:v for k,v in result[key].items() if k!='path'}
+  return result
+ expected=evidence(rows[0])
+ assert all(evidence(row)==expected for row in rows), 'Conflicting repeated remote publication'
+ return rows[0]
+
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--credential-file',type=Path,required=True);a=ap.parse_args()
  out=LOCAL/'observability';out.mkdir(exist_ok=True)
@@ -54,7 +72,12 @@ def main():
   except wandb.errors.CommError as exc:
    if 'Could not find run' not in str(exc) and 'not found' not in str(exc).lower():raise
    remote=None
-  existing={x.get('attempt_id') for x in remote.scan_history(keys=['attempt_id'])} if remote else set()
+  existing={x.get('attempt_id') for x in remote.scan_history()} if remote else set()
+  # A successful prior readback is durable evidence of publication. If the API
+  # temporarily omits that row, retry verification rather than uploading again.
+  receipt=out/'verified.json'
+  if receipt.exists():
+   existing.update(row['attempt_id'] for rr in json.loads(receipt.read_text()).get('runs',[]) if rr['run_id']==run_id for row in rr.get('rows',[]))
   run=wandb.init(entity=PROJECT.split('/')[0],project=PROJECT.split('/')[1],id=run_id,resume='allow',name='Copperhead whole-board '+policy,group='copperhead-'+policy,job_type='native-feasibility',tags=['copperhead','whole-board','historical-backfill'],dir=str(out),config={'track':'copperhead','policy':policy,'baseline_hash':baseline,'constraint_scope':scope,'comparison':'completed placement plus whole-board routing','qualification':'No valid board; Stage2 locked','rule_note':'KiCad DSN export includes50um smd_smd exception; native acceptance uses unchanged original rules. No source-rule relaxation.'})
   run.define_metric('outer_index')
   for metric in ['loss/*','incumbent/*','native/*','board/*','routing/*']:run.define_metric(metric,step_metric='outer_index')
@@ -98,16 +121,17 @@ def main():
   # Read back actual remote rows/media/calls. A successful local SDK exit is insufficient.
   for retry in range(6):
    api.flush();remote=api.run(run_path);raw_history=list(remote.scan_history());history=unique_remote_rows(raw_history)
-   if all(sum(h.get('attempt_id')==entry['attempt_id'] for h in history)==1 for entry in entries):break
+   if all(any(h.get('attempt_id')==entry['attempt_id'] for h in history) for entry in entries):break
    time.sleep(2)
   files=[f.name for f in remote.files()];verified=[]
   for entry in entries:
-   matches=[h for h in history if h.get('attempt_id')==entry['attempt_id']];assert len(matches)==1, 'Missing or duplicate remote history row'
-   row=matches[0];assert row['board/attempted_sha256']==entry['board_sha256']
-   for media in ['board/attempted','board/incumbent']:
-    image_path=row[media]['path'];assert image_path in files,'Remote image file missing'
+   matches=[h for h in history if h.get('attempt_id')==entry['attempt_id']]
+   row=verify_repeated_publications(matches);assert row['board/attempted_sha256']==entry['board_sha256']
+   for upload in matches:
+    for media in ['board/attempted','board/incumbent']:
+     image_path=upload[media]['path'];assert image_path in files,'Remote image file missing'
    calls=list(client.get_calls(filter={'call_ids':[entry['call_id']]},limit=2));assert len(calls)==1 and calls[0].ended_at,'Missing remote finished Weave call'
-   verified.append({**entry,'missing_pairs':row['loss/missing_pairs'],'physical_errors':row['loss/physical_errors'],'warnings':row['loss/warnings'],'media_verified':True,'weave_verified':True})
+   verified.append({**entry,'missing_pairs':row['loss/missing_pairs'],'physical_errors':row['loss/physical_errors'],'warnings':row['loss/warnings'],'media_verified':True,'weave_verified':True,'publication_rows':[{'step':u.get('_step'),'attempted_media':u['board/attempted'],'incumbent_media':u['board/incumbent']} for u in matches],'repeated_publications':len(matches)-1})
   for entry in failure_entries:
    calls=list(client.get_calls(filter={'call_ids':[entry['call_id']]},limit=2));assert len(calls)==1 and calls[0].ended_at
   assert len(remote.summary.get('failed_outer_attempts',[]))==len(failure_entries)
