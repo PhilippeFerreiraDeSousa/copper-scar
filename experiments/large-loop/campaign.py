@@ -55,6 +55,8 @@ def realize(base,folder,placements,manifest,source,route=True):
  shutil.copytree(base/'input/models',folder/'models')
  shutil.copytree(base/'input/pcbgolf.3dshapes',folder/'pcbgolf.3dshapes')
  shutil.copy2(base/'input/large-loop.kicad_sch',folder/'pcbgolf.kicad_sch');shutil.copy2(base/'input/pcbgolf.kicad_sym',folder/'pcbgolf.kicad_sym');shutil.copy2(base/'input/sym-lib-table',folder/'sym-lib-table')
+ from live_status import update as update_live
+ update_live(base,folder.name,'preflight')
  project=(folder/'pcbgolf.kicad_pro').read_bytes();cmds=[]
  def native(action):
   cmds.append(command([KIPY,ROOT/'experiments/large-loop/native_stage.py',action,folder],folder,action))
@@ -75,6 +77,7 @@ def realize(base,folder,placements,manifest,source,route=True):
  new_required=[v for v in pre['violations'] if signature(v) not in known and (v['severity']=='error' or v['type'] in ['silk_over_copper','silk_overlap','text_height','text_thickness'])]
  legal=geometry_ok and not new_required and not pre.get('schematic_parity',[{}])
  if route and legal:
+  update_live(base,folder.name,'routing')
   cmds.append(command([sys.executable,ROOT/'scripts/copperhead_route.py',folder,'--seconds','240','--passes','100','--whole-board','--skip-fanout'],folder,'full-route'));native('import')
  native('audit');cmds.append(command([KICAD,'pcb','drc','--schematic-parity','--format','json','-o',folder/'drc.json',folder/'pcbgolf.kicad_pcb'],folder,'drc'))
  result=audit(folder,manifest,source);result['placement_legal']=legal;result['routing_attempted']=bool(route and legal);result['intrinsic_violation_count']=len(frozen);result['new_preflight_violations']=new_required;result['placement_legal_scope']='No new required findings beyond unchanged source-intrinsic findings; this is not manufacturing acceptance';result['preflight_geometry_preserved']=geometry_ok

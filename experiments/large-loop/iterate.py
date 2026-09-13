@@ -4,6 +4,7 @@ import argparse,copy,json,re,subprocess
 from collections import Counter
 from campaign import realize,poses,hpwl,write,now,sha,ROOT,require_stage_one_work
 from record import finish
+from live_status import update as update_live
 from audit import inventory
 
 def propose(parent,manifest,variant=0):
@@ -37,6 +38,6 @@ if __name__=='__main__':
  try:
   result,commands=realize(base,out,candidate,base/'input/circuit.json',a.source.resolve())
   before=json.loads((parent/'evaluation.json').read_text());record=finish(base,out,a.source.resolve(),action,parent)
-  result=record['after'];retain=result['placement_legal'] and (result['feasibility_cost'],result['wire_length_mm'])<(before['feasibility_cost'],before['wire_length_mm']);record['retained']=retain;record['decision_reason']='strictly lower native feasibility cost, then shorter copper at equal cost; unchanged original rule and pad/net gates mandatory';write(out/'completed.json',record);print(json.dumps({'retained':retain,'opens':result['native_open_count'],'cost':result['feasibility_cost'],'folder':str(out)}),flush=True)
+  result=record['after'];retain=result['placement_legal'] and (result['feasibility_cost'],result['wire_length_mm'])<(before['feasibility_cost'],before['wire_length_mm']);record['retained']=retain;record['decision_reason']='strictly lower native feasibility cost, then shorter copper at equal cost; unchanged original rule and pad/net gates mandatory';write(out/'completed.json',record);update_live(base,state='idle');print(json.dumps({'retained':retain,'opens':result['native_open_count'],'cost':result['feasibility_cost'],'folder':str(out)}),flush=True)
  except Exception as error:
   write(base/(a.output+'-failure.json'),{'action':action,'parent':str(parent),'error':repr(error),'finished_at':now()});raise
