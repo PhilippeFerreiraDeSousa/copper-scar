@@ -25,7 +25,7 @@ def audit(folder,manifest,original):
  drc=json.loads((f/'drc.json').read_text());native=json.loads((f/'native-audit.json').read_text());settings=json.loads((f/'pcbgolf.kicad_pro').read_text());orig=json.loads((src/'pcbgolf.kicad_pro').read_text())
  rules={k:settings[k]==orig[k] for k in ['erc','net_settings']};rules['drc']=settings['board']['design_settings']==orig['board']['design_settings']
  footprints={r:inv[r]['pads']==old[r]['pads'] and inv[r]['library']==old[r]['library'] for r in inv}
- required=[v for v in drc['violations'] if v['severity']=='error' or v['type'] in ['text_height','text_thickness','silk_overlap','silk_over_copper','hole_to_hole','isolated_copper','track_dangling','via_dangling']]
+ required=list(drc.get('schematic_parity',[]))+[v for v in drc['violations'] if v['severity']=='error' or v['type'] in ['text_height','text_thickness','silk_overlap','silk_over_copper','hole_to_hole','isolated_copper','track_dangling','via_dangling']]
  invariants=hashlib.sha256((f/'pcbgolf.kicad_pcb').read_bytes()).hexdigest()==native['board_sha256'] and all(rules.values()) and set(inv)==set(m['refs']) and nets==expected and all(footprints.values()) and native['copper_layers']==2
  width_ok=all(w>=.2-1e-6 for w in native['track_widths_mm']);via_ok=all(abs(v['drill']-.3)<1e-6 and abs(v['diameter']-.6)<1e-6 and v['net'] in expected for v in native['vias'])
  cost=len(drc['unconnected_items'])+len(required)+(0 if invariants and width_ok and via_ok else 10000)
