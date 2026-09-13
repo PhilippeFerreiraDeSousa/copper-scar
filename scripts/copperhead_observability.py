@@ -52,8 +52,8 @@ def main():
  records=[];failures=[]
  for p in sorted((LOCAL/'runs').glob('stage1-*/attempt.json')):
   r=json.loads(p.read_text())
-  if r.get('comparison_kind')=='routed_placement' and r.get('status')=='failed' and r.get('after'):failures.append((p,r))
-  if r.get('comparison_kind') in ('initial_routed_placement','routed_placement') and r.get('routing_scope',{}).get('completion')=='routed_and_natively_evaluated' and r.get('finished_at') and r.get('after'):records.append((p,r))
+  if r.get('comparison_kind') in ('routed_placement','terminal_topology_then_full_routing') and r.get('status')=='failed' and r.get('after'):failures.append((p,r))
+  if r.get('comparison_kind') in ('initial_routed_placement','routed_placement','terminal_topology_then_full_routing') and r.get('routing_scope',{}).get('completion')=='routed_and_natively_evaluated' and r.get('finished_at') and r.get('after'):records.append((p,r))
  assert records,'No completed whole-board evaluations'
  groups=collections.defaultdict(list)
  for p,r in records:groups[(r['policy'],r['constraint_scope'])].append((p,r))
@@ -99,7 +99,7 @@ def main():
    call_id=str(uuid.uuid5(uuid.NAMESPACE_URL,'copperhead://'+run_id+'/'+r['attempt']))
    found=list(client.get_calls(filter={'call_ids':[call_id]},limit=1))
    if not found:
-    call=client.create_call('copperhead.outer.native_evaluation_backfill',inputs={'attempt_id':r['attempt'],'placement':r.get('placement_delta'),'routing_scope':route,'routing_coverage':coverage,'baseline_hash':baseline,'evidence_sha256':hashlib.sha256(path.read_bytes()).hexdigest()},attributes={'track':'copperhead','policy':policy,'comparison_kind':r['comparison_kind'],'wb_run_id':run_id,'historical_backfill':True},display_name='Copperhead outer '+str(index)+' '+r['attempt'],_call_id_override=call_id,started_at=datetime.fromisoformat(r['started_at']))
+    call=client.create_call('copperhead.outer.native_evaluation_backfill',inputs={'attempt_id':r['attempt'],'action':r.get('action'),'placement':r.get('placement_delta'),'fanout':r.get('fanout_result'),'fanout_evaluation':r.get('fanout_evaluation'),'routing_scope':route,'routing_coverage':coverage,'baseline_hash':baseline,'evidence_sha256':hashlib.sha256(path.read_bytes()).hexdigest()},attributes={'track':'copperhead','policy':policy,'comparison_kind':r['comparison_kind'],'wb_run_id':run_id,'historical_backfill':True},display_name='Copperhead outer '+str(index)+' '+r['attempt'],_call_id_override=call_id,started_at=datetime.fromisoformat(r['started_at']))
     client.finish_call(call,output={**metadata,'attempted_board':Image.open(attempt_png),'incumbent_board':Image.open(inc_png)},ended_at=datetime.fromisoformat(r['finished_at']))
    entries.append({'attempt_id':r['attempt'],'outer_index':index,'call_id':call_id,'call_url':'https://wandb.ai/'+PROJECT+'/r/call/'+call_id,'board_sha256':attempt_hash})
   failure_entries=[]
@@ -109,7 +109,7 @@ def main():
    subprocess.run([str(ROOT/'.venv/bin/python'),str(ROOT/'scripts/copperhead_route_evidence.py'),r['candidate']],check=True,capture_output=True)
    coverage=json.loads((Path(r['candidate'])/'routing-coverage.json').read_text());coverage_by_attempt[r['attempt']]=coverage
    item={'attempt_id':r['attempt'],'comparison_kind':'failed_outer_attempt','error':r['error'],'missing_pairs':e['unconnected'],'physical_errors':e['errors'],'warnings':e['warnings'],'invariants_ok':e['invariants_ok'],'retained':False,'board_sha256':digest,'routing_coverage':coverage}
-   run.summary['failed_board/'+r['attempt']]=wandb.Image(str(png),caption='Failed routing; preserved placement, not a completed routing point')
+   run.summary['failed_board/'+r['attempt']]=wandb.Image(str(png),caption='Failed outer attempt; preserved candidate, not a completed routing point')
    call_id=str(uuid.uuid5(uuid.NAMESPACE_URL,'copperhead://'+run_id+'/'+r['attempt']))
    if not list(client.get_calls(filter={'call_ids':[call_id]},limit=1)):
     call=client.create_call('copperhead.outer.failed_evaluation_backfill',inputs={'attempt_id':r['attempt'],'routing_scope':r['routing_scope'],'original_started_at':r['started_at']},attributes={'track':'copperhead','policy':policy,'historical_backfill':True,'comparison_kind':'failed_outer_attempt'},_call_id_override=call_id,started_at=datetime.fromisoformat(r['started_at']))

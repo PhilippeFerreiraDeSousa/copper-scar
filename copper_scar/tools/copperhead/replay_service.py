@@ -12,7 +12,7 @@ def start(view="outer"):
   for p in sorted((LOCAL/'runs').glob('stage1-*/attempt.json')):
    a=json.loads(p.read_text())
    if a.get('status') in ('completed','failed') and a.get('finished_at') and a.get('before'):records.append(dict(path=str(p),record=a))
-  if view=='outer':records=[x for x in records if x['record'].get('comparison_kind') in ('initial_routed_placement','routed_placement') and x['record'].get('routing_scope',{}).get('completion')=='routed_and_natively_evaluated']
+  if view=='outer':records=[x for x in records if x['record'].get('comparison_kind') in ('initial_routed_placement','routed_placement','terminal_topology_then_full_routing') and x['record'].get('routing_scope',{}).get('completion')=='routed_and_natively_evaluated']
   if view=='outer' and records:records=[x for x in records if x['record']['policy']==records[-1]['record']['policy']]
   assert records,'No completed native checkpoint is available'
   signature=[(x['record']['attempt'],x['record']['status'],x['record'].get('after',{}).get('design_sha256')) for x in records]
