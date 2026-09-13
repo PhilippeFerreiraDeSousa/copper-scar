@@ -1,6 +1,6 @@
 """Fixed-budget placement policy comparison using Copperhead's whole-board router."""
 from pathlib import Path
-import argparse,copy,hashlib,itertools,json,random,shutil,subprocess,sys,time
+import argparse,copy,hashlib,itertools,json,random,shutil,subprocess,sys,time,os
 from datetime import datetime,timezone
 import sexpdata as sx
 from audit import audit,inventory,nodes,first
@@ -9,7 +9,8 @@ KIPY='/Users/philippe/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.fr
 KICAD='/Users/philippe/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli'
 def now():return datetime.now(timezone.utc).isoformat()
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
-def write(p,v):p.write_text(json.dumps(v,indent=2)+'\n')
+def write(p,v):
+ tmp=p.with_name(p.name+'.tmp');tmp.write_text(json.dumps(v,indent=2)+'\n');os.replace(tmp,p)
 def command(argv,f,label):
  t=time.monotonic();start=now()
  with (f/(label+'.log')).open('w') as log:r=subprocess.run(list(map(str,argv)),stdout=log,stderr=subprocess.STDOUT,timeout=360)

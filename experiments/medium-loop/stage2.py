@@ -1,10 +1,26 @@
 """Validity-gated optimization of the official PCBA volume/via/layer objective."""
 from pathlib import Path
-import argparse,copy,hashlib,json,math,shutil,subprocess,sys,time
+import argparse,copy,hashlib,json,math,shutil,subprocess,sys,time,os,threading
 import sexpdata as sx
 from audit import audit,inventory,nodes,first
-from campaign import command,KIPY,KICAD,ROOT,now,write
+from campaign import command as base_command,KIPY,KICAD,ROOT,now,write
 from assembly import step_volume,board_inventory
+
+def command(argv,folder,label):
+    """Publish operation heartbeats while the bounded native command executes."""
+    status_path=folder.parent/'live-status.json'
+    if not status_path.exists():return base_command(argv,folder,label)
+    status=json.loads(status_path.read_text());started=now();tick=time.monotonic();stop=threading.Event()
+    def heartbeat():
+        while not stop.is_set():
+            record={**status,'status':'running','current_operation':label,'operation_started_at':started,'operation_elapsed_seconds':round(time.monotonic()-tick,2),'heartbeat_at':now(),'worker_pid':os.getpid(),'candidate_folder':str(folder)}
+            write(status_path,record);write(folder.parent.parent/'status.json',{**record,'active_study':str(folder.parent)})
+            stop.wait(2)
+    thread=threading.Thread(target=heartbeat,daemon=True);thread.start()
+    try:return base_command(argv,folder,label)
+    except Exception as error:
+        stop.set();thread.join();write(status_path,{**status,'status':'operation_failed','current_operation':label,'heartbeat_at':now(),'error':str(error),'worker_pid':os.getpid()});raise
+    finally:stop.set();thread.join()
 
 def assembly_clearance(f):
     # Conservative box-intersection screen of every populated model, independent
@@ -52,7 +68,7 @@ def main():
  ap=argparse.ArgumentParser();ap.add_argument('base',type=Path);ap.add_argument('--source',type=Path,required=True);ap.add_argument('--study',default='');ap.add_argument('--margin',type=float,default=1);ap.add_argument('--factors',default='1,.8,.65,.5,.4');ap.add_argument('--incumbent',type=Path);a=ap.parse_args();base=a.base.resolve();root=base/'stage2';source=a.source.resolve();baseline=root/'baseline';root=root/a.study if a.study else root;root.mkdir(exist_ok=True);manifest=base/'input/circuit.json';commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip();incdir=a.incumbent.resolve() if a.incumbent else baseline;inc=json.loads((incdir/'score.json').read_text());assert inc['valid']
  protocol={'formula':'PCBA bbox volume mm^3 +50*via_count +5000*copper_layers','source':'https://comma.ai/leaderboard','source_sha':commit,'initial_board_sha256':inc['board_sha256'],'baseline_score':inc['official_formula_score'],'objective':'Strict lower official-formula score, after full native/assembly acceptance','factors':[float(x) for x in a.factors.split(',')],'geometry_source':str(baseline),'initial_incumbent':str(incdir),'route_seconds':240,'route_passes':100,'full_board':True,'layers':2,'tie_policy':'retain incumbent','assembly_contract':'assembly-contract.json','wire_length_is_objective':False,'edge_margin_mm':a.margin};write(root/'protocol.json',protocol);events=[]
  for idx,factor in enumerate(protocol['factors'],1):
-  f=root/f'candidate-{idx:02}';f.mkdir();start=now();write(root/'live-status.json',{'size_family':'medium-loop','stage':2,'running':idx,'started_at':start,'last_completed':idx-1,'incumbent_score':inc['official_formula_score']});board,action=proposal(baseline/'pcbgolf.kicad_pcb',factor,a.margin);(f/'pcbgolf.kicad_pcb').write_text(board)
+  f=root/f'candidate-{idx:02}';f.mkdir();start=now();write(root/'live-status.json',{'size_family':'medium-loop','stage':2,'running':idx,'worker_pid':os.getpid(),'started_at':start,'last_completed':idx-1,'incumbent_score':inc['official_formula_score']});board,action=proposal(baseline/'pcbgolf.kicad_pcb',factor,a.margin);(f/'pcbgolf.kicad_pcb').write_text(board)
   for name in ['pcbgolf.kicad_pro','pcbgolf.kicad_sch','pcbgolf.kicad_sym','fp-lib-table','sym-lib-table']:shutil.copy2(baseline/name,f/name)
   for name in ['pcbgolf.pretty','pcbgolf.3dshapes','models']:shutil.copytree(baseline/name,f/name)
   write(f/'proposal.json',action);project=(f/'pcbgolf.kicad_pro').read_bytes();cmds=[]
@@ -69,6 +85,6 @@ def main():
    cmds.append(command([sys.executable,ROOT/'scripts/copperhead_route.py',f,'--seconds','240','--passes','100','--whole-board','--skip-fanout'],f,'full-route'));native('import')
   native('audit');cmds.append(command([KICAD,'pcb','drc','--schematic-parity','--format','json','-o',f/'drc.json',f/'pcbgolf.kicad_pcb'],f,'drc'));cmds.append(command([KICAD,'sch','erc','--format','json','-o',f/'erc.json',f/'pcbgolf.kicad_sch'],f,'erc'));accept=audit(f,manifest,source);cmds.append(command([KICAD,'pcb','export','step','-f','-o',f/'assembly.step',f/'pcbgolf.kicad_pcb'],f,'step-export'));result=score(f);cmds.append(command([KICAD,'pcb','export','svg','--layers','F.Cu,B.Cu,F.SilkS,Edge.Cuts','--mode-single','--page-size-mode','2','--exclude-drawing-sheet','-o',f/'board.svg',f/'pcbgolf.kicad_pcb'],f,'render'));cmds.append(command(['/opt/homebrew/bin/rsvg-convert','-w','1400','-o',f/'board.png',f/'board.svg'],f,'raster'));retain=result['valid'] and result['official_formula_score']<inc['official_formula_score'];event={'index':idx,'started_at':start,'finished_at':now(),'source_sha':commit,'folder':str(f),'parent_incumbent':str(incdir),'proposal_source':str(baseline),'action':action,'routing_attempted':legal,'commands':cmds,'result':result,'retained':retain}
   if retain:inc=result;incdir=f
-  event['incumbent_score']=inc['official_formula_score'];event['incumbent_folder']=str(incdir);write(f/'event.json',event);events.append(event);write(root/'events.json',events);write(root/'current.json',{'folder':str(incdir),'score':inc,'last_completed':idx,'source_sha':commit});write(root/'live-status.json',{'size_family':'medium-loop','stage':2,'running':None,'last_completed':idx,'incumbent_score':inc['official_formula_score']});print(idx,factor,result['valid'],result['official_formula_score'],'retained',retain,'native',result['native'],flush=True)
+  event['incumbent_score']=inc['official_formula_score'];event['incumbent_folder']=str(incdir);write(f/'event.json',event);events.append(event);write(root/'events.json',events);write(root/'current.json',{'folder':str(incdir),'score':inc,'last_completed':idx,'source_sha':commit});write(root/'live-status.json',{'size_family':'medium-loop','stage':2,'running':None,'status':'assessing-next-proposal','heartbeat_at':now(),'worker_pid':os.getpid(),'last_completed':idx,'incumbent_score':inc['official_formula_score']});print(idx,factor,result['valid'],result['official_formula_score'],'retained',retain,'native',result['native'],flush=True)
  print(json.dumps({'selected':str(incdir),'score':inc}),flush=True)
 if __name__=='__main__':main()
