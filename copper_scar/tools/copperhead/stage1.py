@@ -48,7 +48,7 @@ def copy_project(source, dest):
                     '*-backups', 'router-userdata', '*.ses', '*.dsn', 'router.log',
                     'router-result.json', 'execution.json', 'board.svg', 'board.png',
                     'erc.json', 'reference.net.xml', 'reference-check.json',
-                    'stage1-drc.json', 'placement-collisions', 'terminal-fanout', 'via-definition', 'via-consolidation.json', 'krt-*.json', 'placement-search.json', 'ground-escape.json'))
+                    'stage1-drc.json', 'placement-collisions', 'terminal-fanout', 'via-definition', 'via-seed.json', 'via-consolidation.json', 'krt-*.json', 'placement-search.json', 'ground-escape.json'))
 def command(argv, directory, label, timeout):
     if DEADLINE is not None:
         remaining = DEADLINE-time.monotonic()
@@ -156,7 +156,7 @@ def evaluate(candidate, run, label, frozen_support):
     return result
 
 def validate_proposal(proposal, result):
-    if proposal.get('kind') not in ('krt_reconnect','placement_repair','placement_group','placement_trial','global_expand','group_pose','terminal_fanout','via_consolidation') or not isinstance(proposal.get('net'),str):
+    if proposal.get('kind') not in ('krt_reconnect','placement_repair','placement_group','placement_trial','global_expand','group_pose','terminal_fanout','via_seed','via_consolidation') or not isinstance(proposal.get('net'),str):
         raise ValueError('Only a scoped native repair proposal is supported')
     if not result['invariants_ok'] or result['errors']:
         raise ValueError('Backend proposal requires preserved invariants and no physical errors')
@@ -251,6 +251,9 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                 if action['kind']=='via_consolidation':
                     via_proposal=run/'via-consolidation-proposal.json';write(via_proposal,action)
                     commands=[('via_consolidation',[KIPY,str(ROOT/'scripts/copperhead_consolidate_vias.py'),str(candidate),'--proposal',str(via_proposal)],120)]+full_commands
+                if action['kind']=='via_seed':
+                    via_proposal=run/'via-seed-proposal.json';write(via_proposal,action)
+                    commands=[('via_seed',[KIPY,str(ROOT/'scripts/copperhead_seed_via.py'),str(candidate),'--proposal',str(via_proposal)],120)]+full_commands
                 if action['kind']=='terminal_fanout':
                     fanout_proposal=run/'terminal-fanout-proposal.json';write(fanout_proposal,action)
                     commands=[('fanout_export',full_commands[0][1],60),('terminal_fanout',[PYTHON,str(ROOT/'scripts/copperhead_terminal_fanout.py'),str(candidate),'--proposal',str(fanout_proposal)],420),('fanout_import',full_commands[2][1],60)]+full_commands
@@ -258,11 +261,11 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                         if action['new_via_definition']!={'diameter_mm':.45,'drill_mm':.2,'span':['F.Cu','B.Cu']}:raise ValueError('Only the reviewed additional through-via definition is supported')
                         commands=[step for entry in commands for step in ([entry,(entry[0]+'_via_definition',[PYTHON,str(ROOT/'scripts/copperhead_via_definition.py'),str(candidate),'--phase',entry[0]],60)] if entry[0] in ('export','fanout_export') else [entry])]
                 record['comparison_kind']='initial_routed_placement' if action['kind']=='initial_route' else 'routed_placement'
-                if action['kind'] in ('terminal_fanout','via_consolidation'):record['comparison_kind']='terminal_topology_then_full_routing'
+                if action['kind'] in ('terminal_fanout','via_consolidation','via_seed'):record['comparison_kind']='terminal_topology_then_full_routing'
                 record['routing_scope']=dict(kind='whole_board',net_filter=None,fanout_enabled=False,via_count_limit=None,effort_limit_seconds=route_seconds,pass_limit=100,completion='pending')
             else:record['comparison_kind']='legacy_inner'
             record['action_level']='outer_placement' if action['kind'] in ('placement_repair','placement_group','placement_trial','global_expand','group_pose') else 'inner_routing'
-            if action['kind'] in ('terminal_fanout','via_consolidation'):record['action_level']='outer_topology'
+            if action['kind'] in ('terminal_fanout','via_consolidation','via_seed'):record['action_level']='outer_topology'
             record['outer_candidate']=uid if record['action_level'] in ('outer_placement','outer_topology') else 'geometry:'+initial['geometry_scope']
             record['inner_effort']=[]
             record['commands']=[]
@@ -294,6 +297,14 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                         record['via_consolidation_evaluation']=evaluate(snapshot,run,'after_via_consolidation',frozen)
                         write(run/'attempt.json',record)
                         if not record['via_consolidation_evaluation']['invariants_ok'] or record['via_consolidation_evaluation']['errors'] or record['via_consolidation_evaluation']['counts'].get('hole_to_hole',0):raise RuntimeError('Via consolidation failed native physical/invariant/hole check')
+                    if name=='via_seed':
+                        snapshot=run/'via-seed-project';copy_project(candidate,snapshot)
+                        record['via_seed']=json.loads((candidate/'via-seed.json').read_text());record['via_seed_evaluation']=evaluate(snapshot,run,'after_via_seed',frozen)
+                        proof_path=run/'seed-via-geometry.json'
+                        check=command([KIPY,str(ROOT/'scripts/copperhead_via_geometry.py'),'--before',str(run/'input/pcbgolf.kicad_pcb'),'--after',str(candidate/'pcbgolf.kicad_pcb'),'--output',str(proof_path)],run,'seed_via_geometry',60)
+                        if check['returncode']!=0:raise RuntimeError('Native seed via geometry check failed')
+                        proof=json.loads(proof_path.read_text());gate=record['via_seed_evaluation'];write(run/'attempt.json',record)
+                        if not gate['invariants_ok'] or gate['errors'] or not gate['manufacturing_rules_clear'] or not proof['existing_via_geometry_preserved'] or not proof['new_vias_use_only_allowed_definitions']:raise RuntimeError('Via seed failed native physical/invariant/geometry gate')
                     if name=='placement':
                         if action.get('copper_policy')=='detach_moved_pad_incident':
                             clearance=command([KIPY,str(ROOT/'scripts/copperhead_clear_placement_collisions.py'),str(candidate)],run,'placement_collision_ripup',300)
@@ -323,7 +334,7 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
             oldbest=state.get('best_feasibility')
             retain=should_retain(initial,after,oldbest)
             record['selection_decision']=dict(policy_version=SELECTION_VERSION,basis='fresh_feasibility_with_manufacturing_nonregression',eligible=retain,legacy_v1_priority_before=priority(initial),legacy_v1_priority_after=priority(after))
-            if action['kind'] in ('via_consolidation','group_pose','terminal_fanout'):
+            if action['kind'] in ('via_consolidation','group_pose','terminal_fanout','via_seed'):
                 proof_path=run/'final-pad-partitions.json'
                 check=command([KIPY,str(ROOT/'scripts/copperhead_pad_partitions.py'),'--before',str(run/'input/pcbgolf.kicad_pcb'),'--after',str(candidate/'pcbgolf.kicad_pcb'),'--output',str(proof_path)],run,'final_pad_partitions',60)
                 if check['returncode']!=0:raise RuntimeError('Final native pad partition proof failed')
@@ -335,7 +346,7 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                 execution=record['routing_scope']['execution']
                 decision=manufacturing_repair_decision(initial,after,oldbest or {},backend_ok=execution.get('returncode')==0 and not execution.get('timeout') and execution.get('session_exists',False),pad_partitions_preserved=proof['no_connected_pad_group_split'])
                 decision.update(legacy_v1_priority_before=priority(initial),legacy_v1_priority_after=priority(after),pad_partition_proof=str(proof_path));record['selection_decision']=decision;retain=decision['eligible']
-            if action.get('new_via_definition'):
+            if action.get('new_via_definition') or action['kind']=='via_seed':
                 proof_path=run/'final-via-geometry.json'
                 check=command([KIPY,str(ROOT/'scripts/copperhead_via_geometry.py'),'--before',str(run/'input/pcbgolf.kicad_pcb'),'--after',str(candidate/'pcbgolf.kicad_pcb'),'--output',str(proof_path)],run,'final_via_geometry',60)
                 if check['returncode']!=0:raise RuntimeError('Final native via geometry check failed')

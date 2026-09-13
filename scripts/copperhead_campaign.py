@@ -40,7 +40,6 @@ def main():
     python=str(ROOT/'.venv/bin/python');krt=str(LOCAL/'tools/krt-venv/bin/python')
     manifest=LOCAL/'proposals/global-expanded.json';groups=json.loads(manifest.read_text())['groups']
     membership={ref:group for group,refs in groups.items() for ref in refs}
-    catalog=json.loads(a.catalog.read_text())
 
     def run(argv,label,timeout):
         started=time.time()
@@ -63,6 +62,7 @@ def main():
                 state.update(phase='waiting for existing native worker',heartbeat_at=now());write(path,state);time.sleep(5)
 
     while time.time()+a.route_seconds+240<deadline:
+        catalog=json.loads(a.catalog.read_text())
         loop=json.loads((LOCAL/'loop/state.json').read_text());parent=Path(loop['best_feasibility']['candidate'])
         board_hash=hashlib.sha256((parent/'pcbgolf.kicad_pcb').read_bytes()).hexdigest()
         records=[load_record(p) for p in sorted((LOCAL/'runs').glob('stage1-*/attempt.json'))]
@@ -104,7 +104,7 @@ def main():
         for spec in specs:
             if time.time()+a.route_seconds+180>=deadline:break
             label=prefix+'-'+spec['id'];proposal=LOCAL/'proposals'/('campaign-'+label+'.json')
-            if spec['kind']=='terminal_fanout':
+            if spec['kind'] in ('terminal_fanout','via_seed'):
                 action={**spec['action'],'parent_board_sha256':board_hash,'feedback_used':feedback_ids or spec['action']['feedback_used']}
                 write(proposal,action);previews.append(dict(action=action,proposal=str(proposal),catalog_id=spec['id'],score=0,eligible=True,feedback_record_ids=feedback_ids,reason='Untried distinct topology hypothesis from measured failures; native fanout and full-route gates required'));continue
             argv=[krt,str(ROOT/'scripts/copperhead_pose_proposals.py'),str(parent),'--manifest',str(manifest),'--output',str(proposal),'--group',spec['group'],'--move-refs',spec['ref'],'--rotations',spec.get('rotations','0'),'--feedback',str(LOCAL/'loop/feedback.json'),'--allow-proxy-regression']
@@ -154,7 +154,7 @@ def main():
             from copper_scar.tools.copperhead.replay_service import start
             state['replay']=start('outer')
         except Exception as error:state['replay_error']=repr(error)
-        if result['status']=='failed' and not any(x in result.get('error','') for x in ('Placement failed native','Fanout failed native','New via trial failed')):
+        if result['status']=='failed' and not any(x in result.get('error','') for x in ('Placement failed native','Fanout failed native','New via trial failed','Via seed failed native')):
             state.update(status='needs_attention',reason='Execution failure requires inspection');break
     else:state.update(status='routing_cutoff',reason='No full routing evaluation fits before the deadline')
     state.update(heartbeat_at=now(),finished_at=now(),worker_pid=None);write(path,state)

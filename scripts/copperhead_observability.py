@@ -129,6 +129,18 @@ def main():
     client.finish_call(call,output=item,ended_at=datetime.fromisoformat(audit['at']))
    corrections.append(item)
   run.summary['retention_corrections']=corrections
+  scope_corrections=[]
+  for path,record in items:
+   correction_path=path.parent/'terminal-scope-correction.json'
+   if not correction_path.exists():continue
+   audit=json.loads(correction_path.read_text())
+   call_id=str(uuid.uuid5(uuid.NAMESPACE_URL,'copperhead://'+run_id+'/'+record['attempt']+'/terminal-scope-correction'))
+   item={**audit,'attempt':record['attempt'],'correction_sha256':hashlib.sha256(correction_path.read_bytes()).hexdigest(),'call_id':call_id}
+   if not list(client.get_calls(filter={'call_ids':[call_id]},limit=1)):
+    call=client.create_call('copperhead.native.terminal_scope_correction',inputs={'attempt_id':record['attempt'],'original_attempt_sha256':hashlib.sha256(path.read_bytes()).hexdigest()},attributes={'wb_run_id':run_id,'track':'copperhead','correction':True},_call_id_override=call_id)
+    client.finish_call(call,output=item)
+   scope_corrections.append(item)
+  run.summary['terminal_scope_corrections']=scope_corrections
   run.finish();client.flush()
   # Read back actual remote rows/media/calls. A successful local SDK exit is insufficient.
   for retry in range(6):
@@ -152,6 +164,12 @@ def main():
    calls=list(client.get_calls(filter={'call_ids':[correction['call_id']]},limit=2));assert len(calls)==1 and calls[0].ended_at
    for entry in verified:
     if entry['attempt_id']==correction['attempt']:entry.update(effective_retained=correction['effective_retained'],retention_correction_call_id=correction['call_id'])
-  report['runs'].append({'retention_corrections':corrections,'failed_outer_attempts':failure_entries,'run_id':run_id,'url':'https://wandb.ai/'+PROJECT+'/runs/'+run_id,'rows':verified,'history_rows':len(history),'raw_history_rows':len(raw_history),'identical_remote_duplicates':len(raw_history)-len(history)})
+  assert remote.summary.get('terminal_scope_corrections',[])==scope_corrections,'Remote terminal scope correction mismatch'
+  for correction in scope_corrections:
+   calls=list(client.get_calls(filter={'call_ids':[correction['call_id']]},limit=2));assert len(calls)==1 and calls[0].ended_at
+   assert dict(calls[0].output)==correction,'Remote correction call content mismatch'
+   for entry in verified:
+    if entry['attempt_id']==correction['attempt']:entry.update(actual_terminal_nets=correction['actual_terminal_nets'],terminal_scope_correction_call_id=correction['call_id'])
+  report['runs'].append({'terminal_scope_corrections':scope_corrections,'retention_corrections':corrections,'failed_outer_attempts':failure_entries,'run_id':run_id,'url':'https://wandb.ai/'+PROJECT+'/runs/'+run_id,'rows':verified,'history_rows':len(history),'raw_history_rows':len(raw_history),'identical_remote_duplicates':len(raw_history)-len(history)})
  (out/'verified.json').write_text(json.dumps(report,indent=2));print(json.dumps(report,indent=2))
 if __name__=='__main__':main()
