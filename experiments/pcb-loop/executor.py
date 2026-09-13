@@ -26,16 +26,17 @@ def execute_candidate(request:dict, backend, folder:Path, progress=None):
     folder=Path(folder);folder.mkdir(exist_ok=False)
     for key in ['size_family','stage','source_epoch','source_sha','required_gates','eligible_layers','via_options','route_budget','action','source_files','incumbent']:
         if key not in request:raise ValueError('Missing request field: '+key)
+    if not request['required_gates']:raise ValueError('required_gates must not be empty')
     if request['stage'] not in [1,2]:raise ValueError('stage must be1or2')
     if request['stage']==2 and not request['incumbent'].get('valid'):raise ValueError('Stage2requires valid incumbent')
-    sources={str(Path(p).resolve()):sha(p) for p in request['source_files']};started=now();tick=time.monotonic();packet={**request,'started_at':started,'source_file_sha256':sources};atomic(folder/'request.json',packet)
+    sources={str(Path(p).resolve()):sha(p) for p in request['source_files']};started=now();tick=time.monotonic();packet={**request,'source_files':list(sources),'started_at':started,'source_file_sha256':sources};atomic(folder/'request.json',packet)
     def emit(operation,**fields):
         state={'size_family':request['size_family'],'stage':request['stage'],'running':True,'current_operation':operation,'started_at':started,'elapsed_seconds':time.monotonic()-tick,'heartbeat_at':now(),'worker_pid':os.getpid(),**fields};atomic(folder/'live-status.json',state)
         if progress:progress(state)
     emit('native adapter start')
     try:
         measured=backend(packet,folder,emit)
-        gates=measured.get('gates',{});failed=[g for g in request['required_gates'] if gates.get(g,{}).get('passed') is not True]
+        gates=measured.get('gates',{});failed=[g for g in request['required_gates'] if gates.get(g,{}).get('passed') is not True or not Path(gates.get(g,{}).get('report','')).is_file()]
         drift=[p for p,digest in sources.items() if sha(p)!=digest]
         valid=not failed and not drift
         score=measured.get('official_score')
