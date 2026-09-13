@@ -102,7 +102,8 @@ def main():
         else:
             specs=[]
         if not specs:
-            ranked=sorted(component_priority,key=lambda row:(-row['score'],row['ref']))
+            unavailable={row['id'] for row in state.get('screen_failures',[]) if row['parent_board_sha256']==board_hash}
+            ranked=sorted([row for row in component_priority if 'adaptive-'+row['ref'] not in unavailable],key=lambda row:(-row['score'],row['ref']))
             specs=[dict(id='adaptive-'+row['ref'],kind='group_pose',group=membership[row['ref']],ref=row['ref'],steps='-.5,.5,-1,1,-2,2',rotations='0,90,180',component_priority=row) for row in ranked[:3]]
         index=len(state['decisions']);prefix=f'{index:03d}-{board_hash[:8]}-{int(time.time())}'
         previews=[];screened_specs=[]
@@ -111,6 +112,15 @@ def main():
             label=prefix+'-'+spec['id'];proposal=LOCAL/'proposals'/('campaign-'+label+'.json')
             if spec['kind'] in ('terminal_fanout','via_seed'):
                 action={**spec['action'],'parent_board_sha256':board_hash,'feedback_used':sorted(set(feedback_ids+spec['action']['feedback_used']))}
+                if spec['kind']=='via_seed':
+                    write(proposal,action);target_proof=work/(label+'-target-revalidation.json')
+                    if run([KIPY,str(ROOT/'scripts/copperhead_seed_targets.py'),str(parent/'pcbgolf.kicad_pcb'),'--proposal',str(proposal),'--output',str(target_proof)],label+'-targets',60):
+                        state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,reason='Native seed target binding failed'));continue
+                    targets=json.loads(target_proof.read_text())
+                    if not targets['kept_sites']:
+                        state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,reason='No remaining isolated unseeded target',proof=str(target_proof)));continue
+                    action.update(via_sites=targets['kept_sites'],nets=sorted({site['net'] for site in targets['kept_sites']}),target_revalidation=str(target_proof),excluded_seed_sites=targets['excluded_sites'])
+                    action['net']=action['nets'][0]
                 write(proposal,action);previews.append(dict(action=action,proposal=str(proposal),catalog_id=spec['id'],score=0,eligible=True,feedback_record_ids=feedback_ids,reason='Untried distinct topology hypothesis from measured failures; native fanout and full-route gates required'));continue
             argv=[krt,str(ROOT/'scripts/copperhead_pose_proposals.py'),str(parent),'--manifest',str(manifest),'--output',str(proposal),'--group',spec['group'],'--move-refs',spec['ref'],'--rotations',spec.get('rotations','0'),'--feedback',str(LOCAL/'loop/feedback.json'),'--allow-proxy-regression']
             if 'translation_mm' in spec:
@@ -144,7 +154,11 @@ def main():
         excluded=[dict(attempt=f['attempt'],refs=f['action'].get('refs'),translation_mm=f['action'].get('translation_mm'),rotation_deg=f['action'].get('rotation_deg',0),reason='Already evaluated unsuccessful pose on exact current parent') for f in failures if f['parent_board_sha256']==board_hash]
         trace=dict(parent=str(parent),parent_board_sha256=board_hash,created_at=now(),feedback_record_ids=feedback_ids,component_priority=component_priority,circuit_role_filter='Adaptive moves limited to resistors; protected oscillator R26 excluded. Capacitors/inductors require explicit reviewed placement intent.',exact_parent_exclusions=excluded,screened_specs=screened_specs,previews=previews,selection_policy='native-feedback-v2')
         if not eligible:
-            write(selection,trace);state.update(status='needs_attention',reason='Finite candidate pool has no eligible native preview',selection=str(selection));break
+            write(selection,trace)
+            if specs:
+                for spec in specs:state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,reason='No eligible preview in this finite candidate subset',selection=str(selection)))
+                write(path,state);continue
+            state.update(status='needs_attention',reason='Finite candidate pool has no eligible native preview',selection=str(selection));break
         chosen=min(eligible,key=lambda p:p['score']);trace['chosen']={k:v for k,v in chosen.items() if k!='action'};write(selection,trace)
         if a.preview_only:
             state.update(status='preview_verified',reason='Native finalist previews completed without routing',selection=str(selection),preview_count=len(previews));break
