@@ -11,7 +11,7 @@ def item(name,seconds,**extra): return dict(frame='video-frames/'+name,seconds=s
 with sync_playwright() as pw:
  b=pw.chromium.launch(executable_path=a.browser,headless=True);page=b.new_page(viewport={'width':1920,'height':1080},device_scale_factor=1)
  errors=[];page.on('pageerror',lambda e: errors.append(str(e)));page.goto((out/'index.html').as_uri())
- page.add_style_tag(content='main{padding:24px 42px}.intro{margin-bottom:18px}header{margin-bottom:18px}.board{height:470px}#gain,#diagnostics,#feedback,.lower,details,footer{display:none}.flow{margin:16px 0}h1{font-size:38px}')
+ page.add_style_tag(content='main{padding:24px 42px}.intro{margin-bottom:18px}header{margin-bottom:18px}.board{height:470px}#placement-gain,#gain,#diagnostics,#feedback,.lower,details,footer{display:none}.flow{margin:16px 0}h1{font-size:38px}')
  retained=max((i for i,r in enumerate(hist) if r.get('retained') and r.get('image') and not r.get('failed')),default=0)
  for i,r in enumerate(hist):
   page.evaluate('(i)=>showAttempt(i)',i);page.wait_for_function('document.querySelector("#board").hidden || (document.querySelector("#board").complete && document.querySelector("#board").naturalWidth>0)')
@@ -22,7 +22,14 @@ with sync_playwright() as pw:
  manifest.extend(item(f'{i:03}.png',30/len(hist),chapter='Complete historical trajectory',attempt=r['id'],board_sha256=r.get('board_sha256')) for i,r in enumerate(hist))
  feedback_path=out/'feedback-chain/portable.json'
  gain_path=out/'topology-gain/summary.json'
- if gain_path.exists():
+ placement_path=out/'placement-gain/summary.json'
+ if placement_path.exists():
+  placement=json.loads(placement_path.read_text());before=next(i for i,r in enumerate(hist) if r.get('board_sha256')==placement['parent_board_sha256']);after=next(i for i,r in enumerate(hist) if r['id']==placement['attempt'])
+  manifest.append(item(f'{before:03}.png',10,chapter='54-open parent: isolated R37 CMD pad',attempt=hist[before]['id'],board_sha256=hist[before]['board_sha256']))
+  page.goto((out/'index.html').as_uri());page.add_style_tag(content='#gain,#diagnostics,#feedback,.intro,.layout,.flow,.lower,details,footer,nav{display:none}#placement-gain{margin-top:110px;padding:35px}#placement-gain h2{font-size:32px}#placement-gain p{font-size:20px}#placement-gain a{font-size:17px}')
+  page.screenshot(path=str(frames/'placement-gain.png'));manifest.append(item('placement-gain.png',10,chapter='R37 pose change and independent final connectivity proof'))
+  manifest.append(item(f'{after:03}.png',10,chapter='Retained53: combined placement and routing result; warnings19',attempt=hist[after]['id'],board_sha256=hist[after]['board_sha256']))
+ elif gain_path.exists():
   gain=json.loads(gain_path.read_text());before=next(i for i,r in enumerate(hist) if r.get('board_sha256')==gain['parent_board_sha256']);after=next(i for i,r in enumerate(hist) if r['id']==gain['attempt'])
   manifest.append(item(f'{before:03}.png',10,chapter='Diagnostic parent: U15 ground island outside connected planes',attempt=hist[before]['id'],board_sha256=hist[before]['board_sha256']))
   page.goto((out/'index.html').as_uri());page.add_style_tag(content='#diagnostics,#feedback,.intro,.layout,.flow,.lower,details,footer,nav{display:none}#gain{margin-top:110px;padding:35px}#gain h2{font-size:32px}#gain p{font-size:20px}#gain a{font-size:17px}')
@@ -44,7 +51,7 @@ with sync_playwright() as pw:
  else:
   page.goto((out/'index.html').as_uri());page.add_style_tag(content='.layout,.intro,.flow,details,footer{display:none}.lower{margin-top:100px}.lower h2{font-size:48px}.lower p{font-size:22px}.lower .panel{padding:35px}.eyebrow{font-size:15px}')
   page.screenshot(path=str(frames/'fixture-scope.png'));manifest.append(item('fixture-scope.png',30,chapter='Separate fixture scope; report-derived'))
- page.goto((out/'index.html').as_uri());page.evaluate("document.querySelector('.layout').remove();document.querySelector('.intro').remove();document.querySelector('.flow').remove();document.querySelector('#feedback').remove();document.querySelector('#diagnostics').remove();document.querySelector('#gain').remove();document.querySelector('details').remove();document.querySelector('footer').style.fontSize='18px';document.querySelector('.lower').insertAdjacentHTML('beforebegin','<div style=\"margin:65px 0 40px\"><div class=\"eyebrow\">Inspect the chain of evidence</div><h1>One board. One evaluation. One decision.</h1><p style=\"font-size:24px\">Native board hash → rendered image → exact metrics → proposal / decision receipt</p><p style=\"font-size:20px;margin-top:25px\">The offline package preserves the evidence. Online observability links are optional.</p></div>')")
+ page.goto((out/'index.html').as_uri());page.evaluate("document.querySelector('.layout').remove();document.querySelector('.intro').remove();document.querySelector('.flow').remove();document.querySelector('#feedback').remove();document.querySelector('#diagnostics').remove();document.querySelector('#gain').remove();document.querySelector('#placement-gain').remove();document.querySelector('details').remove();document.querySelector('footer').style.fontSize='18px';document.querySelector('.lower').insertAdjacentHTML('beforebegin','<div style=\"margin:65px 0 40px\"><div class=\"eyebrow\">Inspect the chain of evidence</div><h1>One board. One evaluation. One decision.</h1><p style=\"font-size:24px\">Native board hash → rendered image → exact metrics → proposal / decision receipt</p><p style=\"font-size:20px;margin-top:25px\">The offline package preserves the evidence. Online observability links are optional.</p></div>')")
  page.screenshot(path=str(frames/'provenance.png'));manifest.append(item('provenance.png',25,chapter='Evidence and limitations'))
  manifest.append(item(f'{retained:03}.png',15,chapter='Closing: incomplete product board',attempt=hist[retained]['id'],board_sha256=hist[retained].get('board_sha256')))
  if errors: raise RuntimeError(errors)

@@ -44,3 +44,9 @@ Package new saved diagnostic evidence with `package_diagnostics.py --source REPO
 `topology-gain/` preserves the retained 54-open checkpoint, its exact final board/evaluation join, separate intermediate and final native graph proofs, and verified W&B/Weave readback. The U15 ground-island repair is a topology/routing gain with fixed component poses; the real board remains incomplete. `package_topology_gain.py` rebuilds this bounded case from its run directory, independent review directory and optional readback receipt.
 
 Use `build.py --through-attempt ATTEMPT_ID` to freeze the historical replay at a completed checkpoint while the owner continues optimizing. This avoids silently adding a newer state during a video refresh.
+
+## R37 placement checkpoint and retention corrections
+
+`placement-gain/` binds the 53-open R37 placement-plus-routing outcome to its final board, independent native graph/pose checks and W&B/Weave receipt. No fresh unchanged54-parent control exists; warning count is19. `package_placement_gain.py` freezes this bounded case.
+
+The importer applies separate `retention-correction.json` records using the owner records.py semantics: effective retained=false and restored incumbent. It preserves both the original immutable attempt bytes and the separate correction. The dashboard and ledger visibly mark corrected decisions, and links expose both audits. Missing-pair observations are not rewritten.

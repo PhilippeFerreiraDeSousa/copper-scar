@@ -23,6 +23,11 @@ def main():
  for path,d in entries:
   if not d.get('finished_at'): continue
   e=d.get('after'); name=d['attempt']; candidate=Path(d.get('candidate',''))
+  correction=None; correction_path=path.parent/'retention-correction.json'
+  if correction_path.exists() and name!='starting-six-layer-checkpoint':
+   correction=json.loads(correction_path.read_text());assert correction['attempt']==name
+   assert correction['fresh_before']==d['diagnostic_priority_before'] and correction['after']==d['diagnostic_priority_after']
+   assert correction['fresh_before']<correction['after'] and correction['restored']['attempt']!=name
   if not isinstance(e,dict):
    history.append(dict(id=name,time=d['finished_at'],kind=d.get('action_level','historical action'),action=d.get('action',{}).get('kind','unknown'),status=d.get('status'),failed=True,note=d.get('error','No completed native after-evaluation'),best=None)); continue
   board=candidate/'pcbgolf.kicad_pcb'; svg=candidate/'board.svg'
@@ -34,6 +39,8 @@ def main():
   # Keep exact action, parent, decision and source fingerprints; omit bulky command logs.
   receipt={k:d[k] for k in ['attempt','policy','started_at','finished_at','status','input','candidate','action','action_level','comparison_kind','incumbent_before','incumbent_after','became_incumbent','constraint_scope','routing_scope','classification','diagnostic_improved','tool_source_hashes'] if k in d}
   write(dest/'attempt.json',receipt)
+  if correction:
+   shutil.copy2(path,dest/'original-attempt.json');shutil.copy2(correction_path,dest/'retention-correction.json')
   shutil.copy2(board,dest/board.name)
   img=None
   render_receipt=dest/'render-receipt.json'
@@ -45,11 +52,11 @@ def main():
    img=f'evidence/{name}/board.svg'
    write(dest/'render-receipt.json',dict(board_sha256=expected,image_sha256=sha(dest/'board.svg'),method='kicad-cli pcb export svg; F.Cu,B.Cu,F.SilkS,Edge.Cuts; page-size-mode 2',source='packaged board bytes',note='Internal copper omitted in presentation view'))
   if svg.exists() and not img: shutil.copy2(svg,dest/'board.svg'); img=f'evidence/{name}/board.svg'
-  inc=d.get('incumbent_after') or {}; priority=inc.get('priority') or []
+  inc=(correction['restored'] if correction else d.get('incumbent_after')) or {}; priority=inc.get('priority') or []
   failed=d.get('status')!='completed'
   if not failed and e.get('invariants_ok') and e.get('errors')==0 and e.get('unconnected') is not None:
    best_observed=min(best_observed if best_observed is not None else e['unconnected'],e['unconnected'])
-  history.append(dict(id=name,time=d['finished_at'],kind=d.get('action_level','historical action'),action=d.get('action',{}).get('kind','unknown'),status=d.get('status'),failed=failed,classification=d.get('classification'),opens=e.get('unconnected'),errors=e.get('errors'),warnings=e.get('warnings'),valid=e.get('validity_gate'),invariants=e.get('invariants_ok'),retained=d.get('became_incumbent'),best=best_observed,retained_best=priority[5] if len(priority)>5 else None,image=img,board_sha256=expected,evaluation=f'evidence/{name}/evaluation.json',receipt=f'evidence/{name}/attempt.json',board=f'evidence/{name}/pcbgolf.kicad_pcb',reason=d.get('action',{}).get('reason',''),hypothesis=d.get('action',{}).get('hypothesis',''),comparison=d.get('comparison_kind',''),source=str(path)))
+  history.append(dict(id=name,time=d['finished_at'],kind=d.get('action_level','historical action'),action=d.get('action',{}).get('kind','unknown'),status=d.get('status'),failed=failed,classification=d.get('classification'),opens=e.get('unconnected'),errors=e.get('errors'),warnings=e.get('warnings'),valid=e.get('validity_gate'),invariants=e.get('invariants_ok'),historical_retained=d.get('became_incumbent'),retained=False if correction else d.get('became_incumbent'),retention_correction=f'evidence/{name}/retention-correction.json' if correction else None,original_attempt=f'evidence/{name}/original-attempt.json' if correction else None,original_attempt_sha256=sha(path) if correction else None,best=best_observed,retained_best=priority[5] if len(priority)>5 else None,image=img,board_sha256=expected,evaluation=f'evidence/{name}/evaluation.json',receipt=f'evidence/{name}/attempt.json',board=f'evidence/{name}/pcbgolf.kicad_pcb',reason=d.get('action',{}).get('reason',''),hypothesis=d.get('action',{}).get('hypothesis',''),comparison=d.get('comparison_kind',''),source=str(path)))
  data=dict(schema=1,built_at=datetime.datetime.now(datetime.timezone.utc).isoformat(),history=history,excluded=skipped,disclosure='Completed native snapshots. Opens are missing endpoint pairs, not a score. Inner routing is not placement optimization. No qualified product board.',source=str(a.source))
  write(out/'data.json',data); (out/'data.js').write_text('window.DEMO = '+json.dumps(data)+';\n')
  if a.feedback_chain:
@@ -61,6 +68,7 @@ def main():
   diagnostics_build(a.diagnostic_source,out)
  elif not (out/'diagnostics-data.js').exists(): (out/'diagnostics-data.js').write_text('window.DIAGNOSTICS=null;\n')
  if not (out/'gain-data.js').exists(): (out/'gain-data.js').write_text('window.GAIN=null;\n')
+ if not (out/'placement-data.js').exists(): (out/'placement-data.js').write_text('window.PLACEMENT=null;\n')
  docs=Path(__file__).parent/'docs'
  if docs.exists(): shutil.copytree(docs,out/'docs',dirs_exist_ok=True)
  hashes={str(f.relative_to(out)):sha(f) for f in sorted(out.rglob('*')) if f.is_file() and f != out/'SHA256SUMS.json'}

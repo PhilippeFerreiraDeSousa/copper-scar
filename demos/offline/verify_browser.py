@@ -18,6 +18,10 @@ with sync_playwright() as p:
   page.evaluate('(i)=>showAttempt(i)',different)
   assert page.locator('#diagnostic-match').inner_text()=='FROZEN PARENT; NOT THE SELECTED BOARD'
   page.locator('#diagnostic-parent').click();assert page.locator('#diagnostic-match').inner_text()=='APPLIES TO SELECTED BOARD'
+ corrected=[(i,r) for i,r in enumerate(data['history']) if r.get('retention_correction')]
+ if corrected:
+  i,r=corrected[0];page.evaluate('(i)=>showAttempt(i)',i);assert page.locator('#retained').inner_text()=='REJECTED · RETENTION CORRECTED'
+  assert page.locator('#correction').is_visible() and page.locator('#original-audit').is_visible()
  page.locator('#play').click();assert page.locator('#slider').input_value()=='0';page.locator('#play').click()
  page.set_viewport_size({'width':390,'height':844});page.screenshot(path=str(out/'mobile-dashboard.png'),full_page=True)
  assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Mobile horizontal overflow'
@@ -28,5 +32,5 @@ with sync_playwright() as p:
   page.screenshot(path=str(out/'diagnostics/preview.png'),full_page=True)
   page.set_viewport_size({'width':390,'height':844});assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Diagnostic mobile overflow'
  assert not errors,errors;assert not external,external;b.close()
-report=dict(status='pass',images_checked=len(data['history']),fixture_states_checked=5,parent_diagnostic_view_checked=(out/'diagnostics/index.html').exists(),javascript_errors=errors,external_requests=external,play_from_start=True,desktop_viewport=[1440,1100],mobile_viewport=[390,844])
+report=dict(status='pass',images_checked=len(data['history']),fixture_states_checked=5,retention_correction_ui_checked=bool(corrected),parent_diagnostic_view_checked=(out/'diagnostics/index.html').exists(),javascript_errors=errors,external_requests=external,play_from_start=True,desktop_viewport=[1440,1100],mobile_viewport=[390,844])
 (out/'browser-QA.json').write_text(json.dumps(report,indent=2));print(json.dumps(report))
