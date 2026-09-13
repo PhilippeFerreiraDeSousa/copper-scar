@@ -34,8 +34,9 @@ def main():
     work=LOCAL/'campaign';work.mkdir(exist_ok=True)
     lock=(work/'supervisor.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
     path=work/'state.json';state=json.loads(path.read_text()) if path.exists() else dict(decisions=[])
-    state.update(selector_version='native-feedback-v2',pid=os.getpid(),status='running',until=a.until,catalog=str(a.catalog.resolve()))
+    state.update(selector_version='native-feedback-v2',pid=os.getpid(),status='running',worker_pid=None,until=a.until,catalog=str(a.catalog.resolve()))
     state.pop('finished_at',None)
+    state.pop('reason',None)
     python=str(ROOT/'.venv/bin/python');krt=str(LOCAL/'tools/krt-venv/bin/python')
     manifest=LOCAL/'proposals/global-expanded.json';groups=json.loads(manifest.read_text())['groups']
     membership={ref:group for group,refs in groups.items() for ref in refs}
