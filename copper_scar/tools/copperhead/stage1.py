@@ -23,6 +23,7 @@ from copper_scar.loop.weave_trace import WeaveTracer
 from .metrics import measure, ordering, VERSION
 from .effects import compare as compare_effects, missing_by_net, geometry_scope
 from .manufacturing import findings as manufacturing_findings
+from .selection import manufacturing_repair_decision, VERSION as SELECTION_VERSION
 
 ROOT = Path(__file__).resolve().parents[3]
 LOCAL = ROOT / '.local/copperhead'
@@ -47,7 +48,7 @@ def copy_project(source, dest):
                     '*-backups', 'router-userdata', '*.ses', '*.dsn', 'router.log',
                     'router-result.json', 'execution.json', 'board.svg', 'board.png',
                     'erc.json', 'reference.net.xml', 'reference-check.json',
-                    'stage1-drc.json', 'placement-collisions', 'terminal-fanout', 'via-consolidation.json', 'krt-*.json', 'placement-search.json', 'ground-escape.json'))
+                    'stage1-drc.json', 'placement-collisions', 'terminal-fanout', 'via-definition', 'via-consolidation.json', 'krt-*.json', 'placement-search.json', 'ground-escape.json'))
 def command(argv, directory, label, timeout):
     if DEADLINE is not None:
         remaining = DEADLINE-time.monotonic()
@@ -90,6 +91,9 @@ def classify_action(initial, after):
 
 def should_retain(initial, after, incumbent):
     # A stale incumbent tie-break must not override the fresh same-parent result.
+    old_manufacturing=collections.Counter(v['type'] for v in manufacturing_findings({'violations':initial.get('violations',[])}))
+    new_manufacturing=collections.Counter(v['type'] for v in manufacturing_findings({'violations':after.get('violations',[])}))
+    if any(new_manufacturing[k]>old_manufacturing[k] for k in new_manufacturing):return False
     incumbent_priority=(priority(initial) if incumbent and incumbent.get('design_sha256')==initial['design_sha256']
                         else tuple(incumbent['priority']) if incumbent else None)
     return (classify_action(initial,after)[2] and after['invariants_ok']
@@ -145,6 +149,7 @@ def evaluate(candidate, run, label, frozen_support):
     result=dict(geometry_scope=geometry_scope(candidate/'pcbgolf.kicad_pcb'),native_kicad_version=raw.get('kicad_version'),search_cost=measure(raw),design_sha256=design_digest(before),invariants_ok=invariant,counts=counts,unconnected=len(raw['unconnected_items']),errors=sum(v['severity']=='error' for v in items),warnings=sum(v['severity']=='warning' for v in items),erc_ok=erc['ok'],native_cad_ok=erc['ok'] and drc['ok'] and invariant,missing_model_assignments=inventory['missing_models'],engineering_review='unknown',hardware_proof='unknown',assembly_completeness='unknown',validity_gate=False,stage2_enabled=False,official_score=None,report=str(d/'drc.json'),files=before,violations=items+raw['unconnected_items'])
     manufacturing=manufacturing_findings(raw)
     result.update(manufacturing_findings=manufacturing,manufacturing_findings_count=len(manufacturing),manufacturing_rules_clear=not manufacturing)
+    result['constraint_scope']=design_digest(frozen_support)
     result['native_cad_ok']=result['native_cad_ok'] and not manufacturing
     # This implementation has no authority to invent engineering acceptance.
     write(d/'evaluation.json',result)
@@ -190,7 +195,7 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
             state['stop_reason']='explicit wall-time budget';break
         uid='stage1-'+datetime.now().strftime('%Y%m%d-%H%M%S')+'-'+uuid.uuid4().hex[:6]
         run=LOCAL/'runs'/uid;run.mkdir();candidate=LOCAL/'candidates'/uid
-        record=dict(schema_version=1,attempt=uid,policy=POLICY,stage=1,started_at=now(),input=str(current),constraint_scope=scope,status='running',candidate=str(candidate))
+        record=dict(schema_version=1,attempt=uid,policy=POLICY,selection_policy_version=SELECTION_VERSION,stage=1,started_at=now(),input=str(current),constraint_scope=scope,status='running',candidate=str(candidate))
         source_paths=[Path(__file__)]+sorted((ROOT/'scripts').glob('copperhead_*.py'))+sorted((ROOT/'scripts/native').glob('Copperhead*.java'))
         record['implementation_sources']={}
         for source in source_paths:
@@ -249,6 +254,9 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                 if action['kind']=='terminal_fanout':
                     fanout_proposal=run/'terminal-fanout-proposal.json';write(fanout_proposal,action)
                     commands=[('fanout_export',full_commands[0][1],60),('terminal_fanout',[PYTHON,str(ROOT/'scripts/copperhead_terminal_fanout.py'),str(candidate),'--proposal',str(fanout_proposal)],420),('fanout_import',full_commands[2][1],60)]+full_commands
+                    if action.get('new_via_definition'):
+                        if action['new_via_definition']!={'diameter_mm':.45,'drill_mm':.2,'span':['F.Cu','B.Cu']}:raise ValueError('Only the reviewed additional through-via definition is supported')
+                        commands=[step for entry in commands for step in ([entry,(entry[0]+'_via_definition',[PYTHON,str(ROOT/'scripts/copperhead_via_definition.py'),str(candidate),'--phase',entry[0]],60)] if entry[0] in ('export','fanout_export') else [entry])]
                 record['comparison_kind']='initial_routed_placement' if action['kind']=='initial_route' else 'routed_placement'
                 if action['kind'] in ('terminal_fanout','via_consolidation'):record['comparison_kind']='terminal_topology_then_full_routing'
                 record['routing_scope']=dict(kind='whole_board',net_filter=None,fanout_enabled=False,via_count_limit=None,effort_limit_seconds=route_seconds,pass_limit=100,completion='pending')
@@ -274,6 +282,12 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                         record['fanout_evaluation']=evaluate(snapshot,run,'after_fanout',frozen)
                         write(run/'attempt.json',record)
                         if not record['fanout_evaluation']['invariants_ok'] or record['fanout_evaluation']['errors']:raise RuntimeError('Fanout failed native physical/invariant check before routing')
+                        if action.get('new_via_definition'):
+                            proof_path=run/'fanout-via-geometry.json'
+                            check=command([KIPY,str(ROOT/'scripts/copperhead_via_geometry.py'),'--before',str(run/'input/pcbgolf.kicad_pcb'),'--after',str(candidate/'pcbgolf.kicad_pcb'),'--output',str(proof_path)],run,'fanout_via_geometry',60)
+                            if check['returncode']!=0:raise RuntimeError('Native fanout via geometry check failed')
+                            proof=json.loads(proof_path.read_text());record['fanout_via_geometry']=str(proof_path)
+                            if not proof['existing_via_geometry_preserved'] or not proof['new_vias_use_only_allowed_definitions'] or not record['fanout_evaluation']['manufacturing_rules_clear']:raise RuntimeError('New via trial failed existing geometry or manufacturing gate')
                     if name=='via_consolidation':
                         record['via_consolidation']=json.loads((candidate/'via-consolidation.json').read_text())
                         snapshot=run/'via-consolidation-project';copy_project(candidate,snapshot)
@@ -306,9 +320,29 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
             write(run/'effects.json',effects)
             record.update(effects=str(run/'effects.json'),same_design_hash=same_design,raw_cost_decreased=raw_decrease,classification=classification)
             if (candidate/'krt-provenance.json').exists():record['backend_provenance']=dict(path=str(candidate/'krt-provenance.json'),sha256=hashlib.sha256((candidate/'krt-provenance.json').read_bytes()).hexdigest())
-            record.update(status='completed',after=after,diagnostic_improved=improved,diagnostic_priority_before=priority(initial),diagnostic_priority_after=priority(after),official_score=None,validity_gate=False,finished_at=now())
             oldbest=state.get('best_feasibility')
-            if should_retain(initial,after,oldbest):
+            retain=should_retain(initial,after,oldbest)
+            record['selection_decision']=dict(policy_version=SELECTION_VERSION,basis='fresh_feasibility_with_manufacturing_nonregression',eligible=retain,legacy_v1_priority_before=priority(initial),legacy_v1_priority_after=priority(after))
+            if action['kind'] in ('via_consolidation','group_pose','terminal_fanout'):
+                proof_path=run/'final-pad-partitions.json'
+                check=command([KIPY,str(ROOT/'scripts/copperhead_pad_partitions.py'),'--before',str(run/'input/pcbgolf.kicad_pcb'),'--after',str(candidate/'pcbgolf.kicad_pcb'),'--output',str(proof_path)],run,'final_pad_partitions',60)
+                if check['returncode']!=0:raise RuntimeError('Final native pad partition proof failed')
+                proof=json.loads(proof_path.read_text())
+                record['selection_decision'].update(pad_partition_proof=str(proof_path),no_connected_pad_group_split=proof['no_connected_pad_group_split'])
+                retain=retain and proof['no_connected_pad_group_split']
+                record['selection_decision']['eligible']=retain
+            if action['kind']=='via_consolidation':
+                execution=record['routing_scope']['execution']
+                decision=manufacturing_repair_decision(initial,after,oldbest or {},backend_ok=execution.get('returncode')==0 and not execution.get('timeout') and execution.get('session_exists',False),pad_partitions_preserved=proof['no_connected_pad_group_split'])
+                decision.update(legacy_v1_priority_before=priority(initial),legacy_v1_priority_after=priority(after),pad_partition_proof=str(proof_path));record['selection_decision']=decision;retain=decision['eligible']
+            if action.get('new_via_definition'):
+                proof_path=run/'final-via-geometry.json'
+                check=command([KIPY,str(ROOT/'scripts/copperhead_via_geometry.py'),'--before',str(run/'input/pcbgolf.kicad_pcb'),'--after',str(candidate/'pcbgolf.kicad_pcb'),'--output',str(proof_path)],run,'final_via_geometry',60)
+                if check['returncode']!=0:raise RuntimeError('Final native via geometry check failed')
+                proof=json.loads(proof_path.read_text());retain=retain and proof['existing_via_geometry_preserved'] and proof['new_vias_use_only_allowed_definitions']
+                record['selection_decision'].update(via_geometry_proof=str(proof_path),existing_via_geometry_preserved=proof['existing_via_geometry_preserved'],eligible=retain)
+            record.update(status='completed',after=after,diagnostic_improved=improved,diagnostic_priority_before=priority(initial),diagnostic_priority_after=priority(after),official_score=None,validity_gate=False,finished_at=now())
+            if retain:
                 state['best_feasibility']=dict(candidate=str(candidate),priority=priority(after),attempt=uid,scope=scope,metric_version=VERSION,design_sha256=after['design_sha256'])
                 record['became_incumbent']=True
             record['incumbent_after']=state.get('best_feasibility')

@@ -43,9 +43,10 @@ public class CopperheadFanout {
   settings.strictDrc=true; settings.automaticNeckdown=false;
   settings.fanout.enabled=true; settings.fanout.fallbackToBoardVias=false;
   settings.fanout.ripupAllowed=false;
-  // Direct fanout uses existing board via rules. Keep displayed diameter settings
-  // consistent as well; this wrapper never synthesizes a smaller via definition.
-  settings.fanout.startViaDiameterMm=0.6; settings.fanout.endViaDiameterMm=0.6;
+  // The direct API selects from loaded board rules; these settings describe the
+  // allowed range and do not create or resize padstacks.
+  settings.fanout.startViaDiameterMm=0.6;
+  settings.fanout.endViaDiameterMm=Files.readString(Path.of(args[0])).contains("Via[0-5]_450:200_um")?0.45:0.6;
   var rows=new ArrayList<Map<String,Object>>();
   for(int i=5;i<args.length;i++){
    String target=args[i]; Pin selected=null;
@@ -54,6 +55,13 @@ public class CopperheadFanout {
    }
    if(selected==null)throw new IllegalArgumentException("Missing pin "+target);
    var row=new LinkedHashMap<String,Object>();row.put("terminal",target);row.put("items_before",board.getItems().size());
+   var viaRules=new LinkedHashMap<String,Object>();
+   for(var net:selected.getAllNets()){
+    var names=new ArrayList<String>();var rule=net.getNetClass().getViaRule();
+    for(int v=0;v<rule.viaCount();v++)names.add(rule.getVia(v).getPadstack().name);
+    viaRules.put(net.name,names);
+   }
+   row.put("loaded_via_rules",viaRules);
    var before=snapshot(board.getItems());
    long start=System.nanoTime();
    Stoppable stopper=new Stoppable(){boolean stopped=false;public void requestStop(){stopped=true;}public boolean isStopRequested(){return stopped;}};

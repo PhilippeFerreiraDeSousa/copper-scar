@@ -63,6 +63,8 @@ def test_stale_incumbent_airwire_cannot_promote_fresh_parent_regression():
     matched={'priority':priority(stale_low),'design_sha256':'parent'}
     assert should_retain(fresh,improved,matched)
     assert not should_retain(fresh,improved,{**matched,'design_sha256':'different incumbent'})
+    fewer_opens=dict(improved,search_cost=dict(cost,missing_endpoint_pairs=52),violations=[{'type':'hole_to_hole','severity':'warning'}])
+    assert not should_retain(fresh,fewer_opens,matched)
 
 def test_placement_change_resets_stagnation_and_tried_nets():
     old=[dict(feedback('route_continue',False),geometry_scope='old')]*2
