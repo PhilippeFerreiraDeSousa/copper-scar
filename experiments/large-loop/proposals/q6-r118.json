@@ -1,0 +1,6 @@
+{
+  "kind": "swap_component_locations",
+  "rationale": "Native baseline reports both Q6 drain nets as open. Q6 is 35mm above its drain/indicator resistor field. Move Q6 into R118's location beside R114/R115 and its gate/indicator connections; move R118 near its actual transistor Q8. All original electrical/mechanical geometry and rules remain mandatory; route the entire board fresh after native preflight.",
+  "diagnostic_nets": ["Net-(Q6-D1)", "Net-(Q6-D2)"],
+  "after": {"Q6": [86, 92, 0], "R118": [86, 57, 0]}
+}

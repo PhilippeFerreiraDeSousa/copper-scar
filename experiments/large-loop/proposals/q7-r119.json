@@ -1,0 +1,6 @@
+{
+  "kind": "swap_component_locations",
+  "rationale": "Native baseline reports Net-(Q7-D1) open. Move Q7 from the isolated transistor row into its drain resistor field beside R116/R117; move displaced R119 near its actual transistor Q8. This is a placement-only hypothesis. Require full-board native preflight, rerouting and independent acceptance before retaining it.",
+  "diagnostic_nets": ["Net-(Q7-D1)"],
+  "after": {"Q7": [92, 92, 0], "R119": [92, 57, 0]}
+}
