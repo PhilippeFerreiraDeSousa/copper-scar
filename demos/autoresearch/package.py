@@ -15,7 +15,13 @@ def main():
  remote=json.loads((pilot/'remote/verified.json').read_text());assert remote['source_events_sha256']==state['events_sha256'],'Remote publication lags this freeze'
  video=json.loads((pilot/'replay-verified.json').read_text());assert video['source_events_sha256']==state['events_sha256'],'Replay lags this freeze'
  assert sha(pilot/'two-level-replay.mp4')==video['video_sha256']
+ assert video['source_state_sha256']==sha(pilot/'data.json'),'Replay does not match the complete frozen state'
  ui=json.loads((pilot/'ui-verified.json').read_text());assert ui['events_sha256']==state['events_sha256'],'Offline UI QA lags this freeze'
+ assert ui['source_state_sha256']==sha(pilot/'data.json'),'UI QA does not match complete frozen state'
+ if (state.get('next_campaign') or {}).get('result'):
+  campaign=json.loads((pilot/'remote/campaign-verified.json').read_text());assert campaign['downloaded_bytes_verified']
+  for artifact in state['decision_artifacts']:
+   assert campaign['files_sha256'][artifact['kind']]==artifact['sha256'],'Consumer remote evidence lags this freeze'
  files={}
  def add_tree(folder,prefix,skip=lambda p:False):
   for p in folder.rglob('*'):

@@ -17,7 +17,7 @@ def main():
    # Exact experiment-owned input identity; unrelated historical runs are excluded.
    try:record=json.loads(rp.read_text())
    except json.JSONDecodeError:continue
-   pid=next((p['id'] for p in state['policies'] if record.get('input')==str(root/'candidates'/('policy-'+p['id']+'-'+state['experiment_id']))),None)
+   pid=next((p['id'] for p in state['policies'] if any(x.get('attempt_id')==record.get('attempt') for x in p['points'])),None)
    if not pid:continue
    log=root/'candidates'/record['attempt']/'router.log';command=rp.parent/'route.command.json'
    if not log.exists():continue

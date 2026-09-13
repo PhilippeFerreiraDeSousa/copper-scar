@@ -5,7 +5,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);a=ap.parse_args();out=a.output;d=json.loads((out/'data.json').read_text());assert not d['fixture'];checks=0
+ ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);a=ap.parse_args();out=a.output;state_raw=(out/'data.json').read_bytes();d=json.loads(state_raw);assert not d['fixture'];checks=0
  for p in d['policies']:
   completed=[x for x in p['points'] if x['index'] and x['completed']]
   assert p['cost_at_n'] is None or len(completed)==d['attempt_budget']
@@ -28,5 +28,5 @@ def main():
   page.click('#replay');assert page.evaluate('window.EXPERIMENT.policies.every(p=>p.cost_at_n===null)'), 'Replay leaks future cost at N'
   page.click('#replay')
   page.screenshot(path=str(out/'qa-desktop.png'),full_page=True);page.set_viewport_size({'width':390,'height':844});page.screenshot(path=str(out/'qa-mobile.png'),full_page=True);assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'), 'Mobile overflow';assert not errors,errors;browser.close()
- result={'event_count':d['event_count'],'events_sha256':d['events_sha256'],'checks':checks,'offline_browser':True,'javascript_errors':errors,'mobile_no_overflow':True};(out/'ui-verified.json').write_text(json.dumps(result,indent=2));print(json.dumps(result))
+ result={'event_count':d['event_count'],'events_sha256':d['events_sha256'],'source_state_sha256':hashlib.sha256(state_raw).hexdigest(),'checks':checks,'offline_browser':True,'javascript_errors':errors,'mobile_no_overflow':True};(out/'ui-verified.json').write_text(json.dumps(result,indent=2));print(json.dumps(result))
 if __name__=='__main__':main()

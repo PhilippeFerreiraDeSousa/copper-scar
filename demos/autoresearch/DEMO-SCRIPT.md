@@ -16,9 +16,9 @@ Select `island_first`, decision 1; compare layers including In4.Cu. The challeng
 “This result supports a narrow ranking observation. It does not prove the new vias enabled routing, nor establish a generally superior optimizer.”
 
 **1:45–2:20 — The higher-level decision**
-Use Play actual checkpoints to reveal measured results in chronological order. Read the final recorded cost at three decisions and policy disposition from the current package. If it is still incomplete, say so and do not name a winner. A tie keeps the baseline under the predeclared rule. Time and distance are secondary diagnostics.
+Use Play actual checkpoints to reveal measured results in chronological order. The completed comparison has 49 events and exactly three decisions per arm. Both retain 44 missing pairs, zero physical errors and 20 warnings. The predeclared tie rule keeps placement_first. Time and distance are secondary diagnostics.
 
-Show the selected-policy receipt and, only if present, the separately labeled next-campaign consumption/result receipt. Explain precisely whether the policy was merely selected, consumed, screened or routed. The follow-on campaign is outside the frozen comparison.
+Show the selected-policy receipt and the separately labeled next-campaign receipt. The selected placement_first version 1 was consumed at 09:23:52 Pacific and dispatched the R89 (-1,0) trial for full routing at 09:24:43. Read its final outcome from the included receipt; do not treat consumption alone as proof of a completed route. This follow-on campaign is outside the frozen comparison.
 
 **2:20–2:50 — W&B / Weave and reproducibility**
 Open a linked Evidence summary and complete original files trace. Show its proposal, alternatives, native outcome, decision and causal limitation. These are public evidence summaries, not fabricated model thought traces: deterministic ranking executes each lower decision. Downloadable artifact files contain complete JSON and exact CAD, with SHA256 readback receipts; the Weave array preview is not the full record.

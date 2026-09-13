@@ -5,7 +5,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);a=ap.parse_args();out=a.output;state=json.loads((out/'data.json').read_text());assert not state['fixture'];frames=out/'replay-frames';frames.mkdir(exist_ok=True)
+ ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);a=ap.parse_args();out=a.output;state_raw=(out/'data.json').read_bytes();state=json.loads(state_raw);assert not state['fixture'];frames=out/'replay-frames';frames.mkdir(exist_ok=True)
  sequence=sorted([(x['timestamp'],p['id'],x['index']) for p in state['policies'] for x in p['points'] if x['completed']],key=lambda x:(x[0],x[1]));assert sequence
  events=[json.loads(x) for x in (out/'events.jsonl').read_text().splitlines() if x];recorded=[]
  with sync_playwright() as pw:
@@ -23,5 +23,5 @@ def main():
  # Explicit current frame list avoids including leftovers from earlier longer exports.
  listing=frames/'frames.txt';listing.write_text(''.join("file '"+r['frame']+"'\nduration "+str(8 if i in (0,len(recorded)-1) else 4)+"\n" for i,r in enumerate(recorded))+"file '"+recorded[-1]['frame']+"'\n")
  video=out/'two-level-replay.mp4';subprocess.run(['ffmpeg','-y','-loglevel','error','-f','concat','-safe','0','-i',str(listing),'-vf','fps=24,format=yuv420p','-c:v','libx264','-crf','20','-movflags','+faststart',str(video)],check=True);subprocess.run(['ffmpeg','-v','error','-i',str(video),'-f','null','-'],check=True)
- receipt={'fixture':False,'comparison_complete':bool(state['decisions']),'source_events_sha256':state['events_sha256'],'frames':recorded,'video_sha256':hashlib.sha256(video.read_bytes()).hexdigest(),'video_bytes':video.stat().st_size,'full_decode_pass':True};(out/'replay-verified.json').write_text(json.dumps(receipt,indent=2));print(json.dumps(receipt))
+ receipt={'fixture':False,'comparison_complete':bool(state['decisions']),'source_events_sha256':state['events_sha256'],'source_state_sha256':hashlib.sha256(state_raw).hexdigest(),'frames':recorded,'video_sha256':hashlib.sha256(video.read_bytes()).hexdigest(),'video_bytes':video.stat().st_size,'full_decode_pass':True};(out/'replay-verified.json').write_text(json.dumps(receipt,indent=2));print(json.dumps(receipt))
 if __name__=='__main__':main()
