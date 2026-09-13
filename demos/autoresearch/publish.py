@@ -80,10 +80,24 @@ def main():
      proof=rp.parent/'final-pad-partitions.json'
      if proof.exists():artifact.add_file(str(proof),name='attempts/'+rp.parent.name+'/final-pad-partitions.json')
    logged=run.log_artifact(artifact);logged.wait();append(remote/'publication-journal.jsonl',{'state':'artifact_uploaded','run_id':run_id,'artifact':logged.qualified_name,'digest':logged.digest,'local_sha256':sha(snapshot)})
+  if pid in policies and policies[pid].get('active_index'):
+   active_policy=policies[pid];stages=active_policy.get('active_stages',[]);preview_key=canon([pid,active_policy['active_index'],[x.get('sha256') for x in stages]])
+   if any(x.get('board') for x in stages) and not any(x.get('preview/key')==preview_key for x in history):
+    preview={'preview/key':preview_key,'preview/decision_index':active_policy['active_index'],'preview/status':'Actual selected pre-route state; completed route result is pending','preview/recorded_event':active_policy.get('events',[])[-1]}
+    for kind,board in zip(['input','pre_route'],stages[:2]):
+     if not board.get('board'):continue
+     svg=out/board['base']/'F.Cu.svg';png=svg.with_suffix('.png')
+     if not png.exists():subprocess.run(['/opt/homebrew/bin/rsvg-convert','-w','1200','-o',str(png),str(svg)],check=True,capture_output=True)
+     preview['board/'+kind]=wandb.Image(str(png),caption=pid+' decision '+str(active_policy['active_index'])+' '+kind+'; full-route result PENDING');preview['board/'+kind+'_sha256']=board['sha256']
+    run.log(preview)
   if pid in policies:
    p=policies[pid];run.summary.update({'completed_decisions':p['completed_decisions'],'routed_dispatch_count':p['routed_dispatch_count'],'routed_completed':p['routed_completed'],'cost_at_N_decisions':p['cost_at_n'],'decision_wall_seconds':p['decision_wall_seconds'],'router_wall_seconds':p['route_wall_seconds'],'policy_state':p['state']})
   else:run.summary.update({'policy_decisions':state['decisions'],'common_protocol_sha256':hashlib.sha256(canon(state['common_protocol']).encode()).hexdigest()})
   run.finish();fresh=api.run(run_path);history=list(fresh.scan_history());files={f.name for f in fresh.files()}
+  for row in history:
+   if row.get('preview/key'):
+    for name in ['board/input','board/pre_route']:
+     if name in row:assert row[name]['path'] in files and row[name].get('sha256'),'Missing remote pre-route media'
   for _,event in items:
    digest=hashlib.sha256(canon(event).encode()).hexdigest();matches=[x for x in history if x.get('event_id')==event['event_id']];assert matches and all(x['event_sha256']==digest for x in matches)
    for row in matches:

@@ -28,17 +28,17 @@ def main():
     files['manifest.json']=out/'manifests'/(state['manifest_sha256']+'.json');jobs.append((rid,point['attempt_id'],files,stable(state['experiment_id']+'/'+policy['id']+'/'+str(point['index']))))
  receipts=[]
  for rid,attempt,files,parentid in jobs:
-  hashes={n:digest(p) for n,p in files.items()};bundle_hash=hashlib.sha256(json.dumps(hashes,sort_keys=True).encode()).hexdigest();dest=remote/'complete-evidence'/attempt;dest.mkdir(parents=True,exist_ok=True);receipt_file=dest/(bundle_hash+'.verified.json')
+  hashes={n:digest(p) for n,p in files.items()};bundle_hash=hashlib.sha256(json.dumps({'schema_version':2,'files':hashes},sort_keys=True).encode()).hexdigest();dest=remote/'complete-evidence'/attempt;dest.mkdir(parents=True,exist_ok=True);receipt_file=dest/(bundle_hash+'.verified.json')
   if receipt_file.exists():receipts.append(json.loads(receipt_file.read_text()));continue
   manifest=dest/'sha256-manifest.json';manifest.write_text(json.dumps({'attempt':attempt,'files':hashes,'complete_original_files':True},indent=2));files['sha256-manifest.json']=manifest;hashes['sha256-manifest.json']=digest(manifest)
   run=wandb.init(entity='philippe-fdesousa',project='copper-scar',id=rid,resume='must',dir=str(remote));artifact=wandb.Artifact(attempt+'-complete-evidence',type='complete-native-evidence',metadata={'attempt':attempt,'bundle_sha256':bundle_hash,'array_truncation':False})
   for name,p in files.items():artifact.add_file(str(p),name=name)
   # The full receipt is also available directly in the run Files tab.
-  run.save(str(files['attempt.json']),base_path=str(files['attempt.json'].parent),policy='now');logged=run.log_artifact(artifact);logged.wait();qualified=logged.qualified_name;run.finish()
+  run.save(str(files['attempt.json']),base_path=str(files['attempt.json'].parent.parent),policy='now');logged=run.log_artifact(artifact);logged.wait();qualified=logged.qualified_name;run.finish()
   with tempfile.TemporaryDirectory(prefix='copper-evidence-readback-') as td:
    downloaded=Path(api.artifact(qualified).download(root=td))
    for name,h in hashes.items():assert digest(downloaded/name)==h,('Remote byte mismatch',name)
-  parent=read_trace(parentid);assert parent,'Missing parent trace';cid=stable('complete-evidence/'+rid+'/'+bundle_hash);links={'artifact':qualified,'run_files':'https://wandb.ai/'+PROJECT+'/runs/'+rid+'/files','run_artifacts':'https://wandb.ai/'+PROJECT+'/runs/'+rid+'/artifacts','download_note':'Download complete-native-evidence artifact for full untruncated JSON and the listed exact CAD files. Run Files also contains attempt.json.','files_sha256':hashes,'evidence_summary':json.loads(files['evidence-summary.json'].read_text()) if 'evidence-summary.json' in files else 'Historical original record; see full download.'}
+  parent=read_trace(parentid);assert parent,'Missing parent trace';cid=stable('complete-evidence/'+rid+'/'+bundle_hash);links={'artifact':qualified,'run_files':'https://wandb.ai/'+PROJECT+'/runs/'+rid+'/files','run_artifacts':'https://wandb.ai/'+PROJECT+'/runs/'+rid+'/artifacts','download_note':'Download complete-native-evidence artifact for full untruncated JSON and the listed exact CAD files. Run Files also contains the unique '+attempt+'/attempt.json record.','files_sha256':hashes,'evidence_summary':json.loads(files['evidence-summary.json'].read_text()) if 'evidence-summary.json' in files else 'Historical original record; see full download.'}
   c=start(cid,'copperhead.complete_evidence',{'attempt':attempt,'full_record_sha256':hashes['attempt.json'],'truncated_display_is_not_full_record':True},as_call(parent),datetime.datetime.now(datetime.timezone.utc),display_name='Evidence summary and complete original files')
   if not c.ended_at:finish(client,c,output=links)
   found=read_trace(cid);assert found and found.get('ended_at')
