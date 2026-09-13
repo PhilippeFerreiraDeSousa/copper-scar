@@ -11,10 +11,22 @@ rotation=cfg.get('rotation_deg',0);assert not rotation or len(refs)==1,'Rotation
 rotation_center=next(iter(old[r][0] for r in refs))
 oldpads=[q for r in refs for q in fs[r].Pads()]
 oldboxes=[(q.GetNetname(),q.GetBoundingBox(),q.GetLayerSet()) for q in oldpads]
+preserve_all=cfg.get('copper_policy')=='preserve_all'
+anchor=None
+if preserve_all:
+ assert len(refs)==1 and rotation in (-180,-90,90,180),'Bounded contact-preserving pivot required'
+ anchor=next(q for q in oldpads if q.m_Uuid.AsString()==cfg['preserved_pad_uuid'])
+ assert [p.ToMM(anchor.GetPosition().x),p.ToMM(anchor.GetPosition().y)]==cfg['preserved_pad_position_mm']
+ assert anchor.GetShape() in (p.PAD_SHAPE_CIRCLE,p.PAD_SHAPE_RECT,p.PAD_SHAPE_ROUNDRECT) and anchor.GetOffset()==p.VECTOR2I(0,0)
+ assert abs(rotation)==180 or anchor.GetSize().x==anchor.GetSize().y,'Anchor copper lacks rotational symmetry'
+ anchor_position=p.VECTOR2I(anchor.GetPosition())
+
 for ref in refs:
  f=fs[ref];expected=cfg['from_poses'][ref];pos=f.GetPosition();assert abs(p.ToMM(pos.x)-expected['x_mm'])<1e-5 and abs(p.ToMM(pos.y)-expected['y_mm'])<1e-5 and abs(f.GetOrientationDegrees()-expected['angle_deg'])<1e-5,'Stale source pose';f.SetPosition(pos+delta);f.SetOrientationDegrees(expected['angle_deg']+rotation)
+if preserve_all:assert anchor.GetPosition()==anchor_position,'Anchor contact moved'
 affected={n for n,owners in net_refs.items() if owners&refs};assert affected==set(cfg['nets']);retained=collections.Counter();removed=collections.Counter();unchanged=0;preserved_boundary_vias=[]
 for t in list(b.GetTracks()):
+ if preserve_all:unchanged+=1;continue
  n=t.GetNetname();owners=net_refs.get(n,set())
  if n not in affected:unchanged+=1;continue
  if owners<=refs:
@@ -35,5 +47,7 @@ for r,f in fs.items():
   moves.append({'ref':r,'uuid':f.m_Uuid.AsString(),'from_mm':[p.ToMM(pos.x),p.ToMM(pos.y)],'to_mm':[p.ToMM(f.GetPosition().x),p.ToMM(f.GetPosition().y)],'from_degrees':angle,'to_degrees':f.GetOrientationDegrees()})
  else:assert f.GetPosition()==pos and f.GetOrientationDegrees()==angle
 result={'moves':moves,'affected_nets':sorted(affected),'retained_internal_copper_items':sum(retained.values()),'removed_boundary_copper_items':sum(removed.values()),'unchanged_copper_items':unchanged,'retained_by_net':dict(retained),'removed_by_net':dict(removed),'parent_board_sha256':cfg['parent_board_sha256'],'proxy_before':cfg['proxy_before'],'proxy_after':cfg['proxy_after'],'group':cfg['group'],'group_members':cfg.get('group_members',sorted(refs)),'anchor_refs':cfg.get('anchor_refs',[]),'rotation_deg':rotation,'translation_mm':cfg['translation_mm'],'outline_changed':False,'copper_layers':b.GetCopperLayerCount(),'copper_policy':cfg.get('copper_policy','remove_boundary_nets'),'qualification':'Explicit pose applied to original native project. Boundary copper handling follows recorded policy; internal-net copper translated, unrelated nets retained. Native physical/invariant check and whole-board routing required; no proxy-based promotion.'}
+if preserve_all:result['qualification']='Explicit symmetric-pad pivot; all authored tracks and vias remain fixed. Native physical, original-group and full-route checks required.'
+result.update(preserved_pad_uuid=cfg.get('preserved_pad_uuid'),all_copper_preserved_by_policy=preserve_all)
 result.update(boundary_via_policy=cfg.get('boundary_via_policy','detach_incident'),preserved_boundary_vias=preserved_boundary_vias,incident_detachment_layer_scope='Only layers occupied by original moved pads; retained other-layer traces preserve via-to-trunk access')
 (a.candidate/'placement-search.json').write_text(json.dumps(result,indent=2));print(json.dumps({k:v for k,v in result.items() if k not in ['moves','retained_by_net','removed_by_net','affected_nets']},indent=2))

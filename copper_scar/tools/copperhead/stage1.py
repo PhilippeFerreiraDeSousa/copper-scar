@@ -26,6 +26,7 @@ from .manufacturing import findings as manufacturing_findings
 from .selection import manufacturing_repair_decision, VERSION as SELECTION_VERSION
 from .routing_options import candidate_options,context as routing_context,SMALL,verify_after_exports
 from .topology_contract import check as check_topology_contract
+from .placement_contacts import check as check_placement_via_nets
 
 ROOT = Path(__file__).resolve().parents[3]
 LOCAL = ROOT / '.local/copperhead'
@@ -350,6 +351,8 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                             record['commands'].append(clearance)
                             if clearance['returncode']!=0:raise RuntimeError('Placement collision ripup failed')
                         record['placement_delta']=json.loads((candidate/'placement-search.json').read_text())
+                        via_contacts=check_placement_via_nets(run/'input/pcbgolf.kicad_pcb',candidate/'pcbgolf.kicad_pcb');write(run/'placement-via-net-attachments.json',via_contacts);record['placement_via_net_attachments']=via_contacts
+                        if not via_contacts['existing_via_net_attachments_preserved']:raise RuntimeError('Placement implicitly reassigned an existing via net')
                         if set(record['placement_delta']['affected_nets'])!=set(action['nets']):raise RuntimeError('Placement net scope differs from proposal')
                         placement_snapshot=run/'placement-project';copy_project(candidate,placement_snapshot)
                         record['placement_snapshot']=str(placement_snapshot)
