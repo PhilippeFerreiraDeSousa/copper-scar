@@ -4,7 +4,7 @@ import argparse,hashlib,subprocess,sys,time
 from pathlib import Path
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);a=ap.parse_args();small=Path('/Users/philippe/.codex/worktrees/d991/copper-scar/.local/small-loop');medium=Path('/Users/philippe/.codex/worktrees/3bde/copper-scar/.local/medium-loop');paths=[small/'stage2/live-status.json',small/'stage2/final-accepted/frozen.json',medium/'accepted-best/handoff.json',medium/'observability/verified.json'];last=None
+ ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);a=ap.parse_args();small=Path('/Users/philippe/.codex/worktrees/d991/copper-scar/.local/small-loop');medium=Path('/Users/philippe/.codex/worktrees/3bde/copper-scar/.local/medium-loop');paths=[small/'stage2/live-status.json',small/'stage2/final-accepted/frozen.json',medium/'accepted-best/handoff.json',medium/'observability/verified.json',medium/'stage2/compact-v1/live-status.json',medium/'stage2/compact-v1/events.json'];last=None
  while True:
   fingerprint=hashlib.sha256(b''.join(p.read_bytes() for p in paths if p.exists())).hexdigest()
   if fingerprint!=last:

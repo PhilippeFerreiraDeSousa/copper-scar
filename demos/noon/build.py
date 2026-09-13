@@ -71,7 +71,7 @@ def main():
  stage2src=a.small/'stage2'
  if (stage2src/'protocol.json').exists() and (stage2src/'baseline/score.json').exists():
   s2=small/'stage2';s2.mkdir(exist_ok=True);s2protocol=read(stage2src/'protocol.json');events=read(stage2src/'events.json') if (stage2src/'events.json').exists() else [];s2states=[]
-  for name in ['protocol.json','assembly-contract.json','current.json','events.json']:
+  for name in ['protocol.json','assembly-contract.json','current.json','events.json','policy-comparison.json']:
    if (stage2src/name).exists():shutil.copy2(stage2src/name,s2/name)
   copytree(stage2src/'baseline',s2/'baseline')
   def scorestate(folder,title,score,event=None,preview=False):
@@ -97,18 +97,47 @@ def main():
   if (selected/'score.json').exists():s2states.append(scorestate(selected,'Retained valid incumbent',read(selected/'score.json')))
   if (stage2src/'final-accepted/frozen.json').exists():
    copytree(stage2src/'final-accepted',s2/'final-accepted');frozen=read(s2/'final-accepted/frozen.json');score=read(s2/'final-accepted/score.json');st=scorestate(s2/'final-accepted','Frozen final · independently accepted',score);st['source']=frozen['source_sha'];st['at']=frozen['frozen_at'];st['qualification']='Frozen final. Independent native checks passed; search is completed and idle.';s2states.append(st);current={'score':score,'source_sha':frozen['source_sha'],'frozen_at':frozen['frozen_at'],'status':'completed_idle'}
-  projects.insert(1,{'id':'stage2','title':'small-loop · Stage 2 score','stage':'Official formula after native and assembly gates','summary':'Baseline '+str(baseline_score['official_formula_score'])+'; last retained score '+str(current['score']['official_formula_score'])+'. All invalid proposals are rejected regardless of their smaller outline. Wire length is not the selection objective.','states':s2states,'protocol':s2protocol,'decision':current,'limitations':'Reduced original-inspired circuit. J4 was explicitly populated with a nominal Harwin header model; complete 15-component nominal assembly. Not an official competition submission or hardware qualification. Stage 2 is separate from the earlier matched placement pilot. Candidate geometry is generated from the known valid baseline; parent_incumbent names the score comparator, not necessarily the source of the before poses.'})
+  projects.insert(1,{'id':'stage2','title':'small-loop · Stage 2 score','stage':'Official formula after native and assembly gates','summary':'Baseline '+str(baseline_score['official_formula_score'])+'; last retained score '+str(current['score']['official_formula_score'])+'. All invalid proposals are rejected regardless of their smaller outline. Wire length is not the selection objective.','states':s2states,'protocol':s2protocol,'decision':{'final':current,'adaptive_margin_comparison':read(s2/'policy-comparison.json') if (s2/'policy-comparison.json').exists() else None},'limitations':'Reduced original-inspired circuit. J4 was explicitly populated with a nominal Harwin header model; complete 15-component nominal assembly. Not an official competition submission or hardware qualification. Stage 2 is separate from the earlier matched placement pilot. Candidate geometry is generated from the known valid baseline; parent_incumbent names the score comparator, not necessarily the source of the before poses.'})
  large=Path('/Users/philippe/.codex/worktrees/dc68/copper-scar/.local/large-loop');lp=large/'initial-preflight'
  if (lp/'acceptance.json').exists():
   target=raw/'large';copytree(lp,target/'initial-preflight')
   if (large/'input').exists():copytree(large/'input',target/'input')
   st=state(target/'initial-preflight',out,'large-loop · initial native screen','Input preview · no routed result',target/'initial-preflight/acceptance.json');st['qualification']='Ongoing additional size. Initial native screen is invalid; inherited header hole-clearance errors and silkscreen findings remain. No routing convergence or zero claim.'
   projects.append({'id':'large','title':'large-loop · 156 components / 164 nets','stage':'Stage 1 · input screening','summary':'472 native opens at initial screen. Additional large-loop experiment is ongoing and is not needed to release the verified small-loop and medium-loop results.','states':[st],'protocol':{'status':'initial preflight only'},'decision':None,'limitations':st['qualification']})
+ m2src=a.medium/'stage2';m2=medium/'stage2';mp=next(p for p in projects if p['id']=='medium')
+ if (m2src/'lineage.json').exists():
+  m2.mkdir(exist_ok=True);shutil.copy2(m2src/'lineage.json',m2/'lineage.json');mp['lineage']=read(m2/'lineage.json');mp['lineage_receipt']=str((m2/'lineage.json').relative_to(out));mp['summary']='Stage 1: 183 opens → routing-only 1 → placement 0. Stage 2 starts from the explicitly selected policy incumbent; the diagnostic first-zero branch is preserved separately. Exact transition hashes are in the lineage receipt.'
+ if (m2src/'baseline/score.json').exists():
+  copytree(m2src/'baseline',m2/'baseline');sc=read(m2/'baseline/score.json');st=scorestate(m2/'baseline','Stage boundary · accepted-best becomes Stage 2 baseline',sc);st['source']=mp['states'][-1]['source'];st['phase']='Stage 2 official formula · same accepted circuit';st['qualification']='Explicit selected-policy branch → model-only accepted-best → identical board SHA at Stage 2 baseline. Diagnostic first-zero branch is not silently substituted.';mp['states'].append(st)
+  for study_name in ['compact-v1','edge-space-v1']:
+   study=m2src/study_name
+   if not (study/'events.json').exists():continue
+   if (study/'events.json').exists():
+    dst=m2/study_name;dst.mkdir(exist_ok=True)
+    for name in ['protocol.json','events.json','current.json','live-status.json']:
+     if (study/name).exists():shutil.copy2(study/name,dst/name)
+    for event in read(study/'events.json'):
+     f=Path(event['folder']);target=dst/f.name;copytree(f,target);score=event['result'];title='medium-loop Stage 2 · '+str(event['index'])
+     if (target/'preview.kicad_pcb').exists():mp['states'].append(scorestate(target,title+' · proposed',score,event,True))
+     mp['states'].append(scorestate(target,title+' · evaluated',score,event))
+    if (dst/'current.json').exists():mp['stage2_current']=read(dst/'current.json')
+ if (large/'v1/routing-control-01/completed.json').exists():
+  target=raw/'large/v1';target.mkdir(parents=True,exist_ok=True);lp=next(p for p in projects if p['id']=='large');lp['states']=[]
+  for name in ['input-verified','routing-control-01','placement-01']:
+   src=large/'v1'/name
+   if not (src/'completed.json').exists():continue
+   copytree(src,target/name);f=target/name;rec=read(f/'completed.json')
+   if name=='placement-01' and (f/'preview.kicad_pcb').exists():lp['states'].append(state(f,out,'large-loop · six-swap proposal','Placement preview',f/'acceptance.json',True,action=rec.get('action'),source=rec.get('source_sha')))
+   st=state(f,out,'large-loop · '+name,'Ongoing Stage 1 · saved completed record',f/'acceptance.json',action=rec.get('action'),retained=rec.get('retained'),source=rec.get('source_sha'),at=rec.get('finished_at'));st['commands']=rec.get('commands',[]);st['qualification']='Still invalid. Routing-only109 opens retained; placement proposal worsened connectivity and was rejected.';lp['states'].append(st)
+  lp['summary']='472 → 109 opens from routing alone. The subsequent six-swap placement trial worsened opens to 345 and was rejected. 84 inherited required findings remain; no accepted large-loop result.'
+ if (m2src/'final-accepted/frozen.json').exists():
+  f=m2/'final-accepted';copytree(m2src/'final-accepted',f);fr=read(f/'frozen.json');sc=read(f/'score.json');st=scorestate(f,'medium-loop · independently frozen Stage 2 final',sc);st['source']=fr['source_sha'];st['phase']='Stage 2 official formula · frozen final';st['qualification']='Stage 1 accepted-best → identical Stage 2 seed → valid score improvement. Fresh independent native + complete assembly checks passed. Search completed.';mp['states'].append(st)
  status=read(a.status) if a.status else {}
  if 'current' in locals() and current.get('status')=='completed_idle':status['stage2']={'state':'completed_idle','operation':'Search frozen; replay available','last_completed_at':current['frozen_at'],'text':'COMPLETED / IDLE · search frozen · retained official score '+str(current['score']['official_formula_score'])+' · last completed '+current['frozen_at']}
  if (stage2src/'live-status.json').exists():
   source_status=read(stage2src/'live-status.json');shutil.copy2(stage2src/'live-status.json',small/'stage2/live-status.json');status['stage2'].update({'native_status':source_status})
  status['medium']={'state':'completed_checkpoint','text':'Last completed native checkpoint: 0 opens / 0 DRC / ERC 0. Subsequent work, if any, is outside this saved checkpoint.'}
+ if (m2src/'compact-v1/live-status.json').exists():status['medium']['stage2_status']=read(m2src/'compact-v1/live-status.json')
  if (out/'remote').exists():
   remote_links=[]
   for name in ['small-verified.json','stage2-chapter-verified.json']:
