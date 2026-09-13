@@ -132,12 +132,20 @@ def main():
   lp['summary']='472 → 109 opens from routing alone. The subsequent six-swap placement trial worsened opens to 345 and was rejected. 84 inherited required findings remain; no accepted large-loop result.'
  if (m2src/'final-accepted/frozen.json').exists():
   f=m2/'final-accepted';copytree(m2src/'final-accepted',f);fr=read(f/'frozen.json');sc=read(f/'score.json');st=scorestate(f,'medium-loop · independently frozen Stage 2 final',sc);st['source']=fr['source_sha'];st['phase']='Stage 2 official formula · frozen final';st['qualification']='Stage 1 accepted-best → identical Stage 2 seed → valid score improvement. Fresh independent native + complete assembly checks passed. Search completed.';mp['states'].append(st)
+ continuation=m2src/'continuation-01'
+ if (continuation/'events.json').exists():
+  dst=m2/'continuation-01';dst.mkdir(exist_ok=True)
+  for name in ['protocol.json','events.json','current.json','live-status.json']:
+   if (continuation/name).exists():shutil.copy2(continuation/name,dst/name)
+  for event in read(continuation/'events.json'):
+   f=Path(event['folder']);target=dst/f.name;copytree(f,target);score=event['result'];mp['states'].append(scorestate(target,'LIVE continuation · '+str(event['index']),score,event));mp['states'][-1]['qualification']='New live continuation after the frozen noon film; excluded from its immutable snapshot.'
  status=read(a.status) if a.status else {}
  if 'current' in locals() and current.get('status')=='completed_idle':status['stage2']={'state':'completed_idle','operation':'Search frozen; replay available','last_completed_at':current['frozen_at'],'text':'COMPLETED / IDLE · search frozen · retained official score '+str(current['score']['official_formula_score'])+' · last completed '+current['frozen_at']}
  if (stage2src/'live-status.json').exists():
   source_status=read(stage2src/'live-status.json');shutil.copy2(stage2src/'live-status.json',small/'stage2/live-status.json');status['stage2'].update({'native_status':source_status})
  status['medium']={'state':'completed_checkpoint','text':'Last completed native checkpoint: 0 opens / 0 DRC / ERC 0. Subsequent work, if any, is outside this saved checkpoint.'}
  if (m2src/'compact-v1/live-status.json').exists():status['medium']['stage2_status']=read(m2src/'compact-v1/live-status.json')
+ if (m2src/'status.json').exists():status['medium']['stage2_status']=read(m2src/'status.json')
  if (out/'remote').exists():
   remote_links=[]
   for name in ['small-verified.json','stage2-chapter-verified.json']:

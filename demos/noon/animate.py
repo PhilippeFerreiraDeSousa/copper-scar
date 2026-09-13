@@ -94,7 +94,7 @@ def main():
    d.text((60,600),'Initial → recorded checkpoints → current',font=font(13),fill=MUTED)
    for px,py in points:d.ellipse((px-4,py-4,px+4,py+4),fill=CYAN)
    d.text((60,570),'Retained valid score' if score else 'Recorded native checks through this state',font=font(14),fill=MUTED)
-  gates=['PROPOSE','ROUTE','CHECK','KEEP' if st.get('retained') is not False else 'REJECT'];active=0 if not e else 3
+  gates=['PROPOSE','ROUTE','CHECK',('KEEP' if e and e.get('accepted') and st.get('retained') is not False else 'REJECT' if st.get('retained') is False else 'HOLD')];active=0 if not e else 3
   for k,label in enumerate(gates):
    left=56+k*145;accent=(AMBER if label=='REJECT' else CYAN) if k==active else '#20384a';d.rounded_rectangle((left,645,left+130,683),radius=5,fill=accent);d.text((left+15,654),label,font=font(15,True),fill=BG if k==active else MUTED)
   gate='PENDING' if not e else ('VALID' if e.get('accepted') else 'INVALID');gc=CYAN if gate=='VALID' else AMBER;d.text((56,706),gate+'  /  opens + required DRC + parity',font=font(18,True),fill=gc)
