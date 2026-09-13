@@ -14,6 +14,9 @@ def main():
     if stage.get('board'):assert hashlib.sha256((out/stage['board']).read_bytes()).hexdigest()==stage['sha256'];checks+=1
    if x.get('receipt_href'):assert hashlib.sha256((out/x['receipt_href']).read_bytes()).hexdigest()==x['receipt_sha256'];checks+=1
    if x.get('retained') is False and x.get('attempted',{}).get('pad_groups_preserved') is False:assert x['best']['pad_groups_preserved'] is True
+ for artifact in d.get('decision_artifacts',[]):assert hashlib.sha256((out/artifact['href']).read_bytes()).hexdigest()==artifact['sha256'];checks+=1
+ for stage in (d.get('next_campaign') or {}).get('stages',[]):
+  if stage.get('board'):assert hashlib.sha256((out/stage['board']).read_bytes()).hexdigest()==stage['sha256'];checks+=1
  with sync_playwright() as pw:
   browser=pw.chromium.launch(executable_path='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless=True);context=browser.new_context(offline=True,viewport={'width':1440,'height':1100});page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)));page.goto((out/'index.html').as_uri());page.uncheck('#live')
   for p in d['policies']:

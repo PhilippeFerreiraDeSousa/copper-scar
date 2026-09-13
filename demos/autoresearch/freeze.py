@@ -9,7 +9,7 @@ def main():
  events=(live/state['events_snapshot_href']).read_bytes();assert hashlib.sha256(events).hexdigest()==state['events_sha256']
  for name in ['boards','attempts','manifests','decisions','next-campaign']:
   if (live/name).exists():shutil.copytree(live/name,out/name,dirs_exist_ok=True)
- for name in ['index.html','ingestion-receipts.jsonl','two-level-replay.mp4','replay-verified.json','ui-verified.json']:
+ for name in ['index.html','ingestion-receipts.jsonl','two-level-replay.mp4','replay-verified.json','replay-state.json','ui-verified.json']:
   if (live/name).exists():shutil.copy2(live/name,out/name)
  (out/'remote').mkdir(exist_ok=True)
  for p in (live/'remote').glob('*verified.json'):shutil.copy2(p,out/'remote'/p.name)

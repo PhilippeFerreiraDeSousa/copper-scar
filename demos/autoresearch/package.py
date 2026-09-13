@@ -27,7 +27,7 @@ def main():
   for p in folder.rglob('*'):
    if p.is_file() and not skip(p):files[prefix+'/'+str(p.relative_to(folder))]=p
  for folder in ['boards','attempts','manifests','decisions','next-campaign']:add_tree(pilot/folder,'two-level-autoresearch/'+folder)
- for name in ['index.html','data.js','data.json','events.jsonl','ingestion-receipts.jsonl','two-level-replay.mp4','replay-verified.json','ui-verified.json']:files['two-level-autoresearch/'+name]=pilot/name
+ for name in ['index.html','data.js','data.json','events.jsonl','ingestion-receipts.jsonl','two-level-replay.mp4','replay-verified.json','replay-state.json','ui-verified.json']:files['two-level-autoresearch/'+name]=pilot/name
  for p in (pilot/'remote').glob('*verified.json'):files['two-level-autoresearch/remote/'+p.name]=p
  for folder in ['router-logs','complete-evidence']:add_tree(pilot/'remote'/folder,'two-level-autoresearch/remote/'+folder)
  for folder in ['optimizer-research-ledger','latest-loop-experiments','higher-loop-provenance-audit']:
