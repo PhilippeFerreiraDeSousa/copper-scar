@@ -1,0 +1,1403 @@
+{
+  "reference_commit": "7210bdb5049c5b7fdf4900a34928e2736767292a",
+  "sources": [
+    {
+      "path": "pcbgolf_import/Pcbgolf.py",
+      "sha256": "72203ba3ecff7fe1d663cd9552620f7b7c873d361ffb34beec3183350c31f754"
+    },
+    {
+      "path": "pcbgolf_import/Pcbgolf_parameterized.py",
+      "sha256": "d7870e32b525e0be4a04ac260d26cdcdb9df22b5e0b579e931821b34794be9e4"
+    },
+    {
+      "path": "pcbgolf_import/Pcbgolf_placement003.py",
+      "sha256": "fcce8ce763839e3396822c60697261cfca6a4c795f52f2ee318da55e6c81efd8"
+    },
+    {
+      "path": "pcbgolf_import/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "pcbgolf_import/board.py",
+      "sha256": "3d29178f42ad19a2b6e0a6e5fdffa79e756606b4c766201f4b4badbf27a2cdf6"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/ABM8AIG_24_000MHZ_12_2Z_T3.py",
+      "sha256": "5f3691614986cd37a4ec67f2d7fe886eca12262f3cf2cf600a2682018084559d"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/ACT1210D_101_2P_TL00.py",
+      "sha256": "76cdea79b695cd9cc3a60b9be2230944b27c2c9f2b14cf1e579e860076abc825"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/AM23ESGW.py",
+      "sha256": "a005dfa452e0397a3088c40994fc487050d7723fe56fb0485acd988c4246f6b4"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/AP62300WU_7.py",
+      "sha256": "6b839b104fd78ba70f87c809f93d8f9fdf915c118b2f16f43fd0995e7890e9d8"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/C0402C120J5GACTU.py",
+      "sha256": "ab979585e3590ba80179a54126187dd05ca67e55b5426e402f893467cfbd16ec"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/CL05F104ZO5NNNC.py",
+      "sha256": "05da8d96ee020b4c0d4cf617347b132edc51bba0f5c700d1f6c1154bf99bff76"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/CL21A106KAYNNNE.py",
+      "sha256": "00d36f76f05af270c971821b3dce87a2baf70a6dfd317e7889a62962701f5793"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/CL21A106KAYNNNE_1.py",
+      "sha256": "87c34d91285f195e3aba996cf0949ee4b6e9c17b45c5b3c1061b29c6f8e06a56"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/CLMVC_FKA_CL1D1L71BB7C3C3.py",
+      "sha256": "8acc9fcc5266831a76eb3d727bae1c9d4e371fabc8f778ebebf7837399dfd964"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/CRGCQ0402F12K.py",
+      "sha256": "0b02b6d9665cc3d2b952221b4aabf478f1062abe9ad901fc6c145195a0a2e0a4"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/Comp_04025A221FAT2A.py",
+      "sha256": "39bc4b4f858bd45a8f29b0d20c3a4f0243fb2ac3eada2bd225ef2fc1aa912867"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/Comp_10132328_10011LF.py",
+      "sha256": "25b94f1b054aadc545bb8cd3a87f9dbb05d5a54c422f4a9c3b4628967421cbae"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/Comp_47219_2001.py",
+      "sha256": "77d607cdbd2b4bd15e3b981d42981c0c708365f35cd73a92ce4423fa70056d6f"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/DX07S024XJ1R1100.py",
+      "sha256": "0ef722e876c6547268e3904516e62fc357055155ecb1d30ffedb98d9040c2952"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/EVQ_Q2Y03W.py",
+      "sha256": "e34e44ff943c3875af3cb85d246c70fd874776931fd2b9f685e5a141bc253746"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/GRM155R61A106ME11D.py",
+      "sha256": "a8aab9f1aa73df29bdff61805e96df462a172afa8a5e98f9bb3167847612841e"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/LG_R971_KN_1.py",
+      "sha256": "70bfb96ee8377588213008daa4f159778041f33d6db5f6756ee241d9a37358f5"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/LG_R971_KN_1_1.py",
+      "sha256": "c8ae8d929d4216b764127406d56d8017ffc9a984939a44c167249aeccae3126c"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/LG_R971_KN_1_2.py",
+      "sha256": "7720ec6b8aeb05c827e932a7f46cc0bbdf19156726f8d11e92604163828ea779"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/LG_R971_KN_1_3.py",
+      "sha256": "7cba3236d16abaee521a459d3ebd8e506dca0bc17b237865abd13f9946883db7"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/LG_R971_KN_1_4.py",
+      "sha256": "28e2f73ce3e878fa729b674fe97a260b4c3584dbb385210adbd7daa4d3d98807"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/LQM2MPN2R2NG0L.py",
+      "sha256": "d4e20f2c6eb213a8f4e43d1280a69f57c1393b55467b2ce5ca3246c1622e00e6"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/MCP2542FDT_H_MNY.py",
+      "sha256": "de0e929a93676d67e55621a06387785a1e9ca127a8f4311ff6222c25b90f4558"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/MEKK2520T3R3M.py",
+      "sha256": "1ae6606c7007b3dcfcc1fe29ca4aa882f1652b123e43fd503c8c154365fbdd22"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/MH1608_601Y.py",
+      "sha256": "92c9a6aadb3fc57ad163cd6aae26e8448b2e5919a0c2a1b2e8ccc11570f46778"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/NCS20071SN2T1G.py",
+      "sha256": "4720e14b0b953c68e4bce522e508da3822a22ae0af47c6aeed363949dd8b54a0"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/PJ_002AH_SMT_TR.py",
+      "sha256": "4a418e5a65294db4dfe602760b43db8a9dfaf07f644b35324758b7628eb7e282"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/PMEG10020ELRX.py",
+      "sha256": "5ac8094ff438f07e99d428350ae5068190e16ee4f2bb3aa430ae2f6b20c482ab"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/QS5K2TR.py",
+      "sha256": "44c4684fc99989de22f186926a73298af970020a7aa752652bf5120bbf9807d7"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/RC0402FR_0710KL.py",
+      "sha256": "9b00826318300764599213f10ce4dfa255dd0aa0be961fc7c2fe81c589d2b92d"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/RC0402FR_0752K3L.py",
+      "sha256": "6cbbfb7ad9a717589e5545b730de86eb51b4b133c941d24e9ad49a8ebfa72948"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/RC0402FR_0760R4L.py",
+      "sha256": "8d4430de1e3dca63b3a371fb98d84eb364c9550aca907090d90ba81b04ac065f"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/RC0402JR_07100KL.py",
+      "sha256": "8b9a2358129fc5bcdf829bced49e8af8e9d5fc9c077f19a297145983985b8690"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/RC0402JR_07100RL.py",
+      "sha256": "fbf68bf828489434b901b015e0b8807caa762ec0b123993ea3ebb28d1bf8bcbf"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/RC0402JR_071KL.py",
+      "sha256": "20c976ace1b7efa09fc286d7027e7fe0a04c00f2cca3fe3937ac0e7f58b624a6"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/RC0402JR_071ML.py",
+      "sha256": "6a878858d7f05e0960274176046a7519fce78ee12df9194e08f797a8575fa658"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/RC0402JR_072K7L.py",
+      "sha256": "d30ae385d55a0a6770e39fb77d81dda121b0bc4ccbb3a75feb17486d5da660f3"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/RC0402JR_0733KL.py",
+      "sha256": "7bc223e725f913acd765c9655d998abf45e673e293069162218372e289aad49f"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/RC0402JR_073K3L.py",
+      "sha256": "2fbf1a3277f4586c7794ef5e6af973f864ee3a43fa244d0d64d9a938564f604e"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/RH100_25_000_12_F_1010_TR.py",
+      "sha256": "22d866d6e895019ca386c598a0aaeaa8ef22f4836e358b8e124707dcb00273ea"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/RK73H1ETTP2802F.py",
+      "sha256": "f1f286549d29ab0b930d238226817c110a72d75bbdd44ffd7da415b17f253590"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/RMCF0402ZT0R00.py",
+      "sha256": "5af00f4d19a5ea8a3e7ab7381bfa6344a57eac0d2881bdb1e76c7690d4025b51"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/SI7101DN_T1_GE3.py",
+      "sha256": "734c30735623d276475997c99fae84f67f22463fe878f1a151359600326d942f"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/SMAJ16CA_13_F.py",
+      "sha256": "d1b0e999957e7900c83cc338f967b7c784cba2c3e9e789329c9908aca51017e4"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/STM32H725ZGT.py",
+      "sha256": "bbdce09927309df45dae0f22511956fa91ac8491191fe8bcccaf3bbe615fcd1f"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/TPS25944ARVCR.py",
+      "sha256": "e4d2554d6a0c9573510b0a4860e4eda49a7a481793df001ea1b61dffc79fb789"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/USB2517.py",
+      "sha256": "012b9283d679242d6610476c4a3278103c4b1f63987868243523677d2a049367"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/comma_ai_11112255_C0402.py",
+      "sha256": "e6b312baf46a5fbfd7f323eb4d16b6a8710a748200f29a77fd581695fa671762"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/comma_ai_11112255_M2X4.py",
+      "sha256": "f9ba5ec8fb535da3ae4dab1adbb56895921cecbef45286ae5fce3749b4fb6afc"
+    },
+    {
+      "path": "pcbgolf_import/components/UNKNOWN/comma_ai_11112255_M2_BOLT.py",
+      "sha256": "7561eab2840a45a194b1d9f4e53e626489dd8c4b04ceab631052ed06d8a73aa6"
+    },
+    {
+      "path": "pcbgolf_import/components/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "pcbgolf_import/current.py",
+      "sha256": "d0b3883fb819fa1a4c665dfad2b7d7f172dbdef3e28829193ac6a78d8c8d8532"
+    },
+    {
+      "path": "pcbgolf_import/fabrication.py",
+      "sha256": "ff1011540c920471d3287f2283679bd79cc2c7d4ae61b3d08cda52343e305891"
+    },
+    {
+      "path": "pcbgolf_import/jlc_profile_probe.py",
+      "sha256": "737eda1778d962506b598428cf838af3697cf62c8aa2bc6ec0f8c676a2159c35"
+    },
+    {
+      "path": "pcbgolf_import/landpatterns/LandpatternCHIPLED.py",
+      "sha256": "d4be9b70aecefa08e027a7d86e59b408727e69cfa6d9e4a4ca23a2efd9d58497"
+    },
+    {
+      "path": "pcbgolf_import/landpatterns/LandpatternLQFP_144_20x20mm_P0_5mm.py",
+      "sha256": "1ac4e59ff9a3eb1c37b8d0f47b5c60e1d202c1d47d6c7e04ccc0ba463c4fad6f"
+    },
+    {
+      "path": "pcbgolf_import/landpatterns/LandpatternSOIC_8_3_9x4_9mm_P1_27mm.py",
+      "sha256": "4baf5f123649256a8e46a08ad3e2bd47c38e92f08bcfcf80d7acf608fe018ad0"
+    },
+    {
+      "path": "pcbgolf_import/landpatterns/LandpatternU0402_C.py",
+      "sha256": "87f9505b848fdf292f66ab0ad446077a6fad5296121048b1416268d57fd56688"
+    },
+    {
+      "path": "pcbgolf_import/landpatterns/LandpatternU0402_R.py",
+      "sha256": "137ff6c8c15fd716c1f093a4643f0118d9061c9bbf2e7ee5e68fa90fa5002f52"
+    },
+    {
+      "path": "pcbgolf_import/landpatterns/LandpatternU0805_C.py",
+      "sha256": "7d4ce91ac56415165e679cca5c78087dcfb23d7923b05639868c883545c44916"
+    },
+    {
+      "path": "pcbgolf_import/landpatterns/LandpatternXTAL_3_2X2_5.py",
+      "sha256": "ad3208ee158da7170439ef35f49755f56716c97e70e00db2abff7304f072e1ff"
+    },
+    {
+      "path": "pcbgolf_import/landpatterns/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "pcbgolf_import/main.py",
+      "sha256": "f3178eec654540126826e79c67f670f569f4a873c9b8669a2e0bb210708fac1b"
+    },
+    {
+      "path": "pcbgolf_import/parameterized_probe.py",
+      "sha256": "37fba112c493e6097df5371f82ed8f8cb66ee7396bef953fc3e790bdf97b0a4a"
+    },
+    {
+      "path": "pcbgolf_import/placement_probe.py",
+      "sha256": "88811d0179bae24174a384cfe68c00f4fd7257ffde28466ade2d942665f67863"
+    },
+    {
+      "path": "pcbgolf_import/stage_one_001.py",
+      "sha256": "28ad7d2a07c37cf11935622282a249655852ad3fd3a4fdf5c65de01c2ff06b5b"
+    },
+    {
+      "path": "pcbgolf_import/stage_one_002.py",
+      "sha256": "45c6e72dd5d002aa3eecf5f2c6d9f5adb798bea4178467b827559737b8de608c"
+    },
+    {
+      "path": "pcbgolf_import/stage_one_003.py",
+      "sha256": "fe5d0e5fa299c04232095c6a5462db51a8a781f72f7929053fbea7a0dbb9a388"
+    },
+    {
+      "path": "pcbgolf_import/stage_one_006.py",
+      "sha256": "53b5a6d5c54b26379eb80607a532a43ccb4dea3434a7ee161da1677d2df19d03"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolACT1210D_CHOKE.py",
+      "sha256": "4b3fdf5cd44270e867a6cddd67e93151ff69669440fa04a3b899cdc3c46813e2"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolAP62300T.py",
+      "sha256": "e7c2b8b4db92086dad0022671cbaf7352714833c7413adfdad8484ce6bfb7e2e"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolC0201.py",
+      "sha256": "9fab793b399453c8076311e659da0f6528b77c58bc43c7cd00021b230a6f743a"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolC0402.py",
+      "sha256": "6b3894e875746c0e56ab3501acbde196cb663ce4c458c839d47616d65321bfa8"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolC0603.py",
+      "sha256": "fa59166bf1b6bff2e5872ae6482302b8f57a7025082655190fbb007ce40131c2"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolC0805.py",
+      "sha256": "ccc50859be65515dca4580d9c69f526fe6e420fe9bce48c7400b273f707528c9"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolC1206.py",
+      "sha256": "b73582be52f2a11f3ff402504489de2f44638df028df93cc462f1bb39408da02"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolCREE_RGB_CLMVC.py",
+      "sha256": "e290c161c0a7e674bdc7e9971fcb90fc5cb6f6831ace27bc7e803d06472c97d9"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolCREE_RGB_CLVBA.py",
+      "sha256": "f6f712318798618b37702f94ce52cca813c9ca2481f2f4a17145e7fb9e02e011"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolCRYSTAL_4PIN.py",
+      "sha256": "96be48d3f163a03d4dea77ea936359dce45815b8e7db02d1162754316f3c6c09"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolCRYSTAL_4PIN4_PIN.py",
+      "sha256": "2a812908d3b5007874ea28f8cc05e1ccb9f6116cbd02ff2ac95331af6c57a7cd"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolDCBARRELPTH.py",
+      "sha256": "6a0df3c1d3c73bde048ffc805c1d3e4728e3136e1d6a5153c6e2e0558c2a24f6"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolDCBARRELSMT.py",
+      "sha256": "6dac29dc76949380f37b8de3cd537a5488e1ba0b8716e93d26e8c73a781e4e41"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolDCBARREL_CUI.py",
+      "sha256": "2bf9cf0773bfb407b91d1b9debee19dd0fe98f5df2d4535c97ca6937e6680d95"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolDIODEDB2W40100L.py",
+      "sha256": "320ebe788e112214e01687a2ed4abb873a0efedb9057c3bbabf9e9cf5e8ffc7f"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolDIODESMD.py",
+      "sha256": "960f196924f33030c239da51927d2a0367d60fea19ce7558cda8302fcd3fc576"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolDIODE_.py",
+      "sha256": "e20576385e32aea9548bd44c27ae4d8fc8916a76ffbfa4d4d3a2b8cbc7e5f596"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolFRAME_LETTERNO_PACKAGE.py",
+      "sha256": "47eb09e0475ff8da51587ce01af093cd569d6a50b1e8c8a0d8b54d56b2b947f6"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolGND.py",
+      "sha256": "4d65a8c95f82d99cc06ac3d1e1545a5c056bb76a2b2991e621900816b392b4be"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolLED_0805.py",
+      "sha256": "07ad6b198b88d9f756448a9f72893364a8abeb86e456b94d5aa388b9bd9b2591"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolLED_CC_GREEN_RED_AM23ESG.py",
+      "sha256": "7abae75c9ea186623eccd974cc85c2850b12ac1b0a737f6c2dd31eaf05d23897"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolLED_LITEON.py",
+      "sha256": "7026a71b4c7567e8a85ed7b1e61ce43e6fcbbf135b44a8f6d9966d42f1048fad"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolLED_TH.py",
+      "sha256": "37f1031a033509d89891a031530062a6800da77fd5961365fc68e98daa601ae5"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US1008.py",
+      "sha256": "ed6dfbbb514e7a004fc31fcb28b66259f19316fb5f771d6a649d3215e127d21d"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_USASPI.py",
+      "sha256": "08f68b942d475a081131644aea0dab94131b9f01419cca6a70ef8fbc22bbf3be"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_USL_DEM8045C.py",
+      "sha256": "7e91acdd48a9e03928f7441e0b264b18ac05acbe9754ffe715cefc456470fbeb"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_USL_MPI40_V2.py",
+      "sha256": "3978ef1a673330a9833a29adbe6e00da355c24c3bd696e3ce40778c810da4829"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_USL_NR6028.py",
+      "sha256": "fc0f64d46e0fa9eba3b5145edb4a166c547a194f7e43411eb3e0dd26266265ed"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_USL_NR8040.py",
+      "sha256": "dc9ae292218166e6acf13c317a4248f5c3e7788a3d99ed5de073c22b9ae97a95"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_USL_NRS4018.py",
+      "sha256": "be1bdf8dd175f06fe0ba709e89622a2585482d39ae30174cc6a5fcff1712316e"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_USL_SPM6530.py",
+      "sha256": "be68fe26efb090654594741f55a884e051659ee2253f018d3ac1df29a9b6749d"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_0315.py",
+      "sha256": "e3eea69c4cfbc7284b1a208db5f84eb99e91b6fd6f98ad360b73aa593470bd40"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_07A7.py",
+      "sha256": "97afe2dfe46a6e0acfba0bac3d1b44781ed1c4a9e58868c7d5b513b6104ddada"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_0805.py",
+      "sha256": "89b3019f65cf9f1ba7a72b5980ecaed0deb674f9fe4da8ffb5b64b8cb72483e7"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_0806.py",
+      "sha256": "6298860398ce2acb16080ef99a02aaf20276283b62871c5a1a6ca5c8fefae734"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_0830CDMCC.py",
+      "sha256": "dc9f33c4511942ab7a389f6fc27e367f23f09eea91e3f41c221c51e718258cd8"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_104CDMC.py",
+      "sha256": "f570713d16f5c318567d399c4aa4c0b56535fef209f72fe1134abbfabd22d626"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_1207.py",
+      "sha256": "dd532bd173e7b4c068676449a55ac25dac176b81660c65adcb5f571b14332f4d"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_1210.py",
+      "sha256": "83419c7b1c929f254ce2b7b36fa59675ff2647d75751914265e6efc41a3e179c"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_4828.py",
+      "sha256": "61466fa82bdc078e0c388071e3ee7b68699486db43fa7b3f6393313a230804ca"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_A.py",
+      "sha256": "224d17ba92ec4345d0e30f3ba2a8058c1a2a9f73f24ae7bec04bf7447732ae96"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_H.py",
+      "sha256": "e7c22804abe61dc3e3753294726bfc00f08952a9bbdf8a78dd9b18e2e7b6926c"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_L.py",
+      "sha256": "0b501ed50c8f754db7ee51b33f5deb592f5f8e9989a448f63b5b8357ed445fa1"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_L2.py",
+      "sha256": "e9f5ed14c3b75a91ca0824ad4d7e76f7595824d7c8b95dfca5c1addc80aaebf5"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_L_MINI.py",
+      "sha256": "f31037b9006818c1ced5cfe36fed63e9592f3a5ff8cc2ec32553216b245713fe"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_SRP1265.py",
+      "sha256": "1976c565ae84d83acc291b7aa19e77931c98ba19f9861cfc0ae4d903fca71708"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolL_US_SRP7050.py",
+      "sha256": "7562fdee729eeef2d255291dd3cc89db4f0a94894a78e189edf46f01b12d4936"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolM10.py",
+      "sha256": "c29687f2a3452e3e71161d690172d5d6021aa71456431115ffd3355b6a26b5f2"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolM10_HEADER.py",
+      "sha256": "e39226a08f8e7d0d431edfa514cd4fe4d6aef3cae5135d61a6c48ebcdfea6072"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolM2X4.py",
+      "sha256": "723e127b11d5ecb24a2e31500e82f27b347cbaedc25fc17d9c63ea84fe65b573"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolM2_BOLT.py",
+      "sha256": "cd6d6fc488a886ec6f57c8e71819f6d6963a8f0e1f793f4e2a26560decffc55c"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolM2_SO_1_5MM.py",
+      "sha256": "8d119d0cf881491fe607b28b26195e0ee550159a218b31558d337d3754058ce4"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolM2_SO_4MM.py",
+      "sha256": "53ba159a7141606a50a75e623e898952ad0364e6d3a040792a0a640931f9d39c"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolM2_SO_PLATED.py",
+      "sha256": "4b6ef20934c97224aa129131379907db73f2eb4592535949603167bba3cdf16f"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolMCP2542FDT_E_MNY.py",
+      "sha256": "528f9482d1a8f79979a89f47eafcf71e1df40a1894f1f5837fb03ed37b38fb71"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolMCP2542FDT_E_MNYTDFN8_2X3MC_MCH_L.py",
+      "sha256": "ed5267b17b306907697a3f0d71672355e0cf4855f5e75e12bb165f61106c31ab"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolMCP2542FDT_E_MNYTDFN8_2X3MC_MCH_M.py",
+      "sha256": "f32b2105f03607820887a1e8f90fa1bf19899f4213a0ccbb065d235264583768"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolMICRO_SD_0472192001.py",
+      "sha256": "6b0162bb7e86555b614bd9440d3d3594f888bc08a2c1fd65a8d5aba45e7d64f8"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolNCS20071XV.py",
+      "sha256": "22377e85d4f350c82cdc2a62fb107e5a07b40ecf0d6444e1f4a221a80b167ac1"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolNCS20071XV_1.py",
+      "sha256": "a4b444fb45623760eb5045bd297e31c1d4d988a27a41e23b510ed9c533c25c6e"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolNFET_DUAL_COMMON_SOURCE_QS5K2.py",
+      "sha256": "66488b1fb8ea7f9a627db525f47f3fed7d2acc954812bd569e18f834a584afba"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolR0201.py",
+      "sha256": "2096770782ed92fa6d56ec1f7ac04f613be3683a714dce4bcd91a416bd060958"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolR0402.py",
+      "sha256": "42c058b1212c8f7c0cc79bbfba8cf5720785a6e6f2051d08f6eadbd50158be97"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolR0603.py",
+      "sha256": "b6c7507befba9b5708b45fac8ce55c814aeb228615338281c34bec5b245f3be5"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolR0805.py",
+      "sha256": "469e23047ce836c9670536f62a3d59a680a9b6a874705f9b67ebd631613557b2"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolR1206.py",
+      "sha256": "725da817e821c9245ecc0a4a5c48b269b6d5a3bfc11185ed49d342b6edd39208"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolSIS427_VI.py",
+      "sha256": "fd291285f872c07b5ec7711af56bcfa54d1539d1e1a52314df1a255cb039daec"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolSPST_2_4PIN.py",
+      "sha256": "e97ca3b504977a14e9c6ce24b047017c0d385abe51492f8569706079ffe06d79"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolSTM32H725AGI6.py",
+      "sha256": "ffa897dfc1e5a1d22a3cbddd4f4de23c04a5a9a38cb347bc8b3ccef9c899f4dd"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolSTM32H725ZGTx.py",
+      "sha256": "b2a3e6f758f5eccc0f37d4b4218879ef9a1096892baeb8cfc631c1587794ffb6"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolSTM32H725ZGTx_1.py",
+      "sha256": "a0d2dda4b70a81aacb3899e826b71706f54bddbaa1db2b42c1e32164a9cb6cea"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolTPS25942.py",
+      "sha256": "95099d9a325b0faacdd785587e5a0bae8c29eb067aedcc05506ea4ae337c1a34"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolTVS_BI_0402_DFN.py",
+      "sha256": "f8f7d3eaae72fa3681b3412794b9569d0b3a45f702208c1e1135fc556799d4f9"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolTVS_BI_DO214AA.py",
+      "sha256": "5523fea6127c1a06babd40154e0503f47408d380e4805d3d90b7149975e00c42"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolU10_0.py",
+      "sha256": "f01eae111c646ef70c422a5e95152e087ecc08162be927ac74a178df0c4ad4cb"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolUSB2517.py",
+      "sha256": "0bc6a61b98fafcaa81b9cce85afe03c0869a824dec44aedbe4087c4f21cbbfd5"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolUSB_C_FEMALE.py",
+      "sha256": "7f876de2a6d1c7f48dfc98646c4fb198d2744b13cff36e783953cafc0c9f7e28"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolUSB_C_FEMALEGCT.py",
+      "sha256": "d712aab5dc42538b9016b942d739e7e1fe559043aafe35336fb3b5f4d5789224"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolUSB_C_FEMALEMOL.py",
+      "sha256": "11e17f04c9e3ef50b25d802a5c6307a2085cbfaf490925d55b5fadcde74c86cc"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolUSB_C_FEMALEVERT.py",
+      "sha256": "37db4228d87c109ba4ebf7562355ec50b89c596a9f051413561484b2fdca096b"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolUSB_C_FEMALE_A.py",
+      "sha256": "3e0e17f42ef70774b068d62963251b649707db8004b18a7c152cba38b0183665"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolUSB_C_FEMALE_EXTRA.py",
+      "sha256": "3734a520521a612800f0aa5fd24c63649cc5d50781a9888137c1fe81bd0b0a5f"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolU_12V.py",
+      "sha256": "0dcabff3a267e20c8dec5cf2585edbbb2fa7debbf78180a3df05c4550d3d3ab7"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolU_12V_1.py",
+      "sha256": "12c3f5e0931153f5d02c021e6122cc0951b0ae14bf4f0897b03c45e8f2d7d2da"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolU_12V_2.py",
+      "sha256": "b620bf96d36df22fe0c393e520bd500090fa80163a9fa07c552464c8552a9802"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolU_3V3.py",
+      "sha256": "246e3cb4bb8f6c98816ec6a8742e145b19e00a3971770f0ff65b69cd2e887bda"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolU_3V3_1.py",
+      "sha256": "f45d2eb1bf5b5e9a928c6f1849654466468d04a6a39917a6cbb0f6e166cf1940"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolU_3V3_2.py",
+      "sha256": "26ba80c3578436a586b5fd94c7dc6bb0a1bcf1381d481af9d60813ff3e501f8f"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolU_5V.py",
+      "sha256": "671b49cab62bce7f9e252e235a19187ef901f5aac35fb5533b53e0e6e8b45345"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolU_5V_1.py",
+      "sha256": "f4e62f4b4e64eb601e896737363b0ed27ca874ae60a3262ef5007f7100f1e932"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolU_5V_2.py",
+      "sha256": "b1c1a084267ca30dd50931875a9e599c339ae50c82a785fae1cc37a1d5abbefc"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolVBUS.py",
+      "sha256": "97d3b72d643beae8ea16413020c0be292c5e6a6f7ea493f4272cad4f2f347f52"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolVBUS_1.py",
+      "sha256": "f0e16324ce5e23fe9d699692a30db55a698aa7025cb2383662c28352259bfd15"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolVBUS_2.py",
+      "sha256": "6429a728c84311583d92dfaa9869291e44fc126aac994333c4276a736c1d4de2"
+    },
+    {
+      "path": "pcbgolf_import/symbols/SymbolVCC_1.py",
+      "sha256": "ff83d6e2813dde38d7866bae194cad9164f60a71493f4dd7cb529ba72b249d28"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_ACT1210D_CHOKE.py",
+      "sha256": "0d7d1623b6cd60e53e922f525b3e3fcdad37e042bbbe17a118304a77337dea83"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_ACT1210D_CHOKE_1.py",
+      "sha256": "b50d385998151dbad090d4baaa64e5fe805f6b2b7b8072b4859fd0afbadc2dd8"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_AP62300T.py",
+      "sha256": "2acfb5d65ccb9679a9c5ac63f46f02f612e96bb388430e5381229f953909b7de"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_AP62300T_1.py",
+      "sha256": "301e8cedc68fb4b4679c34945dae5aa1d6f288ea1ba9b64a4326cd3795e5479a"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_C0201.py",
+      "sha256": "46bef96f6eca0230c9a95be43dbc45f34df290676bd584ae9e4e225dbf857eab"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_C0402.py",
+      "sha256": "9a50845f944bfaadb3dd7295f4e8176bcb4dceb8bdb3cb743ffe17dca7f5e57d"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_C0402_1.py",
+      "sha256": "d6b919804d8d73bd8c2b1831c42a2657dbd35a0b0248b546b9a3b7f97f777922"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_C0402_2.py",
+      "sha256": "416e9b6f358036d0e8bcc43e9f43eff15fa848eca5b2810a861839e93df409e5"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_C0603.py",
+      "sha256": "6caf52ddd015b8e58bdc0b9ac993452bd9c28b239ea833f22f44f62d602c97a6"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_C0805.py",
+      "sha256": "1d256af816e65a63a126e8e9f7f9a54b9d5e6592252eceee2fdc90f6470c79e8"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_C0805_1.py",
+      "sha256": "099132dea491a4ab46ea0098931151f34099f9e034338bb831fc781700e86b4b"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_C0805_2.py",
+      "sha256": "4f56143bd036f3a02454201ae7dd952019d90b8b22a8fe8cd413345025700b63"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_C1206.py",
+      "sha256": "6698dba0036f39afdc66c4348e949b23b68d149363d1a207868c226f5ede70dd"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_CREE_RGB_CLMVC.py",
+      "sha256": "62b5c53bc119d0ebf1281574755e98bcd11d626d3e6f4a01063b9059f51527ad"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_CREE_RGB_CLMVC_1.py",
+      "sha256": "b9a2b9c9d045c4000fae18cec9a03bb8bb127c9e91bfef87f19134a403e0397d"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_CREE_RGB_CLVBA.py",
+      "sha256": "49ea50667af4a62c5b5aaf08b41697b39388558c6e6b505b524c8e9e043aafec"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_CRYSTAL_4PIN.py",
+      "sha256": "591392d5c77d3194b91caf613f26fddba353ef99c54a83db124728ef43eebac5"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_CRYSTAL_4PIN4_PIN.py",
+      "sha256": "44225a76a47211f4005183dca7e7d46ae368f3d407f53814b368a9593c171b8a"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_CRYSTAL_4PIN4_PIN_1.py",
+      "sha256": "0aa704958672af9c570edd6c7bc895d68b8f6a06879e4a695e5a8576566a1c63"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_CRYSTAL_4PIN4_PIN_2.py",
+      "sha256": "41e249adbf0a95648730eb79e6418338a411f0526e0f28b3b1a8ba510cb41990"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_DCBARRELPTH.py",
+      "sha256": "be987c3c56f1c442e7c9437a0c2db4fdb70cf16f268f10f2858aed384fcb49f6"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_DCBARRELSMT.py",
+      "sha256": "b706beea598d138e4e22c67a92d096b34694ce2e72a309bf52e5d393f6711b5a"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_DCBARRELSMT_1.py",
+      "sha256": "00f72137110653265dc6dce727553cfcc1be088b137360ba459c2c593a8f90c1"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_DCBARREL_CUI.py",
+      "sha256": "17e08a2088e8da44867484761801acc25841762851a35fc2a71cfff74d10b91c"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_DIODEDB2W40100L.py",
+      "sha256": "094207e72982bbf2d8a5c8a3b8390fd8732c2ecf288e7384cb943f3970d4a266"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_DIODEDB2W40100L_1.py",
+      "sha256": "053807ca22f0db10219d9ec2e45f9909e7eca37b3e577956e522fddc146a414f"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_DIODESMD.py",
+      "sha256": "22cf0bc50f48897356c8a2f435228dcf0df4c9069c42453880e80aa8b280f8fd"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_DIODE_.py",
+      "sha256": "11948b9aadcde977e4db350a82d3b413a20771d6560b90ec531304bbb70ff7a1"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_FRAME_LETTERNO_PACKAGE.py",
+      "sha256": "6d9fc48bf3845d9862eb1958c07a5ad80b7d62cbe99cccc8c1c91f48ef789cfa"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_GND.py",
+      "sha256": "5eb42ed9cc8d977da2013f963a0cb652fad1af2e0b2f466c5fbd4e1f828edd03"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_GND_1.py",
+      "sha256": "cd647d456a81819752d9dd3db46578ba8b7f2b39373ad3e39b6ddd6a8f1c02e7"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_GND_2.py",
+      "sha256": "72c6c8928efc14b05a8ac545f98f1f9893417205496bfc353d5dbed2a34ebed0"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_LED_0805.py",
+      "sha256": "a93337628e740fcd995f5783db0df8d2e9d82d887817ce061d9e223c6f9e863e"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_LED_0805_1.py",
+      "sha256": "bd236869dad454910d95772a641433a89aef633e1fe81b9a1317efca942ddea6"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_LED_0805_2.py",
+      "sha256": "a7fd98e1857642d8aa438332a2d625cef8fdd7704c53db5329d2d7b6c72249a1"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_LED_CC_GREEN_RED_AM23ESG.py",
+      "sha256": "1d561c20e9c9ad4b8464b2d67df227b95e265a33733463032f7362defb65b938"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_LED_CC_GREEN_RED_AM23ESG_1.py",
+      "sha256": "1432e3462f67b466c97a537a49348f73d71ef6925f18778a0ece2fbb53f323f0"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_LED_LITEON.py",
+      "sha256": "cc63accca732a1e70b5408b4800d4d3593aa285d1a954b468ba0d2b647214eee"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_LED_TH.py",
+      "sha256": "cac93cc92d21980980897edece64aafa40ee926c6d62b217c06bae1d89df2936"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US1008.py",
+      "sha256": "72a1f43e0f9921489314b6967789a7d7c0a52276c96114704277b5cfce3d0e0b"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US1008_1.py",
+      "sha256": "02459a31a66f2e634327627d8ab3b94a5741d8b00b5b5ab9e3266458385b5b8a"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_USASPI.py",
+      "sha256": "b6727f58bf78512fd8576cb94d5eba218c130da4b77f58b001a2eae4543301da"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_USL_DEM8045C.py",
+      "sha256": "926a3bbeaf3d11a5908cc01d646091a9c34b4a02fa4d868bdc173b22d72824b1"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_USL_MPI40_V2.py",
+      "sha256": "b9ff72f640e1af598a1b9f87e85279d49bd482855af1cba9a7d679163666c034"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_USL_NR6028.py",
+      "sha256": "6e5f9d5a5ffdd4523580dc2ea7918e76e61e7fbceb775286536ab626562880c0"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_USL_NR8040.py",
+      "sha256": "45340fcc0412010287887bcc8947f609eb079b2ee7557f6105061cdd703f779b"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_USL_NRS4018.py",
+      "sha256": "7d159311dc2734ec80ced378bfea79f3764f01d7fcfab9afb1a5f2e463105ab3"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_USL_SPM6530.py",
+      "sha256": "df2498a59b913fa447fffd270db2cd6610e601b28c7d2c5dba5dd5cbec5023ee"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_0315.py",
+      "sha256": "3d19fb6a9dee8bc62a20c9a504bf6ab37ee799d0e1fedf8e6ff8eb94b2f1a97d"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_07A7.py",
+      "sha256": "99f14152c06e48d0d4235db4f5b32cfa581ca12c4c37cc700656a21f4ecb663e"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_0805.py",
+      "sha256": "c392aa9c3560c3e936107ba7eb22502340e08d3c26facc3924e63d6c0e1aaf25"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_0806.py",
+      "sha256": "a0a926c3e60c317451725693ae5bf97eccae994372121f4a7fa19073a3809f8f"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_0806_1.py",
+      "sha256": "9e2a39524d958f7ea59c11941f7d4f1e126f75a5b06681b541f94511c691d445"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_0830CDMCC.py",
+      "sha256": "d8ff10f1bc36d78b280ce94898496c0e63b8d4af7e53b22eb3007743739a7f61"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_104CDMC.py",
+      "sha256": "e139402c6f8e3a962b4eb25fe60ef2d7ddff305a5c990b0365035d37c010a5f4"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_1207.py",
+      "sha256": "4f41084e6dcce93cb4d7791e0b4e333c7655634c21e40937d0d8981011e4755d"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_1210.py",
+      "sha256": "6d0508e865765fa8b3e0159e7a6bfe18ab4d5644617156e5d9a17ecaea0d1cc9"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_4828.py",
+      "sha256": "9591076b88e64d3eabe3eccb51bef8838c3e0737abe700fe0860d41b18b644d6"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_A.py",
+      "sha256": "fb9f3320064a5314195c525943bc3b92c5a871ede692e5d95fa1e86af85b0c79"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_H.py",
+      "sha256": "c633a998f6ded936abf661c7826edac1d3150fda87f4821a74d42729f0d26a21"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_L.py",
+      "sha256": "62f292eabcb60f013310ad4b350307b7b0156dac5490c250965bafe1b8a0b2eb"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_L2.py",
+      "sha256": "c0e1b3a1e909609e968a245bf9861ce21d9cc8e1d12abb5ae2809758ecf3d3df"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_L2_1.py",
+      "sha256": "30a38272dea5df626c3909308283f3e229ea2ec7a738befc746b81798fb07b07"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_L_MINI.py",
+      "sha256": "b07ce44156d9f6ee5938645c2a1cb37a0557e66b8c58fdbd0d72746d500e593b"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_SRP1265.py",
+      "sha256": "8574a21fb83d00b0e412b0ae6b27f35eae228069e8d6f28ee6d95b9e495e5eda"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_L_US_SRP7050.py",
+      "sha256": "9d71c215fbd7a0068a0b731f86431b97b631d860c1870eadc429f06820d4e9e6"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_M10.py",
+      "sha256": "5b9394a09a3e429907ced32de880914756adbd2cd5cb71e1d767b001943304d0"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_M10_HEADER.py",
+      "sha256": "090e73733cf42e122305f64f3a1afc107ade2122defcd5bee3e195babafd8463"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_M2X4.py",
+      "sha256": "a36ac52b41a18028151a0740370baf299b5560ef665a4087ab78a8c5c48c6961"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_M2X4_1.py",
+      "sha256": "2ea6139c9e1c76865b6d09ad9064f27eb2044b354f1c05cf237fde7c73799c8d"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_M2_BOLT.py",
+      "sha256": "9dd0b93179050430ced0abeaf0394fff8d34b04ab39b657016a04815116655a8"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_M2_BOLT_1.py",
+      "sha256": "f1088e75a4290829a9223d2737967b2775f12edf089a1c877350f5e2a0d9b0ea"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_M2_SO_1_5MM.py",
+      "sha256": "49c3da8d119088c601cacd15af7e603c3f7b500381d882f95b1a644792ce7c5d"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_M2_SO_4MM.py",
+      "sha256": "e405ac46284071c671e080c5869191fb6cdba9e166c06dd7c93cafcaf57a932c"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_M2_SO_PLATED.py",
+      "sha256": "1785669beae0b6ef8c3f8a3d6543f6d008697e4f8dd703359c0df8559ae8e42a"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_MCP2542FDT_E_MNY.py",
+      "sha256": "5c45a187fa0e70152d446a2ce7a1b6359be30a6139543cb9d71ebd10ebb04a96"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_MCP2542FDT_E_MNYTDFN8_2X3MC_MCH_L.py",
+      "sha256": "dc60e7908e3270d76f04fb7122fa8f64611843e6194481bb47ae03344d2cd134"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_MCP2542FDT_E_MNYTDFN8_2X3MC_MCH_M.py",
+      "sha256": "0acd393b78be23f49d218ef9eaccc0ec02f408768ebe2d4e3c4ff0c5380d4e7e"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_MCP2542FDT_E_MNY_1.py",
+      "sha256": "3cf09f47758a2d95abdc4094136bf447b33c97e9e1577b4de4cf3619db659eec"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_MICRO_SD_0472192001.py",
+      "sha256": "c37b3b5f02b19b3ff6682378fdc0e30529e337e808cd95b23fa2b7533cebc968"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_MICRO_SD_0472192001_1.py",
+      "sha256": "8ef74cf1e5c9fe5f7223c7b04e76fe129d6b45324a653cb988f83853ca1139f3"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_NFET_DUAL_COMMON_SOURCE_QS5K2.py",
+      "sha256": "cacee842db9315cf2db543ded29209e952297c033f4085359affb50fc4bc1717"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_NFET_DUAL_COMMON_SOURCE_QS5K2_1.py",
+      "sha256": "cba469c110c3a24345c85899d3e79c030728516577d01130484164d372982b8a"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_R0201.py",
+      "sha256": "68f36953a6889ff87b09ec174edad646f5ef0eb2f3829c970ea25dd8ead38e97"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_R0402.py",
+      "sha256": "74001d418e6720b329219fc1232a8972fdcf78f3f5c3cea322c704b26c5e685d"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_R0402_1.py",
+      "sha256": "e8bcacd06dc9a0799476318f7ecd38bdab3f57ec2885927c8823307ded8e4024"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_R0402_2.py",
+      "sha256": "18db3900b14ac4b0e13815d01cbeeb55a2afdbff1bacc8acae66053a19422965"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_R0603.py",
+      "sha256": "b124a3454cf53957c9cb02ff7e35172735f4147295e548e6ab9a40714d03f0f9"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_R0805.py",
+      "sha256": "fc681f89ad3ba936361172bc5c22e06a94ea774ed2538574e53fe43f1692cdbd"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_R1206.py",
+      "sha256": "b0b57fbdb4f929afe69a1af153ffd8b700835832c9573fbf0e4757a371f56067"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_SIS427_VI.py",
+      "sha256": "3ce40f7c5940c83b3b975afa36d7e190cf9a8c25c19c543ab3f8fce0e5cfe10e"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_SIS427_VI_1.py",
+      "sha256": "8de923fb153f68af83e3b05c50e25df41058019fd7d8a1746d6c25cf600556cc"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_SPST_2_4PIN.py",
+      "sha256": "63854e45cef44ebbbc326e9778e39c84fe0a57406bb44ed29c7b607a046a8f1b"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_SPST_2_4PIN_1.py",
+      "sha256": "2ef1f030c7afd1be504b1d5317eab121912fe32aa0dcbd2fe902ebf9c9f93e7a"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_STM32H725AGI6.py",
+      "sha256": "d09a80511134214c19fb80e5aa7228aef368de77bca6ba04e8524cd58bbd34d0"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_TPS25942.py",
+      "sha256": "2c0885d19df325f49be27c73256f89aa0b05e0f6f16cf494244d11b7cbfa4ec9"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_TPS25942_1.py",
+      "sha256": "cf9ad5e22435919bf7c64475701193074e9bfa7d770af869a1b8c3d58de4396f"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_TVS_BI_0402_DFN.py",
+      "sha256": "40ff9394aa5460ec69fe29478f8d02a5706212f7cf436332b5f67f020350332e"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_TVS_BI_DO214AA.py",
+      "sha256": "0f423f43b1dcf8b5918a5bb8623726cbe43e37e5f4ceb457cdd38bf96f167042"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_TVS_BI_DO214AA_1.py",
+      "sha256": "c5f2b9779ef499037b05cac0d0bbd95842c9176ea84076990d9d3f0176515a0c"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_USB2517.py",
+      "sha256": "c02006cf2dd62db5b993e12436e689cba7b541d65b04405c82425a58382b4565"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_USB2517_1.py",
+      "sha256": "55a3a0ed2f173bd831fe77160f562bac43864e39ebfdbbd6d005990cefa0f6fd"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_USB_C_FEMALE.py",
+      "sha256": "42de30c504b16f8d9d66ff1a624e67f269aff5125a73ba94244ce07d577deb61"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_USB_C_FEMALEGCT.py",
+      "sha256": "04c2c60fc3d6a900a09079608c9f95a07f3f4493bff252aa8995b4a3b29b5e35"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_USB_C_FEMALEGCT_1.py",
+      "sha256": "eb9fcc3fe66134eeb2a2af478618ce9b1921a3c1d4626c8039d4a4f400159b53"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_USB_C_FEMALEMOL.py",
+      "sha256": "194df62729b7e5c948c7abe33d799771b45d3aaf0018b6481bd1bc072d981e39"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_USB_C_FEMALEVERT.py",
+      "sha256": "fd37b66df0f46cf51f638cd6aa323e5dab6953635ee7ff2bf5d97dfa7b80e1d9"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_USB_C_FEMALE_1.py",
+      "sha256": "4c74afc85101e5016a4c12927590736ea85256396edc8acf257cc494de909dfb"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_USB_C_FEMALE_A.py",
+      "sha256": "a13b25217fd62872a2160da450e1e98bd1f2999eb9f3d3c5297cccc6354551fe"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_USB_C_FEMALE_EXTRA.py",
+      "sha256": "e8f53b68ebc6003f82dd4c0866fd9ced37a94fc0e30ae1c6401382683355c7a4"
+    },
+    {
+      "path": "pcbgolf_import/symbols/Symbolcomma_ai_11112255_VCC_1.py",
+      "sha256": "5f1a3ebe5239a588344a35880c2d1e819e695ad82673b564c75ce8fb0f26977f"
+    },
+    {
+      "path": "pcbgolf_import/symbols/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "pcbgolf_probe/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "pcbgolf_probe/components/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "pcbgolf_probe/components/resistor.py",
+      "sha256": "76df134f2bd5d8a139ee3c4c1d1e614cae4ea1a2baaacf4b5579911a28607e0a"
+    },
+    {
+      "path": "pcbgolf_probe/main.py",
+      "sha256": "de1b03703ec66414ab2a6608761b8293a4c2b11c6c49e0e78e90c5dbe927cc53"
+    }
+  ],
+  "excluded_step_assets": [
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/10132328-10011LF.step",
+      "exact_reference_path": null,
+      "sha256": "809fff80281f4d19b8e247a57a5d84d100a8fd73eac5e11541b5151e3dc6b467",
+      "bytes": 1388914,
+      "original_reference_path": "pcbgolf.3dshapes/Connector_USB.3dshapes/10132328-10011LF.step",
+      "original_reference_sha256": "b114f41babf1ba98b12e34a26a4e82bacd75a36a3653e4ed5c7d853535280aed",
+      "note": "Imported model differs from original; restore exact asset from preserved external project or repeat pinned importer, do not substitute silently"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/472192001.step",
+      "exact_reference_path": null,
+      "sha256": "cf2aa72a50879359ccb22fcdf7e7e12990af92e2f4e6961520a62ce4f3dfd15a",
+      "bytes": 3176653,
+      "original_reference_path": "pcbgolf.3dshapes/Connector_Card.3dshapes/472192001.step",
+      "original_reference_sha256": "88627ed8f6b7d37f7d28671cb3417e8213399a163c484b86fd24ee0ac242052c",
+      "note": "Imported model differs from original; restore exact asset from preserved external project or repeat pinned importer, do not substitute silently"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/ACT1210D-101-2P-TL00.step",
+      "exact_reference_path": null,
+      "sha256": "d4ec6501f2ea5b2d9313ada89dfd901c11b19e444cc1fbeba4afa63a1bc58228",
+      "bytes": 202834,
+      "original_reference_path": "pcbgolf.3dshapes/Inductor_SMD.3dshapes/ACT1210D-101-2P-TL00.step",
+      "original_reference_sha256": "4d7af6e723627c5db4585b6ebdb88cf487ed0cb703d6acf90fe67b948c9e0301",
+      "note": "Imported model differs from original; restore exact asset from preserved external project or repeat pinned importer, do not substitute silently"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/CLMVC-FKA-CL1D1L71BB7C3C3.step",
+      "exact_reference_path": null,
+      "sha256": "d648aa7e837a44054ac824604062d98aad320466731cc3c6ad193f671fa047ae",
+      "bytes": 285051,
+      "original_reference_path": "pcbgolf.3dshapes/LED_SMD.3dshapes/CLMVC-FKA-CL1D1L71BB7C3C3.step",
+      "original_reference_sha256": "cc3ccf520bb0749125a2c5cb0cfc7e905a16a08adb8d59a1e1c57037bc7b9d7e",
+      "note": "Imported model differs from original; restore exact asset from preserved external project or repeat pinned importer, do not substitute silently"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/DFN-8-1EP_3x2mm_P0.5mm_EP1.7x1.6mm.step",
+      "exact_reference_path": null,
+      "sha256": "9191308df214176b3b965ca763768715eb71a728f6f53084f42303fffce5e141",
+      "bytes": 109549,
+      "original_reference_path": "pcbgolf.3dshapes/Package_DFN_QFN.3dshapes/DFN-8-1EP_3x2mm_P0.5mm_EP1.7x1.6mm.step",
+      "original_reference_sha256": "84056eb0db44a0456886a08de40e8957f0471c0ca51620829f0e702a48c8dca5",
+      "note": "Imported model differs from original; restore exact asset from preserved external project or repeat pinned importer, do not substitute silently"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/DX07S024XJ1R1100.step",
+      "exact_reference_path": null,
+      "sha256": "e8d82bce7ccfe3b7203b14b2c4c771e8ad4bfc780faa943407df465454a9a4d5",
+      "bytes": 1470784,
+      "original_reference_path": "pcbgolf.3dshapes/Connector_USB.3dshapes/DX07S024XJ1R1100.step",
+      "original_reference_sha256": "87d5973d25e728e905bd518205eae8f9ea76338f6adc218db72a66e7e21473a4",
+      "note": "Imported model differs from original; restore exact asset from preserved external project or repeat pinned importer, do not substitute silently"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/D_SMB.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Diode_SMD.3dshapes/D_SMB.step",
+      "sha256": "029466277d91e9f5492556be93e46611049e07115c7913880c547afa96058ed4",
+      "bytes": 70508,
+      "original_reference_path": "pcbgolf.3dshapes/Diode_SMD.3dshapes/D_SMB.step",
+      "original_reference_sha256": "029466277d91e9f5492556be93e46611049e07115c7913880c547afa96058ed4",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/D_SOD-123F.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Diode_SMD.3dshapes/D_SOD-123F.step",
+      "sha256": "132323445e3d1f9231e81c083cd88a33cd204dd8b96063bb2ed1f3ab4470c7e7",
+      "bytes": 42604,
+      "original_reference_path": "pcbgolf.3dshapes/Diode_SMD.3dshapes/D_SOD-123F.step",
+      "original_reference_sha256": "132323445e3d1f9231e81c083cd88a33cd204dd8b96063bb2ed1f3ab4470c7e7",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/EVQQ2-BFKPUY-03W.step",
+      "exact_reference_path": null,
+      "sha256": "2673a7e741f7ca43e5560ce8d737b3d1a1f1d5f506a630d7e405ef61f684013f",
+      "bytes": 633439,
+      "original_reference_path": "pcbgolf.3dshapes/Button_Switch_SMD.3dshapes/EVQQ2-BFKPUY-03W.step",
+      "original_reference_sha256": "561e0b2781c880b92302d5afe5e22b9a56d0ae99a38d255ac5d4946976ef6f25",
+      "note": "Imported model differs from original; restore exact asset from preserved external project or repeat pinned importer, do not substitute silently"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/LQFP-144_20x20mm_P0.5mm.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Package_QFP.3dshapes/LQFP-144_20x20mm_P0.5mm.step",
+      "sha256": "9de32431b419fa05aa2234aa0a50040bf22032360221ce28f95ce7539a78188f",
+      "bytes": 4008720,
+      "original_reference_path": "pcbgolf.3dshapes/Package_QFP.3dshapes/LQFP-144_20x20mm_P0.5mm.step",
+      "original_reference_sha256": "9de32431b419fa05aa2234aa0a50040bf22032360221ce28f95ce7539a78188f",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/L_0603_1608Metric.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Inductor_SMD.3dshapes/L_0603_1608Metric.step",
+      "sha256": "b0136ad7160588d2f5dac8c85da84a35646db656b5bc54bbb873b6b548eedbb3",
+      "bytes": 43450,
+      "original_reference_path": "pcbgolf.3dshapes/Inductor_SMD.3dshapes/L_0603_1608Metric.step",
+      "original_reference_sha256": "b0136ad7160588d2f5dac8c85da84a35646db656b5bc54bbb873b6b548eedbb3",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/L_1008_2520Metric.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Inductor_SMD.3dshapes/L_1008_2520Metric.step",
+      "sha256": "668211b41c20173a79370d5022674ffbcde71227caefcb073f67734f4f34ba90",
+      "bytes": 42409,
+      "original_reference_path": "pcbgolf.3dshapes/Inductor_SMD.3dshapes/L_1008_2520Metric.step",
+      "original_reference_sha256": "668211b41c20173a79370d5022674ffbcde71227caefcb073f67734f4f34ba90",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/L_Cenker_CKCS201610.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Inductor_SMD.3dshapes/L_Cenker_CKCS201610.step",
+      "sha256": "ce88d417f3cc24476f9aad00916d9b584f35b9f756772161300527dc28687d02",
+      "bytes": 43305,
+      "original_reference_path": "pcbgolf.3dshapes/Inductor_SMD.3dshapes/L_Cenker_CKCS201610.step",
+      "original_reference_sha256": "ce88d417f3cc24476f9aad00916d9b584f35b9f756772161300527dc28687d02",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/PJ-002AH-SMT-TR.step",
+      "exact_reference_path": null,
+      "sha256": "07af363ac39d20b2ea14d566cddb2c996eaa2932de864a3bdb371965e3dfdf30",
+      "bytes": 919490,
+      "original_reference_path": "pcbgolf.3dshapes/Connector_BarrelJack.3dshapes/PJ-002AH-SMT-TR.step",
+      "original_reference_sha256": "d2fc6b707e602c1f105b34f1085427b0eb6d5c674d55e9e40bb580def0bed4d6",
+      "note": "Imported model differs from original; restore exact asset from preserved external project or repeat pinned importer, do not substitute silently"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/QFN-20-1EP_3x4mm_P0.5mm_EP1.65x2.65mm.step",
+      "exact_reference_path": null,
+      "sha256": "58f11b691cf89db2a7a27cec4ee5162477b6975dfc1cff4e85d60d0df3f21bce",
+      "bytes": 229710,
+      "original_reference_path": "pcbgolf.3dshapes/Package_DFN_QFN.3dshapes/QFN-20-1EP_3x4mm_P0.5mm_EP1.65x2.65mm.step",
+      "original_reference_sha256": "9305bb1f2217b3a3c4923c5aad9089084cd988b0009a6b8028004dfc00dac347",
+      "note": "Imported model differs from original; restore exact asset from preserved external project or repeat pinned importer, do not substitute silently"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/QFN-64-1EP_9x9mm_P0.5mm_EP4.1x4.1mm.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Package_DFN_QFN.3dshapes/QFN-64-1EP_9x9mm_P0.5mm_EP4.1x4.1mm.step",
+      "sha256": "36a0cdf868c1d1a2f6860869fcbb4a57ef0b8ee8212708f0dcc6d10b7970af9d",
+      "bytes": 723698,
+      "original_reference_path": "pcbgolf.3dshapes/Package_DFN_QFN.3dshapes/QFN-64-1EP_9x9mm_P0.5mm_EP4.1x4.1mm.step",
+      "original_reference_sha256": "36a0cdf868c1d1a2f6860869fcbb4a57ef0b8ee8212708f0dcc6d10b7970af9d",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/SI7101DN-T1-GE3.step",
+      "exact_reference_path": null,
+      "sha256": "94882acd95661afdda4c039a226893489eef2752de87fc0ac2d749c61a534ec0",
+      "bytes": 281795,
+      "original_reference_path": "pcbgolf.3dshapes/Package_DFN_QFN.3dshapes/SI7101DN-T1-GE3.step",
+      "original_reference_sha256": "34ef8bc1af507fc37ab43dbd12aa66a494a2648bc4b77e55c94d4bf3f0910264",
+      "note": "Imported model differs from original; restore exact asset from preserved external project or repeat pinned importer, do not substitute silently"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/SOIC-8_3.9x4.9mm_P1.27mm.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Package_SO.3dshapes/SOIC-8_3.9x4.9mm_P1.27mm.step",
+      "sha256": "d9b46f6dd6cf8c5e2028838eed38e2a6a7f26235856078511e5a71a594ca809e",
+      "bytes": 253807,
+      "original_reference_path": "pcbgolf.3dshapes/Package_SO.3dshapes/SOIC-8_3.9x4.9mm_P1.27mm.step",
+      "original_reference_sha256": "d9b46f6dd6cf8c5e2028838eed38e2a6a7f26235856078511e5a71a594ca809e",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/SOT-23-3.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-3.step",
+      "sha256": "75385c48b1bfe8fdc197acee7ac7a452dabbc4c2a2e19cb35712e2f306cb320c",
+      "bytes": 121106,
+      "original_reference_path": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-3.step",
+      "original_reference_sha256": "75385c48b1bfe8fdc197acee7ac7a452dabbc4c2a2e19cb35712e2f306cb320c",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/SOT-23-5.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-5.step",
+      "sha256": "3b70f1b6dd947543fda90b947f91f2e2804766c39b78e56c87f1448dfd575ed8",
+      "bytes": 174941,
+      "original_reference_path": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-5.step",
+      "original_reference_sha256": "3b70f1b6dd947543fda90b947f91f2e2804766c39b78e56c87f1448dfd575ed8",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/components/UNKNOWN/SOT-23-6.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-6.step",
+      "sha256": "9491de18305b16fe125ee3d603109a29edd837d50d22305b6f929886492ce755",
+      "bytes": 199168,
+      "original_reference_path": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-6.step",
+      "original_reference_sha256": "9491de18305b16fe125ee3d603109a29edd837d50d22305b6f929886492ce755",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/landpatterns/C_0402_1005Metric.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Capacitor_SMD.3dshapes/C_0402_1005Metric.step",
+      "sha256": "03e44c4b2b727b8d4b6b1fd598cbd12dd5e614f1dfeefa96a92a07e3a3b312a2",
+      "bytes": 43502,
+      "original_reference_path": "pcbgolf.3dshapes/Capacitor_SMD.3dshapes/C_0402_1005Metric.step",
+      "original_reference_sha256": "03e44c4b2b727b8d4b6b1fd598cbd12dd5e614f1dfeefa96a92a07e3a3b312a2",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/landpatterns/C_0805_2012Metric.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Capacitor_SMD.3dshapes/C_0805_2012Metric.step",
+      "sha256": "9a669c1a2f1ea25b88b401acef6efeaa80a067bd7da9db6993de719a7fbe155c",
+      "bytes": 43618,
+      "original_reference_path": "pcbgolf.3dshapes/Capacitor_SMD.3dshapes/C_0805_2012Metric.step",
+      "original_reference_sha256": "9a669c1a2f1ea25b88b401acef6efeaa80a067bd7da9db6993de719a7fbe155c",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/landpatterns/Crystal_SMD_3225-4Pin_3.2x2.5mm.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Crystal.3dshapes/Crystal_SMD_3225-4Pin_3.2x2.5mm.step",
+      "sha256": "d2a89df82ee5f0f56ef23ee59c8161b8d4e92af2b21959d72778316dde3f9f22",
+      "bytes": 44789,
+      "original_reference_path": "pcbgolf.3dshapes/Crystal.3dshapes/Crystal_SMD_3225-4Pin_3.2x2.5mm.step",
+      "original_reference_sha256": "d2a89df82ee5f0f56ef23ee59c8161b8d4e92af2b21959d72778316dde3f9f22",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/landpatterns/LED_0805_2012Metric.step",
+      "exact_reference_path": "pcbgolf.3dshapes/LED_SMD.3dshapes/LED_0805_2012Metric.step",
+      "sha256": "0aa8b791804f5d72a2fc7d1bf231dd9959207d83df8ad801176fbc459f575b98",
+      "bytes": 78220,
+      "original_reference_path": "pcbgolf.3dshapes/LED_SMD.3dshapes/LED_0805_2012Metric.step",
+      "original_reference_sha256": "0aa8b791804f5d72a2fc7d1bf231dd9959207d83df8ad801176fbc459f575b98",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/landpatterns/LQFP-144_20x20mm_P0.5mm.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Package_QFP.3dshapes/LQFP-144_20x20mm_P0.5mm.step",
+      "sha256": "9de32431b419fa05aa2234aa0a50040bf22032360221ce28f95ce7539a78188f",
+      "bytes": 4008720,
+      "original_reference_path": "pcbgolf.3dshapes/Package_QFP.3dshapes/LQFP-144_20x20mm_P0.5mm.step",
+      "original_reference_sha256": "9de32431b419fa05aa2234aa0a50040bf22032360221ce28f95ce7539a78188f",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/landpatterns/R_0402_1005Metric.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb",
+      "bytes": 40756,
+      "original_reference_path": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "original_reference_sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb",
+      "note": "Byte-identical to original reference model"
+    },
+    {
+      "destination": "pcbgolf_import/landpatterns/SOIC-8_3.9x4.9mm_P1.27mm.step",
+      "exact_reference_path": "pcbgolf.3dshapes/Package_SO.3dshapes/SOIC-8_3.9x4.9mm_P1.27mm.step",
+      "sha256": "d9b46f6dd6cf8c5e2028838eed38e2a6a7f26235856078511e5a71a594ca809e",
+      "bytes": 253807,
+      "original_reference_path": "pcbgolf.3dshapes/Package_SO.3dshapes/SOIC-8_3.9x4.9mm_P1.27mm.step",
+      "original_reference_sha256": "d9b46f6dd6cf8c5e2028838eed38e2a6a7f26235856078511e5a71a594ca809e",
+      "note": "Byte-identical to original reference model"
+    }
+  ]
+}

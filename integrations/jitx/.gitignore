@@ -1,0 +1,15 @@
+# Native/generated state and local authentication never belong in this checkpoint.
+.venv/
+.jitx/
+designs/
+runs/
+candidates/
+exports/
+.env
+.env.*
+*.step
+*.stp
+*.mp4
+*.png
+*.pdf
+*.log

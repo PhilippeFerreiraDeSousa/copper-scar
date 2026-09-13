@@ -1,0 +1,8 @@
+[project]
+name = "copper-scar-jitx-project"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["jitx==4.4.0", "jitxlib-standard==4.4.0", "jitxlib-jlcpcb==2.0.0"]
+
+[tool.uv]
+package = false

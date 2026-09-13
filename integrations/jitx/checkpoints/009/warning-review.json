@@ -1,0 +1,311 @@
+{
+  "baseline": "iteration-006-jlc-four-layer-ids-v3",
+  "candidate": "iteration-009-power-neighborhood-routed",
+  "additional_warnings": [
+    {
+      "description": "Silkscreen clearance",
+      "items": [
+        {
+          "description": "Polygon of C51 on F.Silkscreen",
+          "pos": {
+            "x": 408.00416,
+            "y": 252.91175
+          },
+          "uuid": "0fe4ac91-05f6-4751-9490-3c26a36067e3"
+        },
+        {
+          "description": "Polygon of LED9 on F.Silkscreen",
+          "pos": {
+            "x": 407.2365,
+            "y": 256.3
+          },
+          "uuid": "acd7bec2-0957-4c11-b2ae-62a4317c8fa5"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_overlap"
+    },
+    {
+      "description": "Silkscreen clearance",
+      "items": [
+        {
+          "description": "Polygon of LED9 on F.Silkscreen",
+          "pos": {
+            "x": 407.3,
+            "y": 252.6365
+          },
+          "uuid": "370d1029-8c1d-4c00-b023-772ede94144a"
+        },
+        {
+          "description": "Polygon of C51 on F.Silkscreen",
+          "pos": {
+            "x": 408.06766,
+            "y": 251.24825
+          },
+          "uuid": "a87d439c-ef7d-4945-8954-ba074e25d4ca"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_overlap"
+    },
+    {
+      "description": "Silkscreen clearance",
+      "items": [
+        {
+          "description": "Polygon of C51 on F.Silkscreen",
+          "pos": {
+            "x": 408.00416,
+            "y": 252.91175
+          },
+          "uuid": "0fe4ac91-05f6-4751-9490-3c26a36067e3"
+        },
+        {
+          "description": "Footprint text of LED9 (+)",
+          "pos": {
+            "x": 406.984,
+            "y": 252.722
+          },
+          "uuid": "88c1740d-ec2b-b776-1bb1-cf6e751c8904"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_overlap"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Polygon of LED9 on F.Silkscreen",
+          "pos": {
+            "x": 407.2365,
+            "y": 256.3
+          },
+          "uuid": "acd7bec2-0957-4c11-b2ae-62a4317c8fa5"
+        },
+        {
+          "description": "Polygon of C51 on F.Mask",
+          "pos": {
+            "x": 406.95336,
+            "y": 252.69905
+          },
+          "uuid": "0d0f3a67-540f-4de8-99c9-e9c0dc4fa1c9"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Polygon of LED9 on F.Silkscreen",
+          "pos": {
+            "x": 407.2365,
+            "y": 256.3
+          },
+          "uuid": "acd7bec2-0957-4c11-b2ae-62a4317c8fa5"
+        },
+        {
+          "description": "Polygon of C51 on F.Mask",
+          "pos": {
+            "x": 407.00416,
+            "y": 252.64825
+          },
+          "uuid": "d6da5ee4-83a0-4338-8a5b-136050330791"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Polygon of LED9 on F.Silkscreen",
+          "pos": {
+            "x": 407.3,
+            "y": 252.6365
+          },
+          "uuid": "370d1029-8c1d-4c00-b023-772ede94144a"
+        },
+        {
+          "description": "Polygon of C51 on F.Mask",
+          "pos": {
+            "x": 406.95336,
+            "y": 252.69905
+          },
+          "uuid": "0d0f3a67-540f-4de8-99c9-e9c0dc4fa1c9"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Polygon of LED9 on F.Silkscreen",
+          "pos": {
+            "x": 407.3,
+            "y": 252.6365
+          },
+          "uuid": "370d1029-8c1d-4c00-b023-772ede94144a"
+        },
+        {
+          "description": "Polygon of C51 on F.Mask",
+          "pos": {
+            "x": 407.00416,
+            "y": 252.64825
+          },
+          "uuid": "d6da5ee4-83a0-4338-8a5b-136050330791"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Footprint text of LED9 (+)",
+          "pos": {
+            "x": 406.984,
+            "y": 252.722
+          },
+          "uuid": "88c1740d-ec2b-b776-1bb1-cf6e751c8904"
+        },
+        {
+          "description": "Polygon of C51 on F.Mask",
+          "pos": {
+            "x": 406.95336,
+            "y": 252.69905
+          },
+          "uuid": "0d0f3a67-540f-4de8-99c9-e9c0dc4fa1c9"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Footprint text of LED9 (+)",
+          "pos": {
+            "x": 406.984,
+            "y": 252.722
+          },
+          "uuid": "88c1740d-ec2b-b776-1bb1-cf6e751c8904"
+        },
+        {
+          "description": "Polygon of C51 on F.Mask",
+          "pos": {
+            "x": 407.00416,
+            "y": 252.64825
+          },
+          "uuid": "d6da5ee4-83a0-4338-8a5b-136050330791"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Polygon of C51 on F.Silkscreen",
+          "pos": {
+            "x": 408.00416,
+            "y": 252.91175
+          },
+          "uuid": "0fe4ac91-05f6-4751-9490-3c26a36067e3"
+        },
+        {
+          "description": "Polygon of LED9 on F.Mask",
+          "pos": {
+            "x": 407.3492,
+            "y": 254.1008
+          },
+          "uuid": "76de70f5-cb18-4e29-b8a4-10c389325210"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Polygon of C51 on F.Silkscreen",
+          "pos": {
+            "x": 408.00416,
+            "y": 252.91175
+          },
+          "uuid": "0fe4ac91-05f6-4751-9490-3c26a36067e3"
+        },
+        {
+          "description": "Polygon of LED9 on F.Mask",
+          "pos": {
+            "x": 407.4,
+            "y": 254.05
+          },
+          "uuid": "b975737b-6ac9-4f2d-abe3-0cad9771c0be"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Polygon of C51 on F.Silkscreen",
+          "pos": {
+            "x": 408.06766,
+            "y": 251.24825
+          },
+          "uuid": "a87d439c-ef7d-4945-8954-ba074e25d4ca"
+        },
+        {
+          "description": "Polygon of LED9 on F.Mask",
+          "pos": {
+            "x": 407.3492,
+            "y": 254.1008
+          },
+          "uuid": "76de70f5-cb18-4e29-b8a4-10c389325210"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Polygon of C51 on F.Silkscreen",
+          "pos": {
+            "x": 408.06766,
+            "y": 251.24825
+          },
+          "uuid": "a87d439c-ef7d-4945-8954-ba074e25d4ca"
+        },
+        {
+          "description": "Polygon of LED9 on F.Mask",
+          "pos": {
+            "x": 407.4,
+            "y": 254.05
+          },
+          "uuid": "b975737b-6ac9-4f2d-abe3-0cad9771c0be"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    }
+  ],
+  "counts": {
+    "silk_overlap": 3,
+    "silk_over_copper": 10
+  },
+  "assessment": "All 13 added findings are LED9/C51 silkscreen overlap or clipping by mask. No added electrical-clearance errors; not harmless for assembly: LED polarity marking and component outline readability need correction, and body/courtyard separation remains unqualified. No warning suppression.",
+  "retention_reason": "Policy v3 lexicographic diagnostic cost prioritizes missing connections before warnings; 313 to310 opens, physical errors44 and incorrect/ERCerrors0 unchanged. Retained incomplete checkpoint only, not manufacturing acceptance."
+}

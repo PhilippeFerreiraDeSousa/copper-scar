@@ -1,0 +1,27 @@
+{
+  "candidate": "/Users/philippe/dev/copper-scar-jitx/candidates/iteration-009-power-neighborhood-routed",
+  "policy_version": "jitx-feasibility-v3",
+  "metrics": {
+    "incorrect_connections": 0,
+    "missing_connections": 310,
+    "physical_errors": 44,
+    "physical_warnings": 237,
+    "erc_errors": 0,
+    "erc_warnings": 0,
+    "parity_issues": 7
+  },
+  "valid": false,
+  "score": null,
+  "retain": true,
+  "evaluation_reliable": true,
+  "invariants_ok": true,
+  "reasons": [
+    "engineering/geometry evidence incomplete; never a valid board",
+    "check findings remain"
+  ],
+  "board_sha256": "55f322cefea95659992382db38118566a0e93824790164809ba831b9d85e8fc0",
+  "project_sha256": "a6a42fde3a89f50d7836e98ee868b6c21cc2eb43e145b55fb894aca31963eabb",
+  "accepted_source_sha256": "2396ebf972d0452dcf57cb6f21ac17c1bab26137124f218bd5182bc675bc09ed",
+  "via_proposal_status": "Offline translation verified; NOT installed into live002; native reload safety unqualified",
+  "native_state_included": false
+}

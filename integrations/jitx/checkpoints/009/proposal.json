@@ -1,0 +1,127 @@
+{
+  "action_kind": "local connected power-output neighborhood",
+  "component_count": 6,
+  "moves": {
+    "U16": {
+      "x": -24,
+      "y": 20,
+      "angle": 180,
+      "side": "top"
+    },
+    "C53": {
+      "x": -29,
+      "y": 20,
+      "angle": 180,
+      "side": "top"
+    },
+    "R69": {
+      "x": -24,
+      "y": 15,
+      "angle": 180,
+      "side": "top"
+    },
+    "R73": {
+      "x": -20,
+      "y": 15,
+      "angle": 180,
+      "side": "top"
+    },
+    "R77": {
+      "x": -20,
+      "y": 25,
+      "angle": 180,
+      "side": "top"
+    },
+    "LED9": {
+      "x": -24,
+      "y": 25,
+      "angle": 180,
+      "side": "top"
+    }
+  },
+  "overrides": {
+    "Main.CAN_FD": {
+      "x": 9.3783,
+      "y": -76.6155,
+      "angle": 0,
+      "side": "top"
+    },
+    "Main.Channels": {
+      "x": 32.86084,
+      "y": 68.51825,
+      "angle": 180,
+      "side": "top"
+    },
+    "Main.Power": {
+      "x": -72.2135,
+      "y": -12.1459,
+      "angle": 270,
+      "side": "top"
+    },
+    "Main.STM32H7": {
+      "x": 48.78745,
+      "y": 8.118,
+      "angle": 0,
+      "side": "top"
+    },
+    "Main.USB__SD": {
+      "x": -110.7699,
+      "y": 10.55,
+      "angle": 0,
+      "side": "top"
+    },
+    "Pcbgolf_5_05.U16": {
+      "x": 41.19839,
+      "y": 47.91825,
+      "angle": 0,
+      "side": "top"
+    },
+    "Pcbgolf_5_05.C53": {
+      "x": 46.19839,
+      "y": 47.91825,
+      "angle": 0,
+      "side": "top"
+    },
+    "Pcbgolf_5_05.R69": {
+      "x": 41.19839,
+      "y": 52.91825,
+      "angle": 0,
+      "side": "top"
+    },
+    "Pcbgolf_5_05.R73": {
+      "x": 37.19839,
+      "y": 52.91825,
+      "angle": 0,
+      "side": "top"
+    },
+    "Pcbgolf_5_05.R77": {
+      "x": 37.19839,
+      "y": 42.91825,
+      "angle": 0,
+      "side": "top"
+    },
+    "Pcbgolf_5_05.LED9": {
+      "x": 41.19839,
+      "y": 42.91825,
+      "angle": 0,
+      "side": "top"
+    }
+  },
+  "groups": [
+    "Channels.Pcbgolf_5_05 power and indicator cluster"
+  ],
+  "nets": [
+    "CH4_PWR_EN",
+    "CH4_IMON",
+    "Net_U16_ILIM",
+    "Net_LED9_PadA",
+    "Net_J8_VBUS_PadA4",
+    "Net12V",
+    "GND"
+  ],
+  "design": "pcbgolf_import.stage_one_002.StageOne002",
+  "rationale": "Compact U16,C53,R69,R73,R77,LED9 around a fixed J8 connector. R77 participates in new clearance findings; its LED9 connection spans~46mm and U16 control/input support parts span~40-50mm. Proposed local cluster shortens those component-center separations while preserving J8 and239otherposes. Outer placement plus bounded native inner reroute of six-component incident nets. This exploratory step starts from rejected008 live state;313-open incumbent stays retained. Power width/current/thermal and connector geometry remain unqualified.",
+  "id": "iteration-009-power-neighborhood",
+  "mode": "incremental",
+  "action": "Compact U16,C53,R69,R73,R77,LED9 around a fixed J8 connector. R77 participates in new clearance findings; its LED9 connection spans~46mm and U16 control/input support parts span~40-50mm. Proposed local cluster shortens those component-center separations while preserving J8 and239otherposes. Outer placement plus bounded native inner reroute of six-component incident nets. This exploratory step starts from rejected008 live state;313-open incumbent stays retained. Power width/current/thermal and connector geometry remain unqualified."
+}
