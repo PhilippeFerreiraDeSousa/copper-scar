@@ -1,0 +1,11 @@
+# PCB Loop — reproduce and inspect
+
+Open index.html from the extracted ZIP. No network or installation is needed for playback. The independent chapter controls show the size families small-loop and medium-loop; Stage 1 feasibility and Stage 2 optimization are separate dimensions. large-loop is additional work and appears only if verified artifacts were ready at the freeze.
+
+Every board state links its exact native CAD and receipt. `package-manifest.json` contains SHA256 for every packaged file; `source/revisions.json` names exact archived implementation revisions. `ui-verified.json` checks every board and every displayed layer offline. `video-verified.json` binds the MP4 to the same data snapshot. W&B links are optional private evidence; no credential file is included.
+
+Native reproduction needs KiCad 10.0.6 and its bundled pcbnew Python, the recorded Freerouting runtime, and the exact source archive for that state. Stage 2 assembly measurement additionally uses OpenCascade/OCP. Read each recorded command's arguments and the protocol before reproducing; absolute original owner paths are provenance and must be mapped to your extracted copy. Each copied project includes its native rules, pads, netlist, models and saved receipts. Do not substitute a wire-length proxy for the official formula or omit assembly validation.
+
+For the demo renderer itself, use `demos/noon/build.py`, `verify.py`, `export_video.py`, and `package.py` in the demo source archive. The renderer reads immutable completed-owner records and exports diagrams from copied CAD; it does not run or control the router. The runtime paths are explicit in these scripts. Exported SVG reference labels are presentation annotations, while linked CAD is unmodified.
+
+The native experiments are deterministic agent-authored candidate procedures. Router seeds are not independently established and results are descriptive single-board pilots. Traces are labeled saved execution evidence, never model chain-of-thought or invented LLM calls. Full-board routing operates on both enabled copper layers with declared budgets; actual elapsed time may be shorter when the router finishes.
