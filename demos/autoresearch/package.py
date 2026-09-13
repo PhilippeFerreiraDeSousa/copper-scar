@@ -16,6 +16,8 @@ def main():
  video=json.loads((pilot/'replay-verified.json').read_text());assert video['source_events_sha256']==state['events_sha256'],'Replay lags this freeze'
  assert sha(pilot/'two-level-replay.mp4')==video['video_sha256']
  assert video['source_state_sha256']==sha(pilot/'data.json'),'Replay does not match the complete frozen state'
+ remote_video=json.loads((pilot/'remote/replay-verified.json').read_text())
+ assert remote_video['downloaded_bytes_verified'] and remote_video['video_sha256']==video['video_sha256'] and remote_video['source_state_sha256']==video['source_state_sha256'],'Remote replay does not match frozen state'
  ui=json.loads((pilot/'ui-verified.json').read_text());assert ui['events_sha256']==state['events_sha256'],'Offline UI QA lags this freeze'
  assert ui['source_state_sha256']==sha(pilot/'data.json'),'UI QA does not match complete frozen state'
  if (state.get('next_campaign') or {}).get('result'):

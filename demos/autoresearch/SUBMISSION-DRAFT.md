@@ -25,3 +25,5 @@ Offline video: two-level-autoresearch/two-level-replay.mp4
 Team name, additional members, contact details, public hosting/video link, eligibility declarations and final submission fields: not supplied; leave unanswered until provided by the team. Private W&B access has not been expanded. No submission has been sent.
 
 The matched pilot uses KiCad native evaluation and Freerouting. JITX source-authored routing and transfer proofs are separate supplemental work and did not realize these pilot routes.
+
+Verified R89 outcome: the separate trial finished at 09:35:07 Pacific after 674.45 seconds overall. Native evaluation found 45 missing pairs, zero physical errors and 21 warnings, with an original connected pad group split. It was rejected; the selected board remains at 44 missing pairs. This proves selected-policy consumption and executed evaluation, not an improvement from that follow-on trial.
