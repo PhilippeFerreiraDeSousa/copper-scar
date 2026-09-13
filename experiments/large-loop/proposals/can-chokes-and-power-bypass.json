@@ -1,0 +1,7 @@
+{
+  "kind": "functional_group_relocation",
+  "rationale": "The retained board's CAN buses and U6/U8 endpoints dominate remaining opens. All four CAN chokes are currently displaced far to the right of their transceivers, creating long local CANH/CANL connections through the passive field. Move L5-L8 below U5-U8. To free that row, move C50-C53 from the upper passive bank beside their corresponding U13-U16 eFuses. This changes local grouping/spacing while retaining the outline, all original component geometry, net assignments, layers, widths and vias. Native preflight must reject any new clearance issue before full routing.",
+  "diagnostic_nets": ["CAN0_H", "CAN1_H", "CAN2_H", "CAN3_H", "Net-(U5-CANL)", "+12V", "GND"],
+  "expected_score_terms": {"native_opens": "Hypothesis: shorter transceiver/choke connections and reduced routing congestion; exact outcome unknown", "required_physical_findings": "No new findings; retain the original84findings", "official_assembled_score": "Ineligible until Stage1validity; no model/BOM/outline/layer changes"},
+  "after": {"L5": [31,47,0], "L6": [42,47,0], "L7": [53,47,0], "L8": [64,47,0], "C50": [38,94,0], "C51": [61,94,0], "C52": [84,94,0], "C53": [107,94,0]}
+}
