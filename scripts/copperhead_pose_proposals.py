@@ -2,7 +2,8 @@
 import argparse,hashlib,json,sys,time,math,re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1];LOCAL=ROOT/'.local/copperhead';repo=LOCAL/'tools/KiCadRoutingTools'
-ap=argparse.ArgumentParser();ap.add_argument('parent',type=Path);ap.add_argument('--manifest',type=Path,required=True);ap.add_argument('--output',type=Path,required=True);ap.add_argument('--group',default='sd_card_interface');ap.add_argument('--move-refs');ap.add_argument('--rotations',default='0');ap.add_argument('--steps',default='-15,-10,-5,5,10,15');ap.add_argument('--feedback',type=Path);ap.add_argument('--allow-proxy-regression',action='store_true');a=ap.parse_args();started=time.monotonic()
+ap=argparse.ArgumentParser();ap.add_argument('parent',type=Path);ap.add_argument('--manifest',type=Path,required=True);ap.add_argument('--output',type=Path,required=True);ap.add_argument('--group',default='sd_card_interface');ap.add_argument('--move-refs');ap.add_argument('--rotations',default='0');ap.add_argument('--steps',default='-15,-10,-5,5,10,15');ap.add_argument('--feedback',type=Path);ap.add_argument('--allow-proxy-regression',action='store_true');ap.add_argument('--x-steps');ap.add_argument('--y-steps');a=ap.parse_args();started=time.monotonic()
+if bool(a.x_steps)!=bool(a.y_steps):ap.error('--x-steps and --y-steps must be supplied together')
 provenance=json.loads((LOCAL/'tools/krt-provenance.json').read_text())
 for name,digest in provenance['files'].items():assert hashlib.sha256((repo/name).read_bytes()).hexdigest()==digest,'KRT source drift: '+name
 sys.path.insert(0,str(repo/'py_placer'));import _path
@@ -14,7 +15,7 @@ data.groups=groups;derived=derive_groups(data,parse_sources('kicad'))
 # Search one declared connected group while all other bodies remain fixed.
 group=a.group;members=groups[group];refs=a.move_refs.split(',') if a.move_refs else members;assert set(refs)<=set(members);rotations=[float(x) for x in a.rotations.split(',')];assert len(refs)==1 or rotations==[0.0];ignored={i for i,n in data.nets.items() if n.name in ('GND','+3V3','+5V','+12V')}
 state=make_state(data,str(board),clearance=.2,board_edge_clearance=.5,ignore_net_ids=ignored,extra_locked_refs=set(flat)-set(refs),move_refs=set(refs))
-state.build_neighbor_lists(max(abs(float(x)) for x in a.steps.split(","))*math.sqrt(2)+1);baseline=state.total_cost();diagnosis=to_json(diagnose(state,data,{group:refs},ignore_net_ids=sorted(ignored),budget=13))
+state.build_neighbor_lists(max(abs(float(x)) for x in ((a.x_steps+","+a.y_steps) if a.x_steps else a.steps).split(","))*math.sqrt(2)+1);baseline=state.total_cost();diagnosis=to_json(diagnose(state,data,{group:refs},ignore_net_ids=sorted(ignored),budget=13))
 poses={r:{'x_mm':state.parts[r].x,'y_mm':state.parts[r].y,'angle_deg':state.parts[r].rot} for r in refs}
 # Bind local approach proxies to a native report for these exact board bytes.
 local_targets=[];diagnostic_source=None
@@ -43,6 +44,7 @@ def local_approach(dx,dy,rotation):
  return total
 
 steps=[float(x) for x in a.steps.split(',')];deltas=list(dict.fromkeys([(x,0) for x in steps]+[(0,x) for x in steps]+[(x,y) for x in steps for y in steps if abs(x)==abs(y)]))
+if a.x_steps:deltas=[(float(x),float(y)) for x in a.x_steps.split(',') for y in a.y_steps.split(',')]
 feedback=json.loads(a.feedback.read_text()) if a.feedback else []
 tried={(tuple(f['action_parameters']['translation_mm']),f['action_parameters'].get('rotation_deg',0)) for f in feedback if f.get('action_parameters',{}).get('group')==group and f.get('action_parameters',{}).get('parent_board_sha256')==before_hash and f.get('action_parameters',{}).get('refs')==refs}
 trials=[]

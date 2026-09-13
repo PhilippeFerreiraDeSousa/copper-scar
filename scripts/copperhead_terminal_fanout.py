@@ -24,6 +24,7 @@ source = ROOT / 'scripts/native/CopperheadFanout.java'
 evidence = folder / 'terminal-fanout'
 evidence.mkdir()
 (evidence / source.name).write_bytes(source.read_bytes())
+(evidence/'input.dsn').write_bytes((folder/'pcbgolf.dsn').read_bytes())
 subprocess.run([str(jdk / 'javac'), '-proc:none', '-cp', str(jar), '-d', str(evidence), str(source)], check=True, timeout=30)
 rules=json.loads((folder/'pcbgolf.kicad_pro').read_text())['board']['design_settings']['rules']
 edge_um=1000*rules['min_copper_edge_clearance']
@@ -32,4 +33,5 @@ command = [str(jdk / 'java'), '-Djava.awt.headless=true', '-Xmx2g', '-cp', str(e
 (evidence/'provenance.json').write_text(json.dumps(dict(command=command, java_source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(), jar_sha256=hashlib.sha256(jar.read_bytes()).hexdigest(), input_dsn_sha256=hashlib.sha256((folder/'pcbgolf.dsn').read_bytes()).hexdigest()), indent=2))
 with (evidence/'engine.log').open('w') as log:
     subprocess.run(command, stdout=log, stderr=subprocess.STDOUT, check=True, timeout=30*len(terminals)+30)
+(evidence/'output.ses').write_bytes((folder/'pcbgolf.ses').read_bytes())
 print((evidence/'result.json').read_text())

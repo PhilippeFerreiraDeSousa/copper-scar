@@ -14,6 +14,19 @@ import com.google.gson.GsonBuilder;
 
 /** Bounded invocation of the stock engine fanout API; contains no path search. */
 public class CopperheadFanout {
+ static Map<String,Object> describe(Item item) {
+  var d=new LinkedHashMap<String,Object>();var transform=item.board.communication.coordinateTransform;
+  d.put("engine_id",item.getId());d.put("type",item.getClass().getSimpleName());d.put("nets",item.getAllNetNames());
+  d.put("bounds_dsn_um",transform.boardToDsn(item.boundingBox()));
+  d.put("layers",List.of(item.board.layerStructure.layers[item.firstLayer()].name,item.board.layerStructure.layers[item.lastLayer()].name));
+  if(item instanceof Trace trace){d.put("start_dsn_um",transform.boardToDsn(trace.firstCorner().toFloat()));d.put("end_dsn_um",transform.boardToDsn(trace.lastCorner().toFloat()));d.put("width_um",transform.boardToDsn(2*trace.getHalfWidth()));}
+  if(item instanceof Via via)d.put("padstack",via.getPadstack().name);
+  return d;
+ }
+ static Map<Integer,String> snapshot(Collection<Item> items) {
+  var result=new LinkedHashMap<Integer,String>();var gson=new GsonBuilder().create();
+  for(var item:items)result.put(item.getId(),gson.toJson(describe(item)));return result;
+ }
  public static void main(String[] args) throws Exception {
   var job=new RoutingJob();
   job.routerSettings=new DefaultSettings().getSettings();
@@ -41,10 +54,14 @@ public class CopperheadFanout {
    }
    if(selected==null)throw new IllegalArgumentException("Missing pin "+target);
    var row=new LinkedHashMap<String,Object>();row.put("terminal",target);row.put("items_before",board.getItems().size());
+   var before=snapshot(board.getItems());
    long start=System.nanoTime();
    Stoppable stopper=new Stoppable(){boolean stopped=false;public void requestStop(){stopped=true;}public boolean isStopRequested(){return stopped;}};
    var result=board.fanout(selected,settings,-1,stopper,new TimeLimit(30000));
-   row.put("state",result.state.toString());row.put("details",result.details);row.put("elapsed_seconds",(System.nanoTime()-start)/1e9);row.put("items_after",board.getItems().size());rows.add(row);
+   var after=snapshot(board.getItems());var gson=new GsonBuilder().create();var added=new ArrayList<Object>();var removed=new ArrayList<Object>();var changed=new ArrayList<Object>();
+   for(var entry:after.entrySet())if(!before.containsKey(entry.getKey()))added.add(gson.fromJson(entry.getValue(),Object.class));else if(!before.get(entry.getKey()).equals(entry.getValue()))changed.add(Map.of("before",gson.fromJson(before.get(entry.getKey()),Object.class),"after",gson.fromJson(entry.getValue(),Object.class)));
+   for(var entry:before.entrySet())if(!after.containsKey(entry.getKey()))removed.add(gson.fromJson(entry.getValue(),Object.class));
+   row.put("state",result.state.toString());row.put("details",result.details);row.put("elapsed_seconds",(System.nanoTime()-start)/1e9);row.put("items_after",board.getItems().size());row.put("added_items",added);row.put("removed_items",removed);row.put("changed_items",changed);rows.add(row);
    System.out.println(new GsonBuilder().create().toJson(row));
   }
   try(var out=Files.newOutputStream(Path.of(args[1]))){if(!manager.saveAsSpecctraSessionSes(out,"pcbgolf"))throw new IllegalStateException("SES export failed");}
