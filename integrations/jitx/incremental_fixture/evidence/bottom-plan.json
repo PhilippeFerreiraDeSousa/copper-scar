@@ -1,0 +1,18 @@
+[
+  {
+    "type": "route",
+    "body": {
+      "layer": 1,
+      "pads": [
+        "6G7qxYQc3FGXYa1e7RVxit/7boHtMAeFBhpffQ45TY91K",
+        "92dEWBrQEXzsb3bVGomGoh/zDLPReKUnXoDZYKWkGGxm",
+        "AzkwzEnHtosQG9zyeSJtNg/9ukiYXMK8jxJtaQW2YA3xA",
+        "Bkk7ftQfa2hFxQ7ryaqFyz/D5ky7sgCrgWjhtN5Zrz549",
+        "DEuPgYkUKxASFoGzzcG7kJ/Er31fSwuhz59xCsDUictur",
+        "DRgGqMj2wRpCLrEXn5zig8/my81DcRvHCxxLGzgKFg1J"
+      ],
+      "force": false,
+      "configure": null
+    }
+  }
+]

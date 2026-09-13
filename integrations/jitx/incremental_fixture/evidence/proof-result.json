@@ -1,0 +1,106 @@
+{
+  "fixture_incremental_proof_passed": true,
+  "whole_product_board_qualified": false,
+  "stages": [
+    {
+      "stage": "01-definition-only-sweep",
+      "source_board_sha256": "d5e5bed93ba43ad651f386dbc2e9f0daa48b397e72ff37a239a917d788727d7a",
+      "normalized_board_sha256": "6a9a4fae83b2bb943c575641cb05ab9b8f8141ef13c3e63a4b466c948107a52d",
+      "project_sha256": "07a28f0d4f449296a462b0701a78de4e73d80889c8a3630867be3457199547c4",
+      "geometry_unchanged": true,
+      "duplicate_ids_reassigned": 0,
+      "all_four_net_memberships_correct": true,
+      "component_count": 8,
+      "via_count": 0,
+      "copper_layers_used": [
+        "F.Cu"
+      ],
+      "through_via_geometry_legal": true,
+      "repeated_drc_agrees": true,
+      "opens": 3,
+      "violations": []
+    },
+    {
+      "stage": "03-multilayer-routed",
+      "source_board_sha256": "bade322849c868961cdbc3489990611cc11c2846c14030d7776eccf4b8a1dc9c",
+      "normalized_board_sha256": "23d612dc9a96206ee4a292143552fa024792c5f4464ce88c28740688fad5a14a",
+      "project_sha256": "07a28f0d4f449296a462b0701a78de4e73d80889c8a3630867be3457199547c4",
+      "geometry_unchanged": true,
+      "duplicate_ids_reassigned": 0,
+      "all_four_net_memberships_correct": true,
+      "component_count": 8,
+      "via_count": 6,
+      "copper_layers_used": [
+        "B.Cu",
+        "F.Cu"
+      ],
+      "through_via_geometry_legal": true,
+      "repeated_drc_agrees": true,
+      "opens": 0,
+      "violations": []
+    },
+    {
+      "stage": "04-moved",
+      "source_board_sha256": "3181d722eeeeec0c287b36811a34fbfff02d5f923ca0cae9952d795ac3cd0511",
+      "normalized_board_sha256": "70a6d19e45caa0bb2f09b37d45de36d344ab29d0fd7d105ac9cdbc3593ea9e10",
+      "project_sha256": "07a28f0d4f449296a462b0701a78de4e73d80889c8a3630867be3457199547c4",
+      "geometry_unchanged": true,
+      "duplicate_ids_reassigned": 0,
+      "all_four_net_memberships_correct": true,
+      "component_count": 8,
+      "via_count": 6,
+      "copper_layers_used": [
+        "B.Cu",
+        "F.Cu"
+      ],
+      "through_via_geometry_legal": true,
+      "repeated_drc_agrees": true,
+      "opens": 0,
+      "violations": []
+    },
+    {
+      "stage": "05-reloaded",
+      "source_board_sha256": "749d0208fff3119a45d3da0b945559c1735bfef367f4b9f3e1383d1d2c345b06",
+      "normalized_board_sha256": "e2f9e4f30e7919f8aba33e8ff8051383ab2a1ecb7e9fa0eccd37c2b953f13196",
+      "project_sha256": "07a28f0d4f449296a462b0701a78de4e73d80889c8a3630867be3457199547c4",
+      "geometry_unchanged": true,
+      "duplicate_ids_reassigned": 0,
+      "all_four_net_memberships_correct": true,
+      "component_count": 8,
+      "via_count": 6,
+      "copper_layers_used": [
+        "B.Cu",
+        "F.Cu"
+      ],
+      "through_via_geometry_legal": true,
+      "repeated_drc_agrees": true,
+      "opens": 0,
+      "violations": []
+    }
+  ],
+  "placement_change": "TP4 only; native a_right (8,6) to (10,8)",
+  "unrelated_copper_preserved_exactly": [
+    "HOLD",
+    "CROSS_B",
+    "CROSS_C"
+  ],
+  "unchanged_source_reload_preserved_moved_poses_and_all_copper": false,
+  "reload_changed_pose_refs": [
+    "TP4"
+  ],
+  "reload_changed_copper_nets": [
+    "CROSS_A"
+  ],
+  "reload_limit": "Source placement is authoritative: unchanged source reload resets the interactive TP4 pose. Preserve accepted poses in authored source before any rebuild.",
+  "source_update_reload": {
+    "legal_definition_added": true,
+    "accepted_pose_authored_in_source": true,
+    "moved_poses_preserved": true,
+    "all_copper_preserved": true,
+    "existing_via_instances_preserved": 6,
+    "drc_opens": 0,
+    "drc_violations": [],
+    "project_rules_unchanged": true,
+    "source_board_sha256": "beaf4eb527b1b62c98f9a43f1b2c77ce2089ce860806ac353e737e222d19778d"
+  }
+}

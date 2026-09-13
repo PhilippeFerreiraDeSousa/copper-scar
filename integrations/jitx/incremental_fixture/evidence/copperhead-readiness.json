@@ -1,0 +1,227 @@
+{
+  "copperhead_exchange_sha256": "9b97dee0faf3ad2ba8d2772b3afe7b7760ad768bade33cc1fee502088a6488c2",
+  "jitx_accepted_board_sha256": "55f322cefea95659992382db38118566a0e93824790164809ba831b9d85e8fc0",
+  "component_refs_exact": true,
+  "components": 245,
+  "copperhead_physical_pads": 1078,
+  "jitx_export_physical_pads": 1090,
+  "missing_pad_keys": [],
+  "extra_pad_keys": [
+    [
+      [
+        "J7",
+        ""
+      ],
+      2
+    ],
+    [
+      [
+        "J8",
+        ""
+      ],
+      2
+    ],
+    [
+      [
+        "J6",
+        ""
+      ],
+      2
+    ],
+    [
+      [
+        "J5",
+        ""
+      ],
+      2
+    ],
+    [
+      [
+        "J1",
+        ""
+      ],
+      2
+    ],
+    [
+      [
+        "J3",
+        ""
+      ],
+      2
+    ]
+  ],
+  "proposal_refs_resolve_to_jitx": true,
+  "proposal_ref_group_ids": {
+    "C37": {
+      "path": "USB__SD.Pcbgolf_3_2.C37",
+      "x": -110.7699,
+      "y": 45.126,
+      "angle": 0,
+      "side": "top",
+      "group_id": "8BGsqMizn7eAGiR2iVRvB2"
+    },
+    "J2": {
+      "path": "USB__SD.Pcbgolf_3_2.J2",
+      "x": -49.2301,
+      "y": 57.95,
+      "angle": 0,
+      "side": "top",
+      "group_id": "5xuFP8XW1AeCivWbF8Zdi8"
+    },
+    "R33": {
+      "path": "USB__SD.Pcbgolf_3_2.R33",
+      "x": -101.7795,
+      "y": 45.126,
+      "angle": 0,
+      "side": "top",
+      "group_id": "CqiANdQt49p8JmhfnsHqVU"
+    },
+    "R34": {
+      "path": "USB__SD.Pcbgolf_3_2.R34",
+      "x": -101.7795,
+      "y": 43.099,
+      "angle": 0,
+      "side": "top",
+      "group_id": "2bT2ws9cy6Hzp8bqK3q6qn"
+    },
+    "R35": {
+      "path": "USB__SD.Pcbgolf_3_2.R35",
+      "x": -101.7795,
+      "y": 41.072,
+      "angle": 0,
+      "side": "top",
+      "group_id": "TmjEC89nN3SCrTFjFmA5D"
+    },
+    "R36": {
+      "path": "USB__SD.Pcbgolf_3_2.R36",
+      "x": -98.7827,
+      "y": 69.45,
+      "angle": 0,
+      "side": "top",
+      "group_id": "BSM66dn1STk7jFcTiEiiLZ"
+    },
+    "R37": {
+      "path": "USB__SD.Pcbgolf_3_2.R37",
+      "x": -98.7827,
+      "y": 67.423,
+      "angle": 0,
+      "side": "top",
+      "group_id": "FtENT4t6RqB6eBVuDhZRSi"
+    },
+    "R38": {
+      "path": "USB__SD.Pcbgolf_3_2.R38",
+      "x": -98.7827,
+      "y": 65.396,
+      "angle": 0,
+      "side": "top",
+      "group_id": "9sxPZC3j6Ev8ubg6rXKHJq"
+    },
+    "R39": {
+      "path": "USB__SD.Pcbgolf_3_2.R39",
+      "x": -98.7827,
+      "y": 63.369,
+      "angle": 0,
+      "side": "top",
+      "group_id": "k6KwceHdiGpeevs5Sqf1X"
+    },
+    "R40": {
+      "path": "USB__SD.Pcbgolf_3_2.R40",
+      "x": -98.7827,
+      "y": 61.342,
+      "angle": 0,
+      "side": "top",
+      "group_id": "7o5HXdwsfEGzNk7ZeCCcvd"
+    },
+    "R41": {
+      "path": "USB__SD.Pcbgolf_3_2.R41",
+      "x": -98.7827,
+      "y": 59.315,
+      "angle": 0,
+      "side": "top",
+      "group_id": "9Rwa6HeKUyyCKyYz6gtKad"
+    },
+    "R42": {
+      "path": "USB__SD.Pcbgolf_3_2.R42",
+      "x": -98.7827,
+      "y": 57.288,
+      "angle": 0,
+      "side": "top",
+      "group_id": "FQg9ouGjhEZpbqnbKC7saj"
+    },
+    "R43": {
+      "path": "USB__SD.Pcbgolf_3_2.R43",
+      "x": -98.7827,
+      "y": 55.261,
+      "angle": 0,
+      "side": "top",
+      "group_id": "Bw9jo526TZ67mkzVM8uxD1"
+    }
+  },
+  "copperhead_layer_count": 6,
+  "jitx_native_layer_count": 2,
+  "jitx_via_definitions": 0,
+  "parent_geometry_equivalent": false,
+  "ready_to_apply": false,
+  "copperhead_named_net_groups": 297,
+  "jitx_export_named_net_groups": 297,
+  "copperhead_active_partitions": 196,
+  "jitx_export_active_partitions": 196,
+  "active_partition_membership_exact": true,
+  "unmatched_copperhead_partitions": [],
+  "unmatched_jitx_partitions": [],
+  "source_explicit_nc_pad_count": 111,
+  "copperhead_groups_after_explicit_source_nc_exclusion": 191,
+  "excluded_multinode_nc_groups": {
+    "unconnected-(J3-TX2+-PadB2)": [
+      [
+        "J3",
+        "B2"
+      ],
+      [
+        "J3",
+        "B2T"
+      ]
+    ],
+    "unconnected-(J3-TX2--PadB3)": [
+      [
+        "J3",
+        "B3"
+      ],
+      [
+        "J3",
+        "B3T"
+      ]
+    ],
+    "unconnected-(J3-SBU2-PadB8)": [
+      [
+        "J3",
+        "B8"
+      ],
+      [
+        "J3",
+        "B8T"
+      ]
+    ],
+    "unconnected-(J3-RX1--PadB10)": [
+      [
+        "J3",
+        "B10"
+      ],
+      [
+        "J3",
+        "B10T"
+      ]
+    ],
+    "unconnected-(J3-RX1+-PadB11)": [
+      [
+        "J3",
+        "B11"
+      ],
+      [
+        "J3",
+        "B11T"
+      ]
+    ]
+  },
+  "pad_count_explanation": "1078 original physical pad objects include1066named+12blank; normalizedJITXexport has1066named+24blank,12extraunnamed mechanical/cutout-derived pads. Nativecurrent191activepartitions omitexplicitNC;297exportednamednets/196multinodegroups includeNC partitions."
+}

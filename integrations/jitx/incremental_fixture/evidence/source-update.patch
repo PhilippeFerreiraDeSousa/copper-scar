@@ -1,0 +1,16 @@
+--- a/incremental_fixture/design.py
++++ b/incremental_fixture/design.py
+@@ -46 +46 @@
+-    a_right = Terminal().at(8, 6)
++    a_right = Terminal().at(10, 8)
+@@ -112,0 +113,10 @@
++    class LargeThroughVia(Via):
++        name = "Proof through via 0.80-0.40"
++        start_layer = 0
++        stop_layer = -1
++        diameter = 0.8
++        hole_diameter = 0.4
++        type = ViaType.MechanicalDrill
++        tented = True
++        via_in_pad = False
++

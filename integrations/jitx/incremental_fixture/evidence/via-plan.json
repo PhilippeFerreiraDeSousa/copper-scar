@@ -1,0 +1,97 @@
+[
+  {
+    "type": "unroute",
+    "body": {
+      "layer": 0,
+      "routes": [
+        "DwwmRGTg72nDDk4yAoJ58X",
+        "9iPCQcAoYQLhw6XRvDviLU",
+        "DbXvNvigpswaiNRQ41JJc2"
+      ]
+    }
+  },
+  {
+    "type": "via-add",
+    "body": {
+      "origin": "6G7qxYQc3FGXYa1e7RVxit/BLoFXoqSncQ8TCXaca4iFz",
+      "layer": 0,
+      "instance": "6G7qxYQc3FGXYa1e7RVxit",
+      "global-point": {
+        "x": 6,
+        "y": -3
+      },
+      "force-place": false,
+      "def-name": "Proof through via 0.60-0.30"
+    }
+  },
+  {
+    "type": "via-add",
+    "body": {
+      "origin": "92dEWBrQEXzsb3bVGomGoh/BLoFXoqSncQ8TCXaca4iFz",
+      "layer": 0,
+      "instance": "92dEWBrQEXzsb3bVGomGoh",
+      "global-point": {
+        "x": -6,
+        "y": -3
+      },
+      "force-place": false,
+      "def-name": "Proof through via 0.60-0.30"
+    }
+  },
+  {
+    "type": "via-add",
+    "body": {
+      "origin": "Bkk7ftQfa2hFxQ7ryaqFyz/BLoFXoqSncQ8TCXaca4iFz",
+      "layer": 0,
+      "instance": "Bkk7ftQfa2hFxQ7ryaqFyz",
+      "global-point": {
+        "x": 6,
+        "y": 6
+      },
+      "force-place": false,
+      "def-name": "Proof through via 0.60-0.30"
+    }
+  },
+  {
+    "type": "via-add",
+    "body": {
+      "origin": "AzkwzEnHtosQG9zyeSJtNg/BLoFXoqSncQ8TCXaca4iFz",
+      "layer": 0,
+      "instance": "AzkwzEnHtosQG9zyeSJtNg",
+      "global-point": {
+        "x": -6,
+        "y": 6
+      },
+      "force-place": false,
+      "def-name": "Proof through via 0.60-0.30"
+    }
+  },
+  {
+    "type": "via-add",
+    "body": {
+      "origin": "DRgGqMj2wRpCLrEXn5zig8/BLoFXoqSncQ8TCXaca4iFz",
+      "layer": 0,
+      "instance": "DRgGqMj2wRpCLrEXn5zig8",
+      "global-point": {
+        "x": 6,
+        "y": 0
+      },
+      "force-place": false,
+      "def-name": "Proof through via 0.60-0.30"
+    }
+  },
+  {
+    "type": "via-add",
+    "body": {
+      "origin": "DEuPgYkUKxASFoGzzcG7kJ/BLoFXoqSncQ8TCXaca4iFz",
+      "layer": 0,
+      "instance": "DEuPgYkUKxASFoGzzcG7kJ",
+      "global-point": {
+        "x": -6,
+        "y": 0
+      },
+      "force-place": false,
+      "def-name": "Proof through via 0.60-0.30"
+    }
+  }
+]

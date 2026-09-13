@@ -2,6 +2,8 @@
 
 Research/design checkpoint,2026-09-12. The source checkpoint was pushed and remotely verified **before this investigation**: `d70fde77cf4936473c0b5e7c78b01639fb21c719`, branch `codex/jitx-optimization`. This investigation used installed4.4.0 Python/viewer sources, saved native API responses and primary upstream documentation. It did not mutate accepted native state or launch a routing planner.
 
+Follow-up: the subsequently authorized isolated fixture proof is now documented in [jitx-incremental-proof.md](jitx-incremental-proof.md). It demonstrated actual multilayer routing and incremental preservation, plus the distinction between an unchanged-source reload resetting interactive poses and an authored-pose source update preserving them. The original full-board limitations in this research checkpoint remain.
+
 **Conclusion:** the current harness correctly issues the installed single-layer route operation, but it is **not a complete multilayer routing evaluator**. Registering a via definition alone will not fix that. Actual via instances, net attachments, layer transitions and a complete terminal selection must be prepared; then all required per-layer legs must be attempted and the realized full board checked. Prior incomplete runs do not establish placement infeasibility.
 
 ## What the native workflow actually provides

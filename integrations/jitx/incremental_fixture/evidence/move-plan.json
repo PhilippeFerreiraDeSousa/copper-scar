@@ -1,0 +1,21 @@
+[
+  {
+    "type": "reposition",
+    "body": {
+      "groups": [
+        {
+          "id": "Bkk7ftQfa2hFxQ7ryaqFyz",
+          "pose": {
+            "center": {
+              "x": 10,
+              "y": 8
+            },
+            "angle": 0,
+            "flipx": false
+          },
+          "side": "top"
+        }
+      ]
+    }
+  }
+]
