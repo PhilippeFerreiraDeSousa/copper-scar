@@ -86,8 +86,10 @@ def main():
         for finding in evaluation['violations']:
             if finding['type']=='unconnected_items':
                 for item in finding.get('items',[]):
-                    match=re.search(r' of ([RCL]\d+) on ',item.get('description',''))
-                    if match:endpoint_counts[match[1]]+=1
+                    match=re.search(r' of (R\d+) on ',item.get('description',''))
+                    # C28/C32/R26/Y2/U4 form the oscillator network. Capacitors,
+                    # inductors and protected oscillator parts need reviewed roles.
+                    if match and match[1] not in {'R26'}:endpoint_counts[match[1]]+=1
         component_priority=[dict(ref=ref,native_missing_endpoint_pairs=count,prior_failed_attempts=[f['attempt'] for f in failures if ref in f['action'].get('refs',[])],score=count/(1+sum(ref in f['action'].get('refs',[]) for f in failures))) for ref,count in endpoint_counts.items()]
         if queued:
             specs=[spec for spec in queued if spec['kind']!='group_pose' or endpoint_counts[spec['ref']]][:2]
@@ -105,7 +107,7 @@ def main():
             if time.time()+a.route_seconds+180>=deadline:break
             label=prefix+'-'+spec['id'];proposal=LOCAL/'proposals'/('campaign-'+label+'.json')
             if spec['kind'] in ('terminal_fanout','via_seed'):
-                action={**spec['action'],'parent_board_sha256':board_hash,'feedback_used':feedback_ids or spec['action']['feedback_used']}
+                action={**spec['action'],'parent_board_sha256':board_hash,'feedback_used':sorted(set(feedback_ids+spec['action']['feedback_used']))}
                 write(proposal,action);previews.append(dict(action=action,proposal=str(proposal),catalog_id=spec['id'],score=0,eligible=True,feedback_record_ids=feedback_ids,reason='Untried distinct topology hypothesis from measured failures; native fanout and full-route gates required'));continue
             argv=[krt,str(ROOT/'scripts/copperhead_pose_proposals.py'),str(parent),'--manifest',str(manifest),'--output',str(proposal),'--group',spec['group'],'--move-refs',spec['ref'],'--rotations',spec.get('rotations','0'),'--feedback',str(LOCAL/'loop/feedback.json'),'--allow-proxy-regression']
             if 'translation_mm' in spec:
@@ -126,10 +128,10 @@ def main():
                 if run([KIPY,str(ROOT/'scripts/copperhead_preview_partitions.py'),'--before',str(parent/'pcbgolf.kicad_pcb'),'--after',str(prepared/'pcbgolf.kicad_pcb'),'--output',str(partition_path)],label+f'-{n}-partitions',60):continue
                 collisions=json.loads((prepared/'placement-collisions/result.json').read_text());partitions=json.loads(partition_path.read_text())
                 labels=partitions['before']['pad_labels'];source_islands=[]
-                for uid,label in labels.items():
-                    if label['terminal'].split('.')[0] in action['refs']:
+                for uid,pad_label in labels.items():
+                    if pad_label['terminal'].split('.')[0] in action['refs']:
                         members=next(g for g in partitions['before']['groups'] if uid in g)
-                        source_islands.append(dict(**label,pad_uuid=uid,connected_pad_uuids=members,connected_pad_terminals=[labels[x]['terminal'] for x in members]))
+                        source_islands.append(dict(**pad_label,pad_uuid=uid,connected_pad_uuids=members,connected_pad_terminals=[labels[x]['terminal'] for x in members]))
                 action['native_source_pad_islands']=source_islands
                 rank=score_preview(action,collisions,partitions,failures)
                 rank.update(action=action,proposal=str(candidate_proposal),catalog_id=spec['id'],native_preview=str(trial),collision_removals=collisions['removed'],split_groups=partitions['split_groups'])
@@ -137,7 +139,7 @@ def main():
         selection=work/(prefix+'-selection.json')
         eligible=[p for p in previews if p['eligible']]
         excluded=[dict(attempt=f['attempt'],refs=f['action'].get('refs'),translation_mm=f['action'].get('translation_mm'),rotation_deg=f['action'].get('rotation_deg',0),reason='Already evaluated unsuccessful pose on exact current parent') for f in failures if f['parent_board_sha256']==board_hash]
-        trace=dict(parent=str(parent),parent_board_sha256=board_hash,created_at=now(),feedback_record_ids=feedback_ids,component_priority=component_priority,exact_parent_exclusions=excluded,screened_specs=screened_specs,previews=previews,selection_policy='native-feedback-v2')
+        trace=dict(parent=str(parent),parent_board_sha256=board_hash,created_at=now(),feedback_record_ids=feedback_ids,component_priority=component_priority,circuit_role_filter='Adaptive moves limited to resistors; protected oscillator R26 excluded. Capacitors/inductors require explicit reviewed placement intent.',exact_parent_exclusions=excluded,screened_specs=screened_specs,previews=previews,selection_policy='native-feedback-v2')
         if not eligible:
             write(selection,trace);state.update(status='needs_attention',reason='Finite candidate pool has no eligible native preview',selection=str(selection));break
         chosen=min(eligible,key=lambda p:p['score']);trace['chosen']={k:v for k,v in chosen.items() if k!='action'};write(selection,trace)

@@ -348,7 +348,8 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                 decision.update(legacy_v1_priority_before=priority(initial),legacy_v1_priority_after=priority(after),pad_partition_proof=str(proof_path));record['selection_decision']=decision;retain=decision['eligible']
             if action.get('new_via_definition') or action['kind']=='via_seed':
                 proof_path=run/'final-via-geometry.json'
-                check=command([KIPY,str(ROOT/'scripts/copperhead_via_geometry.py'),'--before',str(run/'input/pcbgolf.kicad_pcb'),'--after',str(candidate/'pcbgolf.kicad_pcb'),'--output',str(proof_path)],run,'final_via_geometry',60)
+                via_reference=run/('via-seed-project' if action['kind']=='via_seed' else 'input')/'pcbgolf.kicad_pcb'
+                check=command([KIPY,str(ROOT/'scripts/copperhead_via_geometry.py'),'--before',str(via_reference),'--after',str(candidate/'pcbgolf.kicad_pcb'),'--output',str(proof_path)],run,'final_via_geometry',60)
                 if check['returncode']!=0:raise RuntimeError('Final native via geometry check failed')
                 proof=json.loads(proof_path.read_text());retain=retain and proof['existing_via_geometry_preserved'] and proof['new_vias_use_only_allowed_definitions']
                 record['selection_decision'].update(via_geometry_proof=str(proof_path),existing_via_geometry_preserved=proof['existing_via_geometry_preserved'],eligible=retain)
