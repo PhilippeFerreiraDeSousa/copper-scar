@@ -38,7 +38,7 @@ def state():
  for action in {r.get('action',{}).get('kind') for r in rows if r.get('action')}:
   durations=[r['duration'] for r in rows if r.get('action',{}).get('kind')==action and r['status']=='completed' and r['duration'] is not None]
   if durations:timings[action]=dict(n=len(durations),median=statistics.median(durations),minimum=min(durations),maximum=max(durations))
- return dict(observability=read(LOCAL/'observability/verified.json',{}),controller=read(LOCAL/'controller-state.json',{}),timings=timings,now=datetime.now(timezone.utc).isoformat(),root=str(LOCAL),rows=rows,loop=read(LOCAL/'loop/state.json',{}),current=read(LOCAL/'current-status.json',{}),viewer=read(LOCAL/'viewer-state.json',{}))
+ return dict(campaign=read(LOCAL/'campaign/state.json',{}),observability=read(LOCAL/'observability/verified.json',{}),controller=read(LOCAL/'controller-state.json',{}),timings=timings,now=datetime.now(timezone.utc).isoformat(),root=str(LOCAL),rows=rows,loop=read(LOCAL/'loop/state.json',{}),current=read(LOCAL/'current-status.json',{}),viewer=read(LOCAL/'viewer-state.json',{}))
 class Handler(BaseHTTPRequestHandler):
  def do_POST(self):
   if urlparse(self.path).path!="/api/replay/build":self.send_error(404);return

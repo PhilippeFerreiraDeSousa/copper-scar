@@ -46,7 +46,7 @@ def copy_project(source, dest):
                     '*-backups', 'router-userdata', '*.ses', '*.dsn', 'router.log',
                     'router-result.json', 'execution.json', 'board.svg', 'board.png',
                     'erc.json', 'reference.net.xml', 'reference-check.json',
-                    'stage1-drc.json', 'krt-*.json', 'placement-search.json', 'ground-escape.json'))
+                    'stage1-drc.json', 'placement-collisions', 'krt-*.json', 'placement-search.json', 'ground-escape.json'))
 def command(argv, directory, label, timeout):
     if DEADLINE is not None:
         remaining = DEADLINE-time.monotonic()
@@ -232,6 +232,10 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                         record['inner_effort'].append(dict(command=name,elapsed_seconds=item['elapsed_seconds'],returncode=item['returncode'],timed_out=item.get('timed_out',False)))
                     if item['returncode']!=0:raise RuntimeError(name+' failed; see command record')
                     if name=='placement':
+                        if action.get('copper_policy')=='detach_moved_pad_incident':
+                            clearance=command([KIPY,str(ROOT/'scripts/copperhead_clear_placement_collisions.py'),str(candidate)],run,'placement_collision_ripup',300)
+                            record['commands'].append(clearance)
+                            if clearance['returncode']!=0:raise RuntimeError('Placement collision ripup failed')
                         record['placement_delta']=json.loads((candidate/'placement-search.json').read_text())
                         if set(record['placement_delta']['affected_nets'])!=set(action['nets']):raise RuntimeError('Placement net scope differs from proposal')
                         placement_snapshot=run/'placement-project';copy_project(candidate,placement_snapshot)
