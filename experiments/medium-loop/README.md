@@ -1,4 +1,4 @@
-# Medium PCB Loop stage one
+# medium-loop: stage one
 
 85 components, 67 nets, 70 x 60 mm, two copper layers. This is an explicitly derived PCB Golf-inspired input, not an official full-challenge submission. Frozen source: commaai/PCBGolf 7210bdb5049c5b7fdf4900a34928e2736767292a.
 
@@ -19,3 +19,13 @@ Use sexpdata Python environment and KiCad10.0.6 bundled Python3.9. `build_input.
 JITX4.4: own project `.local/medium-loop/jitx`, Python package `medium_loop`, viewer design `medium_loop.design.MediumLoopInput`. Import a directory containing exactly one PCB using `jitx project import kicad INPUT --output PROJECT`. Native constraints remain authoritative; design.py explicitly restores effective clearance/width and via dimensions omitted by import. No solver state or full-board round-trip equivalence is claimed.
 
 Each outer placement/topology action starts fresh whole-board routing. Parent routed checkpoints are immutable; their via identities are never reused as if preserved in a fresh realization. Preview has zero inherited vias; final newly produced vias have recorded UUID/net/layer/geometry. A direct topology operation must instead preserve declared via UUIDs through native saves and audit them.
+
+## Completed native evidence (2026-09-13)
+
+Unchanged baseline placement:183 initial missing connections ->1 native open,0DRCviolations,0schematicparity and0ERCviolations after full routing. Moving R88/R89 together(-15,-6)mm then doing a fresh full-board route reached0opens/0violations/0parity;130vias,3896.6319mm wire. Router subprocess26.25s under240s/100passes/one-thread budget. The remaining baseline net was CH4_SBU1_RELAY between Q5.3 and R88.2. This is a measured placement improvement, not a general solver guarantee.
+
+The separate preregistered cost@2 comparison starts from the same one-open baseline. Both all-net-hpwl and signal-net-hpwl reached0 at their first decision and stayed0. Tie rule retains all-net-hpwl; there is no policy win. The board was previously observed, so this is a descriptive pilot, not independent generalization evidence.
+
+`prepare_handoff.py BASE SOURCE` makes an accepted copy with every original retained component model and an explicit Harwin M20-9980446 nominal body/pin model for all8headers. Header model generator provenance is sibling source commit ad7f166b11fba43eb0c9de16fa626d21686a8fe7. It replaces the generic preview model and preserves every copper/via UUID, net, layer span and dimension. Source page: https://www.harwin.com/products/M20-9980446. Nominal model is not vendor detailedSTEP; no stage-two score is claimed here. The script checks native DRC/parity/ERC again and writes handoff.json.
+
+Current local complete artifact: `.local/medium-loop/accepted-handoff/handoff.json`; source trace `relay-group-01/completed.json`; policy records `policy-pilot/records.json`; current status `status.json`; append-only placement events `events.jsonl`. Human size-family label is always **medium-loop**; stage-one validity is separate from stage-two score.

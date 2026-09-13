@@ -67,28 +67,3 @@ def realize(base,folder,placements,manifest,source,route=True):
  cmds.append(command([KICAD,'pcb','export','svg','--layers','F.Cu,B.Cu,F.SilkS,Edge.Cuts','--mode-single','--page-size-mode','2','--exclude-drawing-sheet','-o',folder/'board.svg',folder/'pcbgolf.kicad_pcb'],folder,'render'))
  command(['/opt/homebrew/bin/rsvg-convert','-w','1400','-o',folder/'board.png',folder/'board.svg'],folder,'raster')
  write(folder/'evaluation.json',result);return result,cmds
-
-def main():
- ap=argparse.ArgumentParser();ap.add_argument('--base',type=Path,required=True);ap.add_argument('--source',type=Path,required=True);ap.add_argument('--decisions',type=int,default=3);a=ap.parse_args();base=a.base.resolve();out=base/'campaign';out.mkdir();manifest=base/'input/circuit.json';m=json.loads(manifest.read_text());source=a.source.resolve();commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
- assert json.loads((base/'feasible-width200/acceptance.json').read_text())['accepted'],'Feasibility must be established first'
- # This initializer does not read known feasible coordinates. Only circuit ref IDs.
- refs=sorted(r for r in m['refs'] if r!='J4');slots=[[38+8*(i%4),26+8*(i//4),0] for i in range(16)];rng=random.Random(713);rng.shuffle(slots);initial={r:slots[i] for i,r in enumerate(refs)};initial['J4']=[27,34,0]
- protocol={'schema':1,'hypothesis':'Excluding ubiquitous supply nets from placement ranking may improve routability under equal decision budget.','baseline':'all-net-hpwl','challenger':'signal-net-hpwl','source_sha':commit,'primary_metric':'retained feasibility_cost at N','N':a.decisions,'tie_policy':'keep baseline on equal primary cost; wire length and vias descriptive only','route_budget':{'seconds':60,'passes':30,'threads':1,'scope':'whole board both copper layers','fanout':False},'starting_poses':initial,'known_solution_coordinates_used':False,'lower_retention':'strict lower feasibility cost, then strictly shorter routed length at equal cost; forbid infeasible replacement of feasible incumbent','sample_limit':'One board, one deterministic placement seed, no verified router seed; descriptive pilot only','topology':'Each proposal explicitly starts a fresh full-board copper realization from its unrouted placement state. No inherited vias or tracks; existing routed evidence never edited. All stage parent/preview states contain zero vias, new routed vias must keep declared net membership and original dimensions.'}
- write(out/'protocol.json',protocol)
- initial_eval,cmds=realize(base,out/'initial-unrouted',initial,manifest,source,False)
- assert initial_eval['placement_legal'],'Initial placement is not legal'
- initial_routed,cmds=realize(base,out/'initial-routing-only',initial,manifest,source)
- records=[{'step':0,'arm':'routing-only','action':{'kind':'route_only'},'after':initial_routed,'folder':str(out/'initial-routing-only'),'source_sha':commit}]
- # Same baseline routing receipt shared by both arms. N counts placement decisions.
- for policy in ['all-net-hpwl','signal-net-hpwl']:
-  ps=copy.deepcopy(initial);inc=copy.deepcopy(initial_routed);incpath=out/'initial-routing-only';tried=set();curve=[inc['feasibility_cost']]
-  for step in range(1,a.decisions+1):
-   start=now();candidate,action=propose(ps,m['nets'],policy,tried);folder=out/(policy+'-'+str(step));write(out/(policy+'-'+str(step)+'-proposal.json'),action)
-   result,commands=realize(base,folder,candidate,manifest,source)
-   retain=result['placement_legal'] and (result['feasibility_cost'],result['wire_length_mm'])<(inc['feasibility_cost'],inc['wire_length_mm'])
-   record={'arm':policy,'step':step,'started_at':start,'finished_at':now(),'source_sha':commit,'parent_placement':ps,'parent_routed_evidence':str(incpath),'action':action,'after':result,'retain':retain,'folder':str(folder),'commands':commands,'preview_sha':sha(folder/'preview.kicad_pcb')}
-   if retain:ps=candidate;inc=result;incpath=folder
-   record['retained_cost']=inc['feasibility_cost'];record['retained_wire_mm']=inc['wire_length_mm'];records.append(record);write(folder/'decision.json',record);write(out/'records.json',records);curve.append(inc['feasibility_cost']);print(policy,step,result['feasibility_cost'],result['wire_length_mm'],'retain',retain,flush=True)
-  write(out/(policy+'-outcome.json'),{'policy':policy,'curve':curve,'cost_at_N':inc['feasibility_cost'],'wire_length_mm':inc['wire_length_mm'],'selected_folder':str(incpath)})
- b=json.loads((out/'all-net-hpwl-outcome.json').read_text());c=json.loads((out/'signal-net-hpwl-outcome.json').read_text());winner='signal-net-hpwl' if c['cost_at_N']<b['cost_at_N'] else 'all-net-hpwl';write(out/'higher-loop-decision.json',{'baseline':b,'challenger':c,'selected_policy':winner,'challenger_kept':winner=='signal-net-hpwl','reason':'Primary cost@N; ties retain baseline','source_sha':commit,'limitations':protocol['sample_limit']})
-if __name__=='__main__':main()
