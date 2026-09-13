@@ -79,3 +79,11 @@ def test_group_proposal_requires_members_anchors_and_current_open_net():
     assert validate_proposal(p,current)==p
     with pytest.raises(ValueError):validate_proposal(dict(p,refs=['R1']),current)
     with pytest.raises(ValueError):validate_proposal(dict(p,anchors=[]),current)
+
+def test_via_removal_requires_exact_native_hole_violation_even_without_open_net():
+    import pytest
+    from copper_scar.tools.copperhead.stage1 import validate_proposal
+    proposal=dict(kind='via_consolidation',net='CAN2_L',keep_via={'uuid':'keep'},remove_via={'uuid':'remove'},reason='overlapping holes',hypothesis='redundant via',feedback_used=['native report'])
+    current=state(errors=0,unconnected=0,violations=[{'type':'hole_to_hole','severity':'warning','items':[{'uuid':'keep'},{'uuid':'remove'}]}])
+    assert validate_proposal(proposal,current)==proposal
+    with pytest.raises(ValueError):validate_proposal(dict(proposal,remove_via={'uuid':'unrelated'}),current)
