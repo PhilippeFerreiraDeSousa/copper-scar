@@ -15,3 +15,14 @@ python3 demos/offline/build.py --source /path/to/copperhead --output /path/to/de
 ```
 
 The builder reads completed attempts, verifies native evaluation board hashes, and excludes mismatches. It does not run CAD or modify source evidence. Videos are edited snapshot presentations: playback speed is presentation speed, not measured solver throughput. See their manifest for exact timing and hashes.
+
+## Presentation files
+
+- `copper-scar-demo-normal.mp4`: 180-second scripted edit, 1920×1080 H.264, silent for live narration.
+- `copper-scar-demo-5x.mp4`: 5× presentation speed, approximately 36 seconds.
+- `docs/3-minute-demo-script.md`: narration aligned to the normal video chapters.
+- `topology-fixture/index.html`: verified joint 53 → 51 → 49 mm fixture and rejected ties.
+- `jitx/index.html`: separate source-routing and whole-board JITX evidence.
+- `docs/submission-draft.md`: primary-source requirements and unknown form fields.
+
+The full historical trajectory is compressed into the video’s 0:50–1:20 chapter; the dashboard preserves every attempt for inspection. The later placement chapter revisits historical rejected trials. Video timing is an editorial choice, not claimed routing performance.

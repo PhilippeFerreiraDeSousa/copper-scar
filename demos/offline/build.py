@@ -37,7 +37,7 @@ def main():
   if render_receipt.exists() and (dest/'board.svg').exists():
    prior=json.loads(render_receipt.read_text())
    if prior.get('board_sha256')==expected and prior.get('image_sha256')==sha(dest/'board.svg'): img=f'evidence/{name}/board.svg'
-  if a.kicad and ((not svg.exists() and not img) or a.rerender):
+  if a.kicad and (not img or a.rerender):
    subprocess.run([str(a.kicad),'pcb','export','svg','--layers','F.Cu,B.Cu,F.SilkS,Edge.Cuts','--mode-single','--page-size-mode','2','--exclude-drawing-sheet','-o',str(dest/'board.svg'),str(dest/board.name)],check=True,capture_output=True)
    img=f'evidence/{name}/board.svg'
    write(dest/'render-receipt.json',dict(board_sha256=expected,image_sha256=sha(dest/'board.svg'),method='kicad-cli pcb export svg; F.Cu,B.Cu,F.SilkS,Edge.Cuts; page-size-mode 2',source='packaged board bytes',note='Internal copper omitted in presentation view'))
@@ -51,7 +51,7 @@ def main():
  write(out/'data.json',data); (out/'data.js').write_text('window.DEMO = '+json.dumps(data)+';\n')
  docs=Path(__file__).parent/'docs'
  if docs.exists(): shutil.copytree(docs,out/'docs',dirs_exist_ok=True)
- hashes={str(f.relative_to(out)):sha(f) for f in sorted(out.rglob('*')) if f.is_file() and f.name!='SHA256SUMS.json'}
+ hashes={str(f.relative_to(out)):sha(f) for f in sorted(out.rglob('*')) if f.is_file() and f != out/'SHA256SUMS.json'}
  write(out/'SHA256SUMS.json',hashes)
  print(json.dumps(dict(output=str(out),snapshots=len(history),excluded=skipped,files=len(hashes))))
 if __name__=='__main__': main()

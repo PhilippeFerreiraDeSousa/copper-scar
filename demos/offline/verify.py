@@ -23,5 +23,5 @@ for f in ['copper-scar-demo-normal.mp4','copper-scar-demo-5x.mp4']:
  m=json.loads((root/'video-manifest.json').read_text());assert sha(root/f)==m['video_sha256'][f]
 report=dict(board_evaluation_joins_verified=checked,completed_records=len(d['history']),excluded=d['excluded'],native_checks='Stored native evaluation reports; packaging does not rerun DRC.',status='pass')
 (root/'package-QA.json').write_text(json.dumps(report,indent=2)+'\n')
-files={str(f.relative_to(root)):sha(f) for f in sorted(root.rglob('*')) if f.is_file() and f.name!='SHA256SUMS.json'}
+files={str(f.relative_to(root)):sha(f) for f in sorted(root.rglob('*')) if f.is_file() and f != root/'SHA256SUMS.json'}
 (root/'SHA256SUMS.json').write_text(json.dumps(files,indent=2)+'\n');print(json.dumps(report))
