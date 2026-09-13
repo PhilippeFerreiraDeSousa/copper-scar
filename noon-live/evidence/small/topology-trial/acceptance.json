@@ -1,0 +1,54 @@
+{
+  "accepted": false,
+  "feasibility_cost": 1,
+  "native_open_count": 0,
+  "drc_opens": 0,
+  "required_violations": [
+    {
+      "description": "Track has unconnected end",
+      "items": [
+        {
+          "description": "Track [Net-(Q2-D1)] on B.Cu, length 1.0000 mm",
+          "pos": {
+            "x": 59.05,
+            "y": 34.0
+          },
+          "uuid": "f54c8bb6-bb45-4403-a342-0b41cfa07d8a"
+        }
+      ],
+      "severity": "warning",
+      "type": "track_dangling"
+    }
+  ],
+  "all_drc_violations": 1,
+  "rules_preserved": {
+    "erc": true,
+    "net_settings": true,
+    "drc": true
+  },
+  "footprints_preserved": {
+    "R98": true,
+    "R91": true,
+    "C50": true,
+    "R90": true,
+    "C46": true,
+    "LED6": true,
+    "J4": true,
+    "R78": true,
+    "LED10": true,
+    "R82": true,
+    "R19": true,
+    "Q2": true,
+    "R83": true,
+    "C5": true,
+    "R74": true
+  },
+  "netlist_parity": true,
+  "component_count": 15,
+  "net_count": 11,
+  "widths_ok": true,
+  "via_rules_ok": true,
+  "wire_length_mm": 521.2547994516024,
+  "vias": 9,
+  "board_sha256": "9f24ad5bf174598aeee9b88572a2dd1a0cda1b1138b4cf57269b72accb605a07"
+}

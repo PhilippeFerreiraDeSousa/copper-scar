@@ -1,0 +1,570 @@
+{
+  "status": "completed",
+  "primitive": "functional_group_reorder",
+  "retained": false,
+  "incumbent_before_missing": 140,
+  "attempted_missing": 122,
+  "retained_after_missing": 140,
+  "errors": 51,
+  "warnings_including_parity": 131,
+  "invariants_ok": true,
+  "exact_pose_identity_preserved": true,
+  "via_definitions_legal": true,
+  "via_count": 516,
+  "restoration_split_groups": [
+    {
+      "net": "GND",
+      "pads": [
+        "22a7dbe0-f50e-4ee6-98a1-8916b6fb2b40",
+        "31b2c603-1d48-4952-8b69-6b6e42f40c79",
+        "43440556-935e-4ea5-913b-5de8546fd8e4",
+        "47f12106-afbc-4a5e-9c84-d0a88968366f",
+        "8754098c-5827-4bae-ba2f-28fbe2f6dc46",
+        "8b1d9484-8eb0-42a4-9740-179b47bd2e9e",
+        "8cc3acc4-bd11-43aa-89fd-1ac579613f92",
+        "9203442b-b7bf-453b-bd67-a24dd32336eb",
+        "ac2e1a83-7a4b-441c-af2b-0ee0feeca2c7",
+        "b99a6c8a-2197-4a2e-bd2b-18173332e1ff",
+        "c0e906fd-633e-4151-9f73-1e805a3c9be8",
+        "c780417f-319e-437d-9863-d20fcc0fc659",
+        "da731e38-43e7-452f-91aa-ac2bea6514b7"
+      ]
+    },
+    {
+      "net": "CH1_D_N",
+      "pads": [
+        "08a36853-3d10-45d0-ac4e-7ffa65bdda1c",
+        "1987b30e-7b56-48ba-9542-7ebc055d923b",
+        "b19f713c-987b-460d-99f4-562c1d6efcf4"
+      ]
+    },
+    {
+      "net": "+3V3",
+      "pads": [
+        "589434de-eef2-4ced-b30d-a653abab0321",
+        "80763ead-6314-4178-b47e-ffd43cad8082",
+        "918b4270-aefd-4d3f-b8a4-017c2269ad7f"
+      ]
+    },
+    {
+      "net": "CH4_D_N",
+      "pads": [
+        "9c48f7e6-5ee4-4617-9ed2-dcdcb216cd8b",
+        "ba980522-614d-4a2c-800b-8814e8cd20be",
+        "dea05b5d-5df8-44ab-a1ca-5132f330acc7"
+      ]
+    },
+    {
+      "net": "+3V3",
+      "pads": [
+        "646c3706-fc5a-48ec-be8f-a6a06e8b89ac",
+        "fed275de-f3f9-44a2-812b-f4dcd21c2749"
+      ]
+    },
+    {
+      "net": "HUB_SDA",
+      "pads": [
+        "01836b74-0654-4bc9-8af1-eaee3bd9da29",
+        "60fc6a27-88cd-4afa-af5b-9cafb5736a8e",
+        "f84d9f8f-2f41-4b37-b087-6f00727e7e89"
+      ]
+    },
+    {
+      "net": "+3V3",
+      "pads": [
+        "5fff8c6d-8f3e-4fa1-932e-04595013408f",
+        "624a4769-2fef-4318-bd53-a65f8efd34bd",
+        "7410d517-7f1c-46d8-99bf-46942613020c",
+        "976fa2c8-b0c0-4f01-baa7-f2c47a8a7792",
+        "a08fabaf-30fb-4dc1-b9c6-50e33a15c5eb",
+        "c34d70a9-b89e-403f-9b7a-7c66b577ae26",
+        "eff69ce8-a991-4779-b6d5-91b50c1e772e"
+      ]
+    },
+    {
+      "net": "Net-(U4-SUSP_IND)",
+      "pads": [
+        "77dcb915-ac94-4f92-8048-506ef108774c",
+        "c86dbd95-4e2b-439d-9106-0de46c27cb80"
+      ]
+    },
+    {
+      "net": "Net-(U4-XTAL1)",
+      "pads": [
+        "046c4e08-36b0-43f9-9756-e5a472d02a52",
+        "7285ad57-2e22-45b4-a766-5cd297222766",
+        "a54d2e38-0a79-4967-8fd3-b644602d60e8",
+        "e0ec0fe6-2400-4425-8e17-ca0633fefd94"
+      ]
+    },
+    {
+      "net": "Net-(J8-VBUS-PadA4)",
+      "pads": [
+        "617dcbe2-c136-4cd8-817f-81e464d42004",
+        "6eac435d-7c67-45ec-b952-0ad9483c709e",
+        "90c98c46-7456-459a-922a-3c443e917306",
+        "940e615d-f46f-4508-85ae-00ad86eb9601",
+        "9add207d-0433-4a03-a792-fa21817151a5",
+        "e58de6d6-4f68-4ede-b064-c59027b9a0f4",
+        "ecf3d7b4-e473-49c1-9f81-b28d3dc81c75"
+      ]
+    },
+    {
+      "net": "GND",
+      "pads": [
+        "2185e0d9-9289-4f84-a608-66b87ab3727d",
+        "92d2ae38-6bc6-40ea-967f-1af93d7327a2"
+      ]
+    },
+    {
+      "net": "CAN1_H",
+      "pads": [
+        "0a1b159a-eced-4b35-b20d-d8367641dca0",
+        "d9b4cf5c-be88-4f86-9041-f7c38dc9e434"
+      ]
+    },
+    {
+      "net": "GND",
+      "pads": [
+        "042d6730-e588-41bd-ae27-5bf40838edb2",
+        "122d6117-0321-472c-9b64-9dd018df4b71",
+        "124e1ea7-5f86-4e93-bcb7-78ca0e5762a5",
+        "1c03b040-18cd-4b67-8803-379dfec69f1c",
+        "24b48732-cf91-4d5c-86a9-98bd8a2f1e2b",
+        "36e0e4cb-6f88-4d82-b92f-917d890e790a",
+        "3e98e88d-f9bb-4779-8fbd-228d42543004",
+        "550aa3cd-63ee-4da5-81d0-c362070da8be",
+        "632129b0-4635-4319-a9de-b3a514190300",
+        "71d47ba3-bfe7-49ed-829c-bfdcb8c12c0d",
+        "78d01bbf-dc85-4d16-acb4-3dda55f01074",
+        "82dbb393-aa14-4eb2-b5d2-85ebb9a07a00",
+        "8f88fbaa-25a6-460e-ae0d-710d40e4307d",
+        "91d30ba9-4768-4e35-9386-7d42753fa62f",
+        "acf8aab5-1192-473e-93b4-c4eeea6be4c6",
+        "b3b1478e-dc36-4a6c-a40e-0216ed68e70e",
+        "c090fd7f-ce13-4da1-ae62-c0e0f2abc39a",
+        "ca7b2a9a-eb81-4bd7-8f05-2cecaf452682",
+        "db57de31-229f-4021-959f-3423a83aa205"
+      ]
+    },
+    {
+      "net": "GND",
+      "pads": [
+        "4e24258b-0263-4bb6-a76d-72df73f86125",
+        "606c43af-03fa-4750-946d-acf996e92906",
+        "69ff344d-b8db-416b-b499-d874776aef9c",
+        "7ca06133-e664-49db-8598-62742f88fcd7",
+        "98090e0a-de41-41ad-b520-95a20f8daea8",
+        "98a4d21d-914d-485a-a414-2d714268c4d3",
+        "db5d72b3-a698-4dfb-a35c-d9baf8f7c68a",
+        "e4f0d21c-6599-4722-97f3-ab576df5669b",
+        "e899edea-b485-4e3d-96fd-58037ee1a716",
+        "ead21805-60b0-4bd5-b618-857c901a175b",
+        "f5e878f4-dfce-43b7-9ea9-0a54d1756705"
+      ]
+    },
+    {
+      "net": "CAN3_L",
+      "pads": [
+        "0fb1b3fe-3d5a-467c-beb2-8b58cac33a7c",
+        "4848ee86-180d-4c22-b928-5d3bb36f0e3f",
+        "c3ff291c-764a-4609-bb6e-af1331d0f39e"
+      ]
+    },
+    {
+      "net": "+3V3",
+      "pads": [
+        "0ff8f510-d1f9-4b52-8913-7dddbf383b87",
+        "162fb5f6-416d-45b5-a2eb-332caf0e2162",
+        "2306d4eb-13d1-4e3d-af36-8bc871988000",
+        "2c374037-b196-4726-adc2-31060966e41d",
+        "309c45ef-2a7f-49a3-a9fa-ad9ef91d6278",
+        "3305d647-3a62-4c2b-b6b2-368c13ab6f49",
+        "58750ee7-778d-415e-b89c-caf5b77a7c96",
+        "63c4ce86-f55d-4d08-a577-07d67d1c004e",
+        "7264e91a-f862-418a-b25d-2aa7492f3682",
+        "73b07251-c1f6-4346-b6f7-171567ab06ad",
+        "7824909d-10dc-4f14-acd9-9d120f7212fd",
+        "7cd75d6a-d153-413d-9975-b3ed78b9d1c2",
+        "7efae7b0-a5ee-448d-8b74-85387cd3b21e",
+        "834e8d43-e548-42ab-b9d9-16516400cccf",
+        "96c249b4-fe73-43f6-b4e7-543fed067c82",
+        "9aef5b70-f550-43c5-a63d-395ab59105d8",
+        "b8710c00-f095-4f1b-bf57-275fc8ef2054",
+        "b961ac9a-09ae-4218-b1a1-a1fe878f6020",
+        "dd9ed11f-9a40-4054-a8ac-0e0939ef6732",
+        "eb070c34-a4bd-4e51-b043-b184fafcd8a2",
+        "eb497347-a07e-4d14-bfcd-44a430ad0ceb",
+        "f4ef1e32-f2d1-4418-9558-30bee8ddd5fc",
+        "fbf6e116-0396-43ef-afca-5d2d50208b96"
+      ]
+    },
+    {
+      "net": "GND",
+      "pads": [
+        "06898257-4569-423c-8658-85158fcac1d0",
+        "0c2bd0bc-0800-4d16-8499-d029c96d34c0",
+        "2fc6d1ae-32a8-4ea8-a69e-8e99c6f9e0b7",
+        "457af605-c023-465a-a1a0-c0f38837f826",
+        "4678026e-100e-4f2e-a7ed-7e4fc8e282a0",
+        "4a6eddcb-a664-4d52-9069-183bcd77419f",
+        "4e5cda2e-3d16-4c3a-831d-4e80c8e04bd9",
+        "582538c3-b52e-4b9c-9f47-6d8ee826ac78",
+        "5f083d37-4e61-4202-846d-0780e955e14b",
+        "741022df-9785-419c-bf5e-96f56f3fa244",
+        "7fb40fc2-2a24-4787-8d1b-842f4edda6e8",
+        "9ec7c6fc-a6ab-473e-9afa-91b404fc6356",
+        "a134b087-557c-46e2-afac-0fbac2c560b2",
+        "a23e1d6b-5e66-43e2-815f-cf5db8039b2c",
+        "a251e375-c72c-438c-9599-67e359740924",
+        "a468ac9d-a83c-4b9d-82a4-af6e1cafd9d3",
+        "a78817e8-3389-471d-979b-4564a12cbb55",
+        "acacde64-6f07-4a28-ba8f-3029bfce74fe",
+        "b4130d23-395e-4d17-9df2-f6942718aeb8",
+        "bd5fd4d0-8256-4b93-9252-053a3c322d35",
+        "bdfa7923-532b-4422-bc60-a4f015c9b307",
+        "d1ea4c74-8aae-49bb-9859-698af94e7f68",
+        "dffe50a0-ea18-44bb-9d1d-64662b863444",
+        "e2db4a0a-785d-4034-b0c1-4293d33698c8",
+        "e3cd8660-93a0-4859-a8f3-cd5130c6e7ac",
+        "f93ec603-8bad-4bfb-a7e9-749f6f2d7f4a",
+        "fd110c22-91a2-443c-a0c9-0f61321ff9e3",
+        "ff90f52b-3c27-4dae-a70b-0c8d8fdc13a6"
+      ]
+    },
+    {
+      "net": "CH3_SBU1_RELAY",
+      "pads": [
+        "0aa9f775-fcaa-46f2-a8cd-ccdae0d54848",
+        "31e22d7e-483d-441c-85a6-fc51fc684d53",
+        "81f600ea-2af0-4c86-9d94-8fd8151a10f5",
+        "9f6e31f4-5e53-4579-b441-4f9bad493394"
+      ]
+    },
+    {
+      "net": "GND",
+      "pads": [
+        "1f1f0dd2-5175-4013-8100-96e5248be0af",
+        "272d92d7-e112-4a8b-a497-5293fcd9fec9",
+        "30326cf9-c399-4f63-8abd-ebbf647ba1dc",
+        "3cc65edf-d48a-46be-8645-e7d9dde7a981",
+        "4be74090-540c-4aca-8653-1cf3c24ea249",
+        "580bddb9-db6e-4913-8808-514fbef2ac94",
+        "5bc4086a-39b4-4875-a40d-9c9aa11809be",
+        "5f37a323-3618-4d51-bdd8-5a9df1a374c3",
+        "632f348c-c75a-4f36-8a58-7ad9641d4f65",
+        "63e163ef-fba0-4e8d-bbb5-062a0bb9a176",
+        "6f637245-ddae-4ce4-b355-91f047608fca",
+        "700a8f5e-fb0e-47d1-ae74-a871669bafa8",
+        "7435d9fc-774a-4af6-aca2-05b7f6b50764",
+        "7f2421c0-7386-4613-8cd9-9c00bad408b9",
+        "8ef3f717-de38-478d-ac47-5c357517a784",
+        "ae68749d-79fe-4a8d-ad12-40a6c1be4cc9",
+        "b513cc33-03fa-42f0-b5e6-601f34d7e7d4",
+        "cd943848-cb95-4e9d-937c-a552a215bfa8",
+        "d0b63003-0f11-4212-8828-8f575a9320f6",
+        "d2174e6e-9feb-469b-894f-35c888d31f13",
+        "db8a2d85-a42c-4ed2-9e5c-bea916a97c4d",
+        "dfbdcc22-608d-4471-8ff5-05998a905933",
+        "e7afbe22-40dd-4008-b893-299866282f1c",
+        "f162468c-ac3b-4641-bfa6-936cebf1cf10"
+      ]
+    },
+    {
+      "net": "GND",
+      "pads": [
+        "39a4ec64-75d1-453b-9c6c-4f6370b5c736",
+        "3a3eb1d8-5e74-4057-853e-4b42123b93ea",
+        "53b354d0-a3b6-43b0-adb8-49d34ff1a712",
+        "5cff5e03-130e-45f4-9a8c-b85946118fc2",
+        "71660bc9-dd81-4ec6-9c84-cc61732332a4",
+        "77cfd9a6-8f00-4660-81b6-cf835bac3d92",
+        "7acef989-cd36-4bec-9dad-6a3950a55d8a",
+        "85c60e8d-9499-438b-9138-e1923e2019c7",
+        "aa6e21a6-61e8-43ed-9e75-1f964abb6740",
+        "cbb8c5de-f64a-4b88-af82-0ec92210f205",
+        "e4a6998a-5ca5-4b3e-990a-1d3e531a3998",
+        "e59b2716-3d18-4585-996a-a28bd8bbecf1"
+      ]
+    },
+    {
+      "net": "GND",
+      "pads": [
+        "47c37404-4fa8-44ad-9f62-ad1dd6b38238",
+        "70f7837b-884e-46b7-8cb7-3d56e313d7c0",
+        "7ddcae9b-75d3-4b7d-9b70-567d47bf5057",
+        "93270e8b-4c8e-41cd-af76-562ead08abd8",
+        "a8319343-a729-4edf-a541-6d308a426e26"
+      ]
+    },
+    {
+      "net": "+12V",
+      "pads": [
+        "0f2b2f80-7f5f-4a42-b49c-ebcdb1c570c4",
+        "1376b35e-5f9e-4830-835e-aba76fcb959f",
+        "154b1030-d0c2-431c-acfb-30cb743796ed",
+        "4d8b317d-6ed0-4a27-ace0-7a0e6dbd274b",
+        "56f9e422-cf2d-451d-af64-544a8f1f07a5",
+        "8788e74f-745b-4586-ad27-288a75c6d70a",
+        "96246689-72fe-4496-bd8f-627ed46c1b0e",
+        "9da005cf-07ca-4ede-9992-4a4038ef6047",
+        "a39e47c7-fea8-4efe-bc5e-8affed13463d",
+        "d876ce8e-133e-456a-9f02-7dc295609190",
+        "e0ddeb45-e746-4393-92fb-b385a0985f10",
+        "f92df72e-2b8f-44a9-bbef-a3aa8dac5ed4"
+      ]
+    },
+    {
+      "net": "GND",
+      "pads": [
+        "06d2c2d1-b4e4-49fd-891f-39e02a8d8788",
+        "0ab9b243-aad8-4be8-ac95-c7880f1ab94f",
+        "0ebd3a08-a5f0-4207-ae78-da65e6b1e3b3",
+        "81ff0cb3-cffe-4997-bbd5-3859807ecd2c",
+        "dcec99c2-a22d-42cd-b74a-d37eeb508b1e",
+        "ebcfdb32-4cce-4bb3-b8fc-1079bd4d62b4"
+      ]
+    },
+    {
+      "net": "CH2_PWR_EN",
+      "pads": [
+        "56f85789-2df0-4de2-914d-da1b995c5ec6",
+        "80db1914-2d62-48ba-bcec-bcb3ef093670"
+      ]
+    },
+    {
+      "net": "+3V3",
+      "pads": [
+        "022b4ae7-0b9f-438c-9893-ec21b7260683",
+        "427c400d-4662-4a82-88b2-40411b99cc2c",
+        "746ba155-04c9-4121-a673-ad2bc546ede7",
+        "81366a8c-7f37-49d8-b81d-27e2d9df11f5",
+        "b76c9757-0b81-4904-924f-e8a7d02a1d94",
+        "bacc1b57-b7d0-4d86-ac51-50b72e6e5fd8",
+        "c04c33c8-bbaa-4ec3-a2c9-d220418f1e77",
+        "c13a5fba-ec04-4f58-9084-82f4aa0d7666",
+        "c88db24f-eb9c-4094-ad7c-74da9fd29b9f",
+        "ca77cd16-5269-4450-94db-f711b6be5b16",
+        "d8b901ac-cba7-4483-abee-9a8b07914d06"
+      ]
+    },
+    {
+      "net": "+12V",
+      "pads": [
+        "5774f793-d8f2-4ad5-b41f-f4330b86184c",
+        "7426e88f-04bf-4e87-a55e-8dffb852dd9e",
+        "ab147778-0cbd-43fc-8ecc-4642a408fc95",
+        "eeeacf30-46ca-44f1-8af3-d98dc337273a"
+      ]
+    },
+    {
+      "net": "VDDLDO",
+      "pads": [
+        "46c616d8-c780-4570-9930-1e50d4bed75b",
+        "c6a981d6-4622-4823-ae69-705af9215251"
+      ]
+    },
+    {
+      "net": "+3V3",
+      "pads": [
+        "1ee7ad7b-5fa5-4386-8ca5-8e2598a13ff5",
+        "b552bf2a-3394-4b5a-96d5-3a4d95d1fbda"
+      ]
+    },
+    {
+      "net": "VDDLDO",
+      "pads": [
+        "529be6c9-4693-4f5d-8c74-67125bc23da5",
+        "9fc4c597-3f20-4e68-83f2-853057f5c9cf",
+        "a969b93f-c16b-494d-bc03-18011550694d",
+        "b134da51-b274-444a-931e-e0f8d2d592d7"
+      ]
+    },
+    {
+      "net": "GND",
+      "pads": [
+        "04197e27-2563-40b8-9fde-be6279723569",
+        "72608185-fb09-488d-a70f-ab9b37130559",
+        "b6bf5b00-5587-46e2-b7ed-504380feef99"
+      ]
+    },
+    {
+      "net": "CH1_SBU2_RELAY",
+      "pads": [
+        "0d1d2594-ab6a-4329-b35b-46024d632d9c",
+        "bf4b83b6-3b8f-466c-8a67-537515685418",
+        "c2f911ef-2d1b-4ab0-bbeb-4f9e2e95d1ec",
+        "dbe70691-0fa1-4d46-92b6-b6ea0761e5fa"
+      ]
+    },
+    {
+      "net": "CAN2_TX",
+      "pads": [
+        "77c93e6c-ff74-4ac0-815b-1eaa38eca735",
+        "a68a34a4-af0f-456e-b951-16819d7a2b74"
+      ]
+    },
+    {
+      "net": "GND",
+      "pads": [
+        "3f4108ef-f1bc-4ef2-a515-60d7ae7cdbd2",
+        "6a0339ce-fcd3-40b1-8355-087107fc893c"
+      ]
+    },
+    {
+      "net": "CAN3_H",
+      "pads": [
+        "9fa8efac-3fc7-4ca2-a695-c8e7b7de719b",
+        "c3cc0864-6900-499e-aadb-2e3b4e13899e",
+        "fbde302b-0762-46bb-a7a2-e2467438d25e"
+      ]
+    },
+    {
+      "net": "+5V",
+      "pads": [
+        "129fe4f7-e772-4199-9df7-c75072834e7f",
+        "2a0e3ddb-58c3-4fd1-a99d-87142893c6d4",
+        "41bc9b18-e026-4326-9a0e-43c050904e71",
+        "5ff92dee-a03f-423d-acea-895bef3fe6d5",
+        "6694e86f-a230-4b0d-a43f-70272f7d5793",
+        "99d1c2a2-0e44-414a-b192-a8a5e4256c27",
+        "b6cf2aaa-0d4e-4d37-841f-3bd760b78b7a",
+        "d5290dff-c4f0-4802-81cc-32afdf9cafd6",
+        "d95e89a4-f16d-47d2-a2a7-776333c1a54d",
+        "dbcb71ea-30e7-4ea5-8256-5240b9305e20"
+      ]
+    },
+    {
+      "net": "CH4_SBU2",
+      "pads": [
+        "5a9ba865-d401-4f73-8358-10210619307c",
+        "c01ac452-a718-4918-acc5-7068cc8ed79f",
+        "c88f9843-0b52-475a-a394-3fa7c50bc91d",
+        "f9678599-9c20-4ce0-aabc-530be3355ec1"
+      ]
+    },
+    {
+      "net": "CAN2_L",
+      "pads": [
+        "168453bc-261c-4cdd-8367-b3b34d8da091",
+        "52fd3922-dae5-4879-9fc4-580d514b2076",
+        "6df6cca1-d329-4821-ad49-5a8eb340e579",
+        "dd6197d5-89f0-4251-bd8f-c66afa6bb1b7",
+        "ecc3729f-590e-4741-bccd-6b7ecebd0efe",
+        "fcf13ea3-35e0-4bf1-b561-776c2bf691ac"
+      ]
+    },
+    {
+      "net": "CH3_SBU1",
+      "pads": [
+        "1ee675c3-32b5-46dd-90a5-9d387f408007",
+        "5519876a-0bcd-476a-99b4-fe921331bbb7",
+        "933a7997-0397-4bf5-b458-948ffc9b9a2c",
+        "e648a1bb-c35c-4fc7-b0e2-8af119a811e4"
+      ]
+    },
+    {
+      "net": "GND",
+      "pads": [
+        "3f473fb0-ac1a-4fba-958b-84d400111f60",
+        "4049d36d-92fd-44e4-8aa8-4c94cd970173",
+        "dd6493dd-ca16-4316-9ccd-1f497c71b3ab",
+        "dee29f67-eeb1-4501-9397-3d31c2515230",
+        "fb01f344-7f27-4cbe-97df-458a0cd27bc1",
+        "fbe69ed4-f482-4f3e-84a5-05a795bd9535"
+      ]
+    },
+    {
+      "net": "Net-(J7-VBUS-PadA4)",
+      "pads": [
+        "7ee97d04-3e5a-4b1b-a7cf-22dab9ec428d",
+        "9eccf877-15f2-43a3-87af-c9abc3d42f3c",
+        "fbc85ae2-e710-4833-b993-389bc609532f"
+      ]
+    },
+    {
+      "net": "GND",
+      "pads": [
+        "1aff47ae-8b0d-47ea-8031-99d89e36b8d2",
+        "d44f2a05-0375-424b-ac33-bc7194660660"
+      ]
+    },
+    {
+      "net": "CH3_SBU2",
+      "pads": [
+        "292bcaff-7458-439e-9f9a-3815a227d98c",
+        "543737af-1eee-48d6-a166-66726c575451",
+        "bc7cd43a-0985-4c0f-b8cb-4d80596411fd",
+        "f022be72-8361-4ad2-9135-ece2f6d0d233"
+      ]
+    },
+    {
+      "net": "GND",
+      "pads": [
+        "7069b4b5-72bc-496a-b44b-0afe4666bd8b",
+        "c68538f6-2690-4e53-acc7-0a78267595b8",
+        "de650a07-f0c9-4339-ac37-4f686a46b49d",
+        "ecbc915a-1a65-4c6c-90bd-ba088fb11699"
+      ]
+    },
+    {
+      "net": "Net-(J5-VBUS-PadA4)",
+      "pads": [
+        "ab733603-d0e4-4e2c-8d7c-50b036331441",
+        "aebf9e99-2418-4b57-910a-fc2ad8b242a5"
+      ]
+    },
+    {
+      "net": "Net-(J5-VBUS-PadA4)",
+      "pads": [
+        "0c872051-c2c5-41bd-b9e0-916b90fec157",
+        "46eee48f-d145-426f-9bfa-ac4e96c1c344",
+        "912a27ad-8e09-4a56-bd88-ee7de3d91150"
+      ]
+    }
+  ],
+  "added_findings": [],
+  "missing_by_net": {
+    "GND": 30,
+    "CH1_D_N": 1,
+    "+3V3": 21,
+    "CH3_D_N": 1,
+    "CH4_D_N": 1,
+    "HUB_SDA": 1,
+    "Net-(U4-SUSP_IND)": 1,
+    "Net-(U4-XTAL1)": 1,
+    "Net-(J8-VBUS-PadA4)": 2,
+    "VDDLDO": 5,
+    "CAN1_H": 5,
+    "CAN3_L": 2,
+    "CH3_SBU1_RELAY": 1,
+    "+12V": 5,
+    "+5V": 4,
+    "CAN3_EN": 1,
+    "Net-(J6-VBUS-PadA4)": 3,
+    "CH2_PWR_EN": 1,
+    "CH2_IMON": 1,
+    "CH3_SBU2_IGN": 1,
+    "CAN1_L": 1,
+    "CH1_SBU2_RELAY": 1,
+    "CAN2_TX": 1,
+    "CAN3_H": 5,
+    "CAN0_H": 4,
+    "CH4_SBU2": 1,
+    "Net-(J7-VBUS-PadA4)": 4,
+    "CAN2_L": 4,
+    "CAN2_H": 4,
+    "CH3_SBU1": 2,
+    "CH3_SBU2": 2,
+    "Net-(J5-VBUS-PadA4)": 5
+  },
+  "route_elapsed_seconds": 604.9610232080013,
+  "elapsed_seconds": 614.8222685420042,
+  "board": "/Users/philippe/dev/copper-scar-demo/.local/copperhead/full-spacious/v1/outer-group-route/project/pcbgolf.kicad_pcb",
+  "board_sha256": "e47f0becf64cf71a93c0f77805c32e8fa9c79046bc60759db8869efd7ee61644",
+  "stage1_native_valid": false,
+  "stage1_stop": false,
+  "stage2_handoff": false,
+  "official_score": null,
+  "qualification": "Whole-board realization after group-placement update. Previously connected groups from the retained140-open result must all be restored. Immutable original footprint errors remain unwaived; no official score without assembly qualification."
+}

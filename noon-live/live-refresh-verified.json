@@ -1,0 +1,8 @@
+{
+  "direct_stage2_hash_route": true,
+  "default_latest_retained_state": true,
+  "completed_idle_from_owner": true,
+  "retained_score": 15900.96,
+  "atomic_completed_data_auto_refresh_verified": true,
+  "no_router_resumed": true
+}

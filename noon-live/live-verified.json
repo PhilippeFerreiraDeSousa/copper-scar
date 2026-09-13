@@ -1,0 +1,15 @@
+{
+  "verified_boards": 87,
+  "families": 4,
+  "browser_errors": [],
+  "panels": {
+    "scaling": {
+      "action": "Uniform placement scaling \u00d70.9 \u00b7 component physical dimensions unchanged \u00b7 85 parts moved \u00b7 3 mm edge allowance \u00b7 outline 70 \u00d7 60 \u2192 65 \u00d7 57 mm \u00b7 geometry source stage2/baseline \u00b7 score comparator stage2/baseline",
+      "terms": "Term\tActual\t\u0394 vs comparator\nAssembly volume \u00b7 mm\u00b3\t43126.20\t-5761.80\nVia penalty \u00b7 50 \u00d7 count\t6850.00\t450.00\nLayer penalty \u00b7 5000 \u00d7 count\t10000.00\t0.00\n\nScore delta: -5311.80\n\nForecast: \"Not recorded; no numeric forecast inferred.\""
+    },
+    "functional": {
+      "action": "connected functional block placement \u00b7 outline see reference \u2192 56 \u00d7 52 mm \u00b7 geometry source grouped-input/pcbgolf.kicad_pcb \u00b7 score comparator continuation-01/candidate-02",
+      "terms": "Term\tActual\t\u0394 vs comparator\nAssembly volume \u00b7 mm\u00b3\t33895.68\t1385.16\nVia penalty \u00b7 50 \u00d7 count\t1450.00\t-5950.00\nLayer penalty \u00b7 5000 \u00d7 count\t10000.00\t0.00\n\nScore delta: -4564.84\n\nForecast: {\"qualification\":\"Forecast only, fixedheight andexistingviacount; nativeassemblyandactualrouting decide score\",\"volume_mm3\":33895.68,\"volume_delta_mm3\":1385.1599999999999,\"via_count_assumption\":148,\"via_penalty_assumption\":7400,\"layer_penalty\":10000,\"score_if_vias_unchanged\":51295.68}"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "accepted": true,
+  "feasibility_cost": 0,
+  "native_open_count": 0,
+  "drc_opens": 0,
+  "required_violations": [],
+  "all_drc_violations": 0,
+  "rules_preserved": {
+    "erc": true,
+    "net_settings": true,
+    "drc": true
+  },
+  "footprints_preserved": {
+    "R98": true,
+    "R91": true,
+    "C50": true,
+    "R90": true,
+    "C46": true,
+    "LED6": true,
+    "J4": true,
+    "R78": true,
+    "LED10": true,
+    "R82": true,
+    "R19": true,
+    "Q2": true,
+    "R83": true,
+    "C5": true,
+    "R74": true
+  },
+  "netlist_parity": true,
+  "component_count": 15,
+  "net_count": 11,
+  "widths_ok": true,
+  "via_rules_ok": true,
+  "wire_length_mm": 524.9500521128792,
+  "vias": 11,
+  "board_sha256": "477d7ffee76adc6f0c2b5f7a695fae35746ff5412b9a98198a5d4986f11b9b18"
+}

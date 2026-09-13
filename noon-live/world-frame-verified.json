@@ -1,0 +1,127 @@
+{
+  "outline_only_unchanged_components": 85,
+  "outline_before_mm": [
+    51.5,
+    48.0
+  ],
+  "outline_after_mm": [
+    48.5,
+    48.0
+  ],
+  "svg_frames_checked": 369,
+  "unchanged_anchors": {
+    "R98": {
+      "before_pixel": [
+        509.60032755784727,
+        299.95879121095027
+      ],
+      "after_pixel": [
+        509.60032755784727,
+        299.95879121095027
+      ]
+    },
+    "R91": {
+      "before_pixel": [
+        613.4322168231762,
+        271.1165997483589
+      ],
+      "after_pixel": [
+        613.4322168231762,
+        271.1165997483589
+      ]
+    },
+    "R84": {
+      "before_pixel": [
+        371.1578085374087,
+        271.1165997483589
+      ],
+      "after_pixel": [
+        371.1578085374087,
+        271.1165997483589
+      ]
+    }
+  },
+  "moved_anchor": {
+    "reference": "R89",
+    "world_delta_mm": [
+      -15.0,
+      -6.0
+    ],
+    "pixel_delta": [
+      -86.52657438777413,
+      -34.61062975510964
+    ],
+    "expected_pixel_delta": [
+      -86.52657438777412,
+      -34.61062975510964
+    ]
+  },
+  "native_first_pad": {
+    "expected_absolute_mm": [
+      63.55,
+      47.0
+    ],
+    "exported_absolute_mm": [
+      63.55,
+      47.0
+    ]
+  },
+  "identical_matrix": [
+    5.768438292518274,
+    0,
+    0,
+    5.768438292518274,
+    140.42027683667771,
+    28.842191462591373
+  ],
+  "families": {
+    "small": {
+      "viewBox": [
+        -5.0,
+        -5.0,
+        82.0,
+        68.0
+      ],
+      "units": "mm",
+      "export_page_size_mode": 0,
+      "coordinate_system": "absolute KiCad XY; origin and scale shared across every state/layer",
+      "preserveAspectRatio": "xMidYMid meet"
+    },
+    "medium": {
+      "viewBox": [
+        -5.0,
+        -5.0,
+        100.0,
+        97.08
+      ],
+      "units": "mm",
+      "export_page_size_mode": 0,
+      "coordinate_system": "absolute KiCad XY; origin and scale shared across every state/layer",
+      "preserveAspectRatio": "xMidYMid meet"
+    },
+    "large": {
+      "viewBox": [
+        -5.0,
+        -5.0,
+        135.0,
+        140.0
+      ],
+      "units": "mm",
+      "export_page_size_mode": 0,
+      "coordinate_system": "absolute KiCad XY; origin and scale shared across every state/layer",
+      "preserveAspectRatio": "xMidYMid meet"
+    },
+    "original": {
+      "viewBox": [
+        -5.0,
+        -5.0,
+        264.0,
+        267.0
+      ],
+      "units": "mm",
+      "export_page_size_mode": 0,
+      "coordinate_system": "absolute KiCad XY; origin and scale shared across every state/layer",
+      "preserveAspectRatio": "xMidYMid meet"
+    }
+  }
+}

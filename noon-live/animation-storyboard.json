@@ -1,0 +1,163 @@
+{
+  "concept": "Native Evidence / The Validity Gate",
+  "data_sha256": "d5a8c0629c422f712d9e7186376f079e04747eface4af2d2e13e26c1c19fd1f2",
+  "render": "Pillow motion graphics + native KiCad SVG + ffmpeg H.264",
+  "resolution": [
+    1600,
+    900
+  ],
+  "fps": 24,
+  "duration_seconds": 90,
+  "shots": [
+    {
+      "project": "medium",
+      "state": 0,
+      "title": "PCB LOOP",
+      "kicker": "LAYOUTS ARE HYPOTHESES",
+      "caption": "Propose. Route every layer. Let native evidence decide.",
+      "seconds": 5
+    },
+    {
+      "project": "medium",
+      "state": 0,
+      "title": "Start with the real problem.",
+      "kicker": "01 / FEASIBILITY \u00b7 medium-loop",
+      "caption": "85 components. 67 nets. Eight original-inspired switching blocks.",
+      "seconds": 5
+    },
+    {
+      "project": "medium",
+      "state": 1,
+      "title": "Routing alone leaves one open.",
+      "kicker": "FULL-BOARD REALIZATION",
+      "caption": "183 \u2192 1 native opens. Both copper layers. The unchanged layout is still invalid.",
+      "seconds": 5
+    },
+    {
+      "project": "medium",
+      "state": 3,
+      "title": "Move the pair. Keep the rules.",
+      "kicker": "ACTUAL PLACEMENT PROPOSAL",
+      "caption": "R88 + R89 translate \u221215 mm, \u22126 mm. This is the unrouted proposal.",
+      "seconds": 5
+    },
+    {
+      "project": "medium",
+      "state": 4,
+      "title": "Zero, after native checks.",
+      "kicker": "FULL REROUTE \u2192 EVALUATE",
+      "caption": "The placement change and 26.25-second full reroute close the last open. No weakened rules.",
+      "seconds": 6
+    },
+    {
+      "project": "medium",
+      "state": 15,
+      "title": "The accepted board crosses the gate.",
+      "kicker": "02 / OPTIMIZATION \u00b7 SAME CIRCUIT",
+      "caption": "The selected policy branch becomes Stage 2 with the identical board hash. Its baseline score is 65,288.",
+      "seconds": 6
+    },
+    {
+      "project": "medium",
+      "state": 17,
+      "title": "A smaller board is not enough.",
+      "kicker": "VALIDITY IS A HARD GATE",
+      "caption": "Only completed native results count. Invalid proposals have no accepted score; the valid incumbent survives.",
+      "seconds": 6
+    },
+    {
+      "project": "stage2",
+      "state": 0,
+      "title": "Now measure the whole assembly.",
+      "kicker": "small-loop / OFFICIAL FORMULA",
+      "caption": "Bounding-box volume + 50 \u00d7 vias + 5,000 \u00d7 copper layers. All 15 populated models are present.",
+      "seconds": 6
+    },
+    {
+      "project": "stage2",
+      "state": 2,
+      "title": "Reject the tempting shortcut.",
+      "kicker": "OBSERVE THE FAILURE",
+      "caption": "A tighter outline reduces volume, but leaves an open. Candidate score: null. Keep the valid board.",
+      "seconds": 5
+    },
+    {
+      "project": "stage2",
+      "state": 12,
+      "title": "Trim margin.",
+      "kicker": "REVISE \u2192 REALIZE \u2192 VERIFY",
+      "caption": "Outline only; no components moved. Full-board routing and native + assembly gates pass.",
+      "seconds": 4
+    },
+    {
+      "project": "stage2",
+      "state": 14,
+      "title": "Compact the placement.",
+      "kicker": "REVISE \u2192 REALIZE \u2192 VERIFY",
+      "caption": "Actual component poses change; physical part sizes stay fixed. Full-board routing and native + assembly gates pass.",
+      "seconds": 4
+    },
+    {
+      "project": "stage2",
+      "state": 16,
+      "title": "Compact the placement.",
+      "kicker": "REVISE \u2192 REALIZE \u2192 VERIFY",
+      "caption": "Actual component poses change; physical part sizes stay fixed. Full-board routing and native + assembly gates pass.",
+      "seconds": 4
+    },
+    {
+      "project": "stage2",
+      "state": 18,
+      "title": "Compact the placement.",
+      "kicker": "REVISE \u2192 REALIZE \u2192 VERIFY",
+      "caption": "Actual component poses change; physical part sizes stay fixed. Full-board routing and native + assembly gates pass.",
+      "seconds": 4
+    },
+    {
+      "project": "stage2",
+      "state": 20,
+      "title": "Compact the placement.",
+      "kicker": "REVISE \u2192 REALIZE \u2192 VERIFY",
+      "caption": "Actual component poses change; physical part sizes stay fixed. Full-board routing and native + assembly gates pass.",
+      "seconds": 4
+    },
+    {
+      "project": "stage2",
+      "state": 22,
+      "title": "Compact the placement.",
+      "kicker": "REVISE \u2192 REALIZE \u2192 VERIFY",
+      "caption": "Actual component poses change; physical part sizes stay fixed. Full-board routing and native + assembly gates pass.",
+      "seconds": 4
+    },
+    {
+      "project": "stage2",
+      "state": 34,
+      "title": "15,900.96. Valid and frozen.",
+      "kicker": "52.54% LOWER OFFICIAL SCORE",
+      "caption": "16 trials. 10 full routing runs. Six retained improvements. Zero opens, DRC, parity and ERC findings.",
+      "seconds": 6
+    },
+    {
+      "project": "large",
+      "state": 0,
+      "title": "The next size stays honest.",
+      "kicker": "large-loop / ONGOING",
+      "caption": "Additional input and routing work. Native failures remain; no accepted large-loop result is claimed.",
+      "seconds": 5
+    },
+    {
+      "project": "stage2",
+      "state": 34,
+      "title": "Every improvement has a receipt.",
+      "kicker": "PCB LOOP / REPRODUCIBLE RESEARCH",
+      "caption": "Exact CAD. Source revisions. Keep/reject records. W&B + Weave evidence. No invented LLM calls or hardware claims.",
+      "seconds": 6
+    }
+  ],
+  "claude": {
+    "cli": "2.1.119",
+    "requested_model": "Fable 5.1",
+    "used": false,
+    "reason": "Claude Code loggedIn false; exact fable-5.1 invocation returned Not logged in, zero model tokens."
+  }
+}

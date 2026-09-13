@@ -1,0 +1,9 @@
+{
+  "size_family": "medium-loop",
+  "stage": 2,
+  "seed": "/Users/philippe/.codex/worktrees/3bde/copper-scar/.local/medium-loop/accepted-best/handoff.json",
+  "seed_sha256": "bca7861dec65603a18cdcef65a9a6c23622e4a09c67e4e2a833c65815105e6bf",
+  "transition": "Original183unrouted ->fullrouting1open ->all-net-hpwl R112/R91swap0opens ->R82/R90swapretains0lowerwire ->model-onlyaccepted-best ->stage2baseline. DiagnosticR88/R89firstzero preserved as separate branch, not silently substituted.",
+  "original_first_feasible_sha256": "53771cdb168a054d54e6c4b556ebced2a8950e5259ac1db365b54ff1c8cb0336",
+  "selection_qualification": "Both arms nativevalid; selected all-netbest has128vias versus130firstfeasible atidenticaloutline andmodelenvelope; officialscore to be verified independently."
+}

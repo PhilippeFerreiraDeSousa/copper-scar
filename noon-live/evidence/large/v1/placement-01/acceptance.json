@@ -1,0 +1,2118 @@
+{
+  "accepted": false,
+  "feasibility_cost": 429,
+  "native_open_count": 345,
+  "drc_opens": 345,
+  "schematic_parity_issues": 0,
+  "required_violations": [
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S11 [GND] of J6 on F.Cu",
+          "pos": {
+            "x": 53.25,
+            "y": 28.0
+          },
+          "uuid": "93270e8b-4c8e-41cd-af76-562ead08abd8"
+        },
+        {
+          "description": "NPTH pad of J6",
+          "pos": {
+            "x": 53.25,
+            "y": 29.0
+          },
+          "uuid": "9e5ec719-c07d-4c53-93ce-e6eafbd375cc"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S11 [GND] of J7 on F.Cu",
+          "pos": {
+            "x": 78.25,
+            "y": 28.0
+          },
+          "uuid": "d1ea4c74-8aae-49bb-9859-698af94e7f68"
+        },
+        {
+          "description": "NPTH pad of J7",
+          "pos": {
+            "x": 78.25,
+            "y": 29.0
+          },
+          "uuid": "29ebc680-7126-48ba-9776-98eb19a482e1"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S14 [GND] of J6 on F.Cu",
+          "pos": {
+            "x": 53.25,
+            "y": 30.0
+          },
+          "uuid": "f2536e23-bd7f-44a4-a41f-8eb4ed19840e"
+        },
+        {
+          "description": "NPTH pad of J6",
+          "pos": {
+            "x": 53.25,
+            "y": 29.0
+          },
+          "uuid": "9e5ec719-c07d-4c53-93ce-e6eafbd375cc"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S14 [GND] of J7 on F.Cu",
+          "pos": {
+            "x": 78.25,
+            "y": 30.0
+          },
+          "uuid": "4678026e-100e-4f2e-a7ed-7e4fc8e282a0"
+        },
+        {
+          "description": "NPTH pad of J7",
+          "pos": {
+            "x": 78.25,
+            "y": 29.0
+          },
+          "uuid": "29ebc680-7126-48ba-9776-98eb19a482e1"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S11 [GND] of J5 on F.Cu",
+          "pos": {
+            "x": 28.25,
+            "y": 28.0
+          },
+          "uuid": "6c2f9f61-cf24-4879-8125-8646ce518df8"
+        },
+        {
+          "description": "NPTH pad of J5",
+          "pos": {
+            "x": 28.25,
+            "y": 29.0
+          },
+          "uuid": "14e596d2-eea0-49c5-ab98-c4190e0fed14"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S14 [GND] of J5 on F.Cu",
+          "pos": {
+            "x": 28.25,
+            "y": 30.0
+          },
+          "uuid": "8b1d9484-8eb0-42a4-9740-179b47bd2e9e"
+        },
+        {
+          "description": "NPTH pad of J5",
+          "pos": {
+            "x": 28.25,
+            "y": 29.0
+          },
+          "uuid": "14e596d2-eea0-49c5-ab98-c4190e0fed14"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S12 [GND] of J7 on F.Cu",
+          "pos": {
+            "x": 85.75,
+            "y": 28.0
+          },
+          "uuid": "4a6eddcb-a664-4d52-9069-183bcd77419f"
+        },
+        {
+          "description": "NPTH pad of J7",
+          "pos": {
+            "x": 85.75,
+            "y": 29.0
+          },
+          "uuid": "549b81c8-aae3-4179-9afd-4c16a868b088"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S13 [GND] of J7 on F.Cu",
+          "pos": {
+            "x": 85.75,
+            "y": 30.0
+          },
+          "uuid": "4e5cda2e-3d16-4c3a-831d-4e80c8e04bd9"
+        },
+        {
+          "description": "NPTH pad of J7",
+          "pos": {
+            "x": 85.75,
+            "y": 29.0
+          },
+          "uuid": "549b81c8-aae3-4179-9afd-4c16a868b088"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S12 [GND] of J5 on F.Cu",
+          "pos": {
+            "x": 35.75,
+            "y": 28.0
+          },
+          "uuid": "b333e073-b311-4469-8c68-b12ce1f84a89"
+        },
+        {
+          "description": "NPTH pad of J5",
+          "pos": {
+            "x": 35.75,
+            "y": 29.0
+          },
+          "uuid": "a195b8a9-432c-4c6b-be45-7051d340502c"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S14 [GND] of J8 on F.Cu",
+          "pos": {
+            "x": 103.25,
+            "y": 30.0
+          },
+          "uuid": "aada12fd-50e2-4c15-838b-1083a3eb5a57"
+        },
+        {
+          "description": "NPTH pad of J8",
+          "pos": {
+            "x": 103.25,
+            "y": 29.0
+          },
+          "uuid": "64179537-f02a-4082-a5ea-c4764f457c52"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S13 [GND] of J5 on F.Cu",
+          "pos": {
+            "x": 35.75,
+            "y": 30.0
+          },
+          "uuid": "0910cf60-8315-4ab3-9c6a-c0c3dc06d6dd"
+        },
+        {
+          "description": "NPTH pad of J5",
+          "pos": {
+            "x": 35.75,
+            "y": 29.0
+          },
+          "uuid": "a195b8a9-432c-4c6b-be45-7051d340502c"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S13 [GND] of J6 on F.Cu",
+          "pos": {
+            "x": 60.75,
+            "y": 30.0
+          },
+          "uuid": "8360193f-3847-451f-bc67-d6a264b698ec"
+        },
+        {
+          "description": "NPTH pad of J6",
+          "pos": {
+            "x": 60.75,
+            "y": 29.0
+          },
+          "uuid": "d8e5e2ea-9b83-407a-b820-e0a05d383c2c"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S11 [GND] of J8 on F.Cu",
+          "pos": {
+            "x": 103.25,
+            "y": 28.0
+          },
+          "uuid": "480d934f-384e-4b3d-a682-9b54ca662f83"
+        },
+        {
+          "description": "NPTH pad of J8",
+          "pos": {
+            "x": 103.25,
+            "y": 29.0
+          },
+          "uuid": "64179537-f02a-4082-a5ea-c4764f457c52"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S12 [GND] of J8 on F.Cu",
+          "pos": {
+            "x": 110.75,
+            "y": 28.0
+          },
+          "uuid": "75061c54-e983-4197-bb8a-6cedb7daf0db"
+        },
+        {
+          "description": "NPTH pad of J8",
+          "pos": {
+            "x": 110.75,
+            "y": 29.0
+          },
+          "uuid": "7cefeac7-9fd1-422c-94a8-ea9239de9862"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S12 [GND] of J6 on F.Cu",
+          "pos": {
+            "x": 60.75,
+            "y": 28.0
+          },
+          "uuid": "b42b3011-2f6a-45b7-b2e7-2080dfdea2b5"
+        },
+        {
+          "description": "NPTH pad of J6",
+          "pos": {
+            "x": 60.75,
+            "y": 29.0
+          },
+          "uuid": "d8e5e2ea-9b83-407a-b820-e0a05d383c2c"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Hole clearance violation (board setup constraints hole clearance 0.2500 mm; actual 0.2094 mm)",
+      "items": [
+        {
+          "description": "Pad S13 [GND] of J8 on F.Cu",
+          "pos": {
+            "x": 110.75,
+            "y": 30.0
+          },
+          "uuid": "ecbc915a-1a65-4c6c-90bd-ba088fb11699"
+        },
+        {
+          "description": "NPTH pad of J8",
+          "pos": {
+            "x": 110.75,
+            "y": 29.0
+          },
+          "uuid": "7cefeac7-9fd1-422c-94a8-ea9239de9862"
+        }
+      ],
+      "severity": "error",
+      "type": "hole_clearance"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L8 on F.Silkscreen",
+          "pos": {
+            "x": 30.35,
+            "y": 50.7
+          },
+          "uuid": "260d7b1c-c62c-4615-b0ce-97753ce3d7f5"
+        },
+        {
+          "description": "Pad 1 [Net-(U8-CANH)] of L8 on F.Cu",
+          "pos": {
+            "x": 30.5,
+            "y": 51.275
+          },
+          "uuid": "949ba0d2-7822-4965-b70e-09f7c35de97b"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L8 on F.Silkscreen",
+          "pos": {
+            "x": 30.35,
+            "y": 50.7
+          },
+          "uuid": "260d7b1c-c62c-4615-b0ce-97753ce3d7f5"
+        },
+        {
+          "description": "Pad 4 [CAN3_H] of L8 on F.Cu",
+          "pos": {
+            "x": 33.5,
+            "y": 51.275
+          },
+          "uuid": "fbde302b-0762-46bb-a7a2-e2467438d25e"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L8 on F.Silkscreen",
+          "pos": {
+            "x": 30.35,
+            "y": 53.3
+          },
+          "uuid": "5f691396-7642-45f6-a6a5-b7b999555eaa"
+        },
+        {
+          "description": "Pad 1 [Net-(U8-CANH)] of L8 on F.Cu",
+          "pos": {
+            "x": 30.5,
+            "y": 51.275
+          },
+          "uuid": "949ba0d2-7822-4965-b70e-09f7c35de97b"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L8 on F.Silkscreen",
+          "pos": {
+            "x": 30.35,
+            "y": 53.3
+          },
+          "uuid": "5f691396-7642-45f6-a6a5-b7b999555eaa"
+        },
+        {
+          "description": "Pad 2 [Net-(U8-CANL)] of L8 on F.Cu",
+          "pos": {
+            "x": 30.5,
+            "y": 52.725
+          },
+          "uuid": "fe65e3d2-e1af-42ea-8e11-4287570b4339"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L8 on F.Silkscreen",
+          "pos": {
+            "x": 33.65,
+            "y": 50.7
+          },
+          "uuid": "177bc143-cbe5-4e42-bfd7-80ac7eb8e849"
+        },
+        {
+          "description": "Pad 3 [CAN3_L] of L8 on F.Cu",
+          "pos": {
+            "x": 33.5,
+            "y": 52.725
+          },
+          "uuid": "4848ee86-180d-4c22-b928-5d3bb36f0e3f"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L8 on F.Silkscreen",
+          "pos": {
+            "x": 33.65,
+            "y": 50.7
+          },
+          "uuid": "177bc143-cbe5-4e42-bfd7-80ac7eb8e849"
+        },
+        {
+          "description": "Pad 4 [CAN3_H] of L8 on F.Cu",
+          "pos": {
+            "x": 33.5,
+            "y": 51.275
+          },
+          "uuid": "fbde302b-0762-46bb-a7a2-e2467438d25e"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L8 on F.Silkscreen",
+          "pos": {
+            "x": 33.65,
+            "y": 53.3
+          },
+          "uuid": "dbad3639-961e-4766-b71c-4fc9f38cce87"
+        },
+        {
+          "description": "Pad 2 [Net-(U8-CANL)] of L8 on F.Cu",
+          "pos": {
+            "x": 30.5,
+            "y": 52.725
+          },
+          "uuid": "fe65e3d2-e1af-42ea-8e11-4287570b4339"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L8 on F.Silkscreen",
+          "pos": {
+            "x": 33.65,
+            "y": 53.3
+          },
+          "uuid": "dbad3639-961e-4766-b71c-4fc9f38cce87"
+        },
+        {
+          "description": "Pad 3 [CAN3_L] of L8 on F.Cu",
+          "pos": {
+            "x": 33.5,
+            "y": 52.725
+          },
+          "uuid": "4848ee86-180d-4c22-b928-5d3bb36f0e3f"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U5 on F.Silkscreen",
+          "pos": {
+            "x": 29.5014,
+            "y": 35.984
+          },
+          "uuid": "c9f8d5e7-08b8-4855-b5d4-72e53e8de2fe"
+        },
+        {
+          "description": "Pad 4 [CAN0_RX] of U5 on F.Cu",
+          "pos": {
+            "x": 29.58,
+            "y": 37.75
+          },
+          "uuid": "f44b0f19-249a-4a56-9975-620c8004c34b"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U5 on F.Silkscreen",
+          "pos": {
+            "x": 29.5014,
+            "y": 35.984
+          },
+          "uuid": "c9f8d5e7-08b8-4855-b5d4-72e53e8de2fe"
+        },
+        {
+          "description": "Pad 1 [CAN0_TX] of U5 on F.Cu",
+          "pos": {
+            "x": 29.58,
+            "y": 36.25
+          },
+          "uuid": "eb065d50-ea11-4d57-b44c-c7b45b344507"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U5 on F.Silkscreen",
+          "pos": {
+            "x": 29.5014,
+            "y": 35.984
+          },
+          "uuid": "c9f8d5e7-08b8-4855-b5d4-72e53e8de2fe"
+        },
+        {
+          "description": "Pad 2 [GND] of U5 on F.Cu",
+          "pos": {
+            "x": 29.58,
+            "y": 36.75
+          },
+          "uuid": "71660bc9-dd81-4ec6-9c84-cc61732332a4"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U5 on F.Silkscreen",
+          "pos": {
+            "x": 29.5014,
+            "y": 35.984
+          },
+          "uuid": "c9f8d5e7-08b8-4855-b5d4-72e53e8de2fe"
+        },
+        {
+          "description": "Pad 3 [+5V] of U5 on F.Cu",
+          "pos": {
+            "x": 29.58,
+            "y": 37.25
+          },
+          "uuid": "cf3925fc-3125-4f7b-9832-30d1cd354300"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U5 on F.Silkscreen",
+          "pos": {
+            "x": 32.4986,
+            "y": 38.016
+          },
+          "uuid": "5646965e-632c-46b9-acda-790773fb8272"
+        },
+        {
+          "description": "Pad 6 [Net-(U5-CANL)] of U5 on F.Cu",
+          "pos": {
+            "x": 32.42,
+            "y": 37.25
+          },
+          "uuid": "12bcc806-d0c5-4c3c-921b-c2a2254b3e06"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U5 on F.Silkscreen",
+          "pos": {
+            "x": 32.4986,
+            "y": 38.016
+          },
+          "uuid": "5646965e-632c-46b9-acda-790773fb8272"
+        },
+        {
+          "description": "Pad 7 [Net-(U5-CANH)] of U5 on F.Cu",
+          "pos": {
+            "x": 32.42,
+            "y": 36.75
+          },
+          "uuid": "99094cbe-c8dd-4aeb-9a48-02e4e20bb298"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U5 on F.Silkscreen",
+          "pos": {
+            "x": 32.4986,
+            "y": 38.016
+          },
+          "uuid": "5646965e-632c-46b9-acda-790773fb8272"
+        },
+        {
+          "description": "Pad 8 [CAN0_EN] of U5 on F.Cu",
+          "pos": {
+            "x": 32.42,
+            "y": 36.25
+          },
+          "uuid": "84ff86f2-09f2-4607-bb2c-14b3670a6ca9"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U5 on F.Silkscreen",
+          "pos": {
+            "x": 32.4986,
+            "y": 38.016
+          },
+          "uuid": "5646965e-632c-46b9-acda-790773fb8272"
+        },
+        {
+          "description": "Pad 5 [+3V3] of U5 on F.Cu",
+          "pos": {
+            "x": 32.42,
+            "y": 37.75
+          },
+          "uuid": "58750ee7-778d-415e-b89c-caf5b77a7c96"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Arc of U5 on F.Silkscreen",
+          "pos": {
+            "x": 31.0,
+            "y": 35.9967
+          },
+          "uuid": "8dfc71e1-2431-403f-ab2e-ddab50442ac3"
+        },
+        {
+          "description": "Pad PAD [GND] of U5 on F.Cu",
+          "pos": {
+            "x": 31.0,
+            "y": 37.0
+          },
+          "uuid": "3a3eb1d8-5e74-4057-853e-4b42123b93ea"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U6 on F.Silkscreen",
+          "pos": {
+            "x": 40.5014,
+            "y": 35.984
+          },
+          "uuid": "0fbb152f-b30d-4ec3-8b87-34b2824241ec"
+        },
+        {
+          "description": "Pad 2 [GND] of U6 on F.Cu",
+          "pos": {
+            "x": 40.58,
+            "y": 36.75
+          },
+          "uuid": "948fcb71-586b-4524-a6ec-77779bcce8e7"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U6 on F.Silkscreen",
+          "pos": {
+            "x": 40.5014,
+            "y": 35.984
+          },
+          "uuid": "0fbb152f-b30d-4ec3-8b87-34b2824241ec"
+        },
+        {
+          "description": "Pad 3 [+5V] of U6 on F.Cu",
+          "pos": {
+            "x": 40.58,
+            "y": 37.25
+          },
+          "uuid": "484229ca-eab7-44ce-bee1-a4fd4c4fdadd"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U6 on F.Silkscreen",
+          "pos": {
+            "x": 40.5014,
+            "y": 35.984
+          },
+          "uuid": "0fbb152f-b30d-4ec3-8b87-34b2824241ec"
+        },
+        {
+          "description": "Pad 4 [CAN1_RX] of U6 on F.Cu",
+          "pos": {
+            "x": 40.58,
+            "y": 37.75
+          },
+          "uuid": "ed74daf1-8d2f-412c-9ede-80144867c0f8"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U6 on F.Silkscreen",
+          "pos": {
+            "x": 40.5014,
+            "y": 35.984
+          },
+          "uuid": "0fbb152f-b30d-4ec3-8b87-34b2824241ec"
+        },
+        {
+          "description": "Pad 1 [CAN1_TX] of U6 on F.Cu",
+          "pos": {
+            "x": 40.58,
+            "y": 36.25
+          },
+          "uuid": "ed9c3dd9-30ae-4a48-af3a-5f5650c0c5f2"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Arc of U6 on F.Silkscreen",
+          "pos": {
+            "x": 42.0,
+            "y": 35.9967
+          },
+          "uuid": "1e20724b-bad1-4b11-b8a6-d184e25167eb"
+        },
+        {
+          "description": "Pad PAD [GND] of U6 on F.Cu",
+          "pos": {
+            "x": 42.0,
+            "y": 37.0
+          },
+          "uuid": "dcb51aa3-8a6a-4850-89b8-b53a1fdee349"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U6 on F.Silkscreen",
+          "pos": {
+            "x": 43.4986,
+            "y": 38.016
+          },
+          "uuid": "ceec39e2-733e-41ae-bd14-97af9993f611"
+        },
+        {
+          "description": "Pad 5 [+3V3] of U6 on F.Cu",
+          "pos": {
+            "x": 43.42,
+            "y": 37.75
+          },
+          "uuid": "fbf6e116-0396-43ef-afca-5d2d50208b96"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U6 on F.Silkscreen",
+          "pos": {
+            "x": 43.4986,
+            "y": 38.016
+          },
+          "uuid": "ceec39e2-733e-41ae-bd14-97af9993f611"
+        },
+        {
+          "description": "Pad 6 [Net-(U6-CANL)] of U6 on F.Cu",
+          "pos": {
+            "x": 43.42,
+            "y": 37.25
+          },
+          "uuid": "9fa21bb0-9d07-40ee-a631-b2303a2b6c2a"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U6 on F.Silkscreen",
+          "pos": {
+            "x": 43.4986,
+            "y": 38.016
+          },
+          "uuid": "ceec39e2-733e-41ae-bd14-97af9993f611"
+        },
+        {
+          "description": "Pad 7 [Net-(U6-CANH)] of U6 on F.Cu",
+          "pos": {
+            "x": 43.42,
+            "y": 36.75
+          },
+          "uuid": "fdec3a4a-78ec-4f4d-8802-a63a1d69d29d"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U6 on F.Silkscreen",
+          "pos": {
+            "x": 43.4986,
+            "y": 38.016
+          },
+          "uuid": "ceec39e2-733e-41ae-bd14-97af9993f611"
+        },
+        {
+          "description": "Pad 8 [CAN1_EN] of U6 on F.Cu",
+          "pos": {
+            "x": 43.42,
+            "y": 36.25
+          },
+          "uuid": "46f405c1-471b-4c55-a7af-04770505f9a3"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U7 on F.Silkscreen",
+          "pos": {
+            "x": 51.5014,
+            "y": 35.984
+          },
+          "uuid": "1053a100-67c5-4b46-89a3-f812e2d6f79c"
+        },
+        {
+          "description": "Pad 1 [CAN2_TX] of U7 on F.Cu",
+          "pos": {
+            "x": 51.58,
+            "y": 36.25
+          },
+          "uuid": "a68a34a4-af0f-456e-b951-16819d7a2b74"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U7 on F.Silkscreen",
+          "pos": {
+            "x": 51.5014,
+            "y": 35.984
+          },
+          "uuid": "1053a100-67c5-4b46-89a3-f812e2d6f79c"
+        },
+        {
+          "description": "Pad 2 [GND] of U7 on F.Cu",
+          "pos": {
+            "x": 51.58,
+            "y": 36.75
+          },
+          "uuid": "dee29f67-eeb1-4501-9397-3d31c2515230"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U7 on F.Silkscreen",
+          "pos": {
+            "x": 51.5014,
+            "y": 35.984
+          },
+          "uuid": "1053a100-67c5-4b46-89a3-f812e2d6f79c"
+        },
+        {
+          "description": "Pad 3 [+5V] of U7 on F.Cu",
+          "pos": {
+            "x": 51.58,
+            "y": 37.25
+          },
+          "uuid": "4e068aea-35c8-4dd3-b19b-5e449cd7d81d"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U7 on F.Silkscreen",
+          "pos": {
+            "x": 51.5014,
+            "y": 35.984
+          },
+          "uuid": "1053a100-67c5-4b46-89a3-f812e2d6f79c"
+        },
+        {
+          "description": "Pad 4 [CAN2_RX] of U7 on F.Cu",
+          "pos": {
+            "x": 51.58,
+            "y": 37.75
+          },
+          "uuid": "993dff61-48f6-4175-9398-d9ff5ae77de9"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U7 on F.Silkscreen",
+          "pos": {
+            "x": 54.4986,
+            "y": 38.016
+          },
+          "uuid": "3195944e-6229-4181-8edd-3a9cd858d6f1"
+        },
+        {
+          "description": "Pad 5 [+3V3] of U7 on F.Cu",
+          "pos": {
+            "x": 54.42,
+            "y": 37.75
+          },
+          "uuid": "b961ac9a-09ae-4218-b1a1-a1fe878f6020"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U7 on F.Silkscreen",
+          "pos": {
+            "x": 54.4986,
+            "y": 38.016
+          },
+          "uuid": "3195944e-6229-4181-8edd-3a9cd858d6f1"
+        },
+        {
+          "description": "Pad 6 [Net-(U7-CANL)] of U7 on F.Cu",
+          "pos": {
+            "x": 54.42,
+            "y": 37.25
+          },
+          "uuid": "ccf626dc-3439-4134-9755-1fdb3c5fcbe9"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U7 on F.Silkscreen",
+          "pos": {
+            "x": 54.4986,
+            "y": 38.016
+          },
+          "uuid": "3195944e-6229-4181-8edd-3a9cd858d6f1"
+        },
+        {
+          "description": "Pad 7 [Net-(U7-CANH)] of U7 on F.Cu",
+          "pos": {
+            "x": 54.42,
+            "y": 36.75
+          },
+          "uuid": "eeb94de9-ce01-46fa-b1ff-a0abe3065d13"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U7 on F.Silkscreen",
+          "pos": {
+            "x": 54.4986,
+            "y": 38.016
+          },
+          "uuid": "3195944e-6229-4181-8edd-3a9cd858d6f1"
+        },
+        {
+          "description": "Pad 8 [CAN2_EN] of U7 on F.Cu",
+          "pos": {
+            "x": 54.42,
+            "y": 36.25
+          },
+          "uuid": "f0f7d7d7-e98c-4aa7-876a-cc4c29382a04"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Arc of U7 on F.Silkscreen",
+          "pos": {
+            "x": 53.0,
+            "y": 35.9967
+          },
+          "uuid": "19010a8e-3865-442a-b6b1-dd4f722f1ac3"
+        },
+        {
+          "description": "Pad PAD [GND] of U7 on F.Cu",
+          "pos": {
+            "x": 53.0,
+            "y": 37.0
+          },
+          "uuid": "3f473fb0-ac1a-4fba-958b-84d400111f60"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L6 on F.Silkscreen",
+          "pos": {
+            "x": 90.35,
+            "y": 45.7
+          },
+          "uuid": "989646d6-9bde-434f-b4e7-c90384715f56"
+        },
+        {
+          "description": "Pad 1 [Net-(U6-CANH)] of L6 on F.Cu",
+          "pos": {
+            "x": 90.5,
+            "y": 46.275
+          },
+          "uuid": "fb89d738-ba58-48ca-b329-5d97caa1e1d6"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L6 on F.Silkscreen",
+          "pos": {
+            "x": 90.35,
+            "y": 45.7
+          },
+          "uuid": "989646d6-9bde-434f-b4e7-c90384715f56"
+        },
+        {
+          "description": "Pad 4 [CAN1_H] of L6 on F.Cu",
+          "pos": {
+            "x": 93.5,
+            "y": 46.275
+          },
+          "uuid": "0a1b159a-eced-4b35-b20d-d8367641dca0"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L6 on F.Silkscreen",
+          "pos": {
+            "x": 93.65,
+            "y": 45.7
+          },
+          "uuid": "bdf853b0-6729-4913-a6ec-a8b34ba030df"
+        },
+        {
+          "description": "Pad 3 [CAN1_L] of L6 on F.Cu",
+          "pos": {
+            "x": 93.5,
+            "y": 47.725
+          },
+          "uuid": "4ab11826-7b69-46a7-8ce7-60e324f7baa9"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L6 on F.Silkscreen",
+          "pos": {
+            "x": 93.65,
+            "y": 45.7
+          },
+          "uuid": "bdf853b0-6729-4913-a6ec-a8b34ba030df"
+        },
+        {
+          "description": "Pad 4 [CAN1_H] of L6 on F.Cu",
+          "pos": {
+            "x": 93.5,
+            "y": 46.275
+          },
+          "uuid": "0a1b159a-eced-4b35-b20d-d8367641dca0"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L6 on F.Silkscreen",
+          "pos": {
+            "x": 93.65,
+            "y": 48.3
+          },
+          "uuid": "c469f33c-2832-49cf-bca8-6452ab137daa"
+        },
+        {
+          "description": "Pad 2 [Net-(U6-CANL)] of L6 on F.Cu",
+          "pos": {
+            "x": 90.5,
+            "y": 47.725
+          },
+          "uuid": "a17745a1-d0fb-4994-ad77-1802033669cd"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L6 on F.Silkscreen",
+          "pos": {
+            "x": 93.65,
+            "y": 48.3
+          },
+          "uuid": "c469f33c-2832-49cf-bca8-6452ab137daa"
+        },
+        {
+          "description": "Pad 3 [CAN1_L] of L6 on F.Cu",
+          "pos": {
+            "x": 93.5,
+            "y": 47.725
+          },
+          "uuid": "4ab11826-7b69-46a7-8ce7-60e324f7baa9"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L5 on F.Silkscreen",
+          "pos": {
+            "x": 84.35,
+            "y": 45.7
+          },
+          "uuid": "b4b0490d-b312-4a32-a8ae-dce0620bb45e"
+        },
+        {
+          "description": "Pad 1 [Net-(U5-CANH)] of L5 on F.Cu",
+          "pos": {
+            "x": 84.5,
+            "y": 46.275
+          },
+          "uuid": "d6351220-e167-4624-afbb-9c3f0d964f53"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L5 on F.Silkscreen",
+          "pos": {
+            "x": 84.35,
+            "y": 45.7
+          },
+          "uuid": "b4b0490d-b312-4a32-a8ae-dce0620bb45e"
+        },
+        {
+          "description": "Pad 4 [CAN0_H] of L5 on F.Cu",
+          "pos": {
+            "x": 87.5,
+            "y": 46.275
+          },
+          "uuid": "b2d4f898-4fd2-418e-b02f-7dae7eafbac8"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L5 on F.Silkscreen",
+          "pos": {
+            "x": 84.35,
+            "y": 48.3
+          },
+          "uuid": "199e13b6-c5a9-432d-a435-ad2251691f4a"
+        },
+        {
+          "description": "Pad 2 [Net-(U5-CANL)] of L5 on F.Cu",
+          "pos": {
+            "x": 84.5,
+            "y": 47.725
+          },
+          "uuid": "7d068a1d-d7e1-4ebe-9846-870400a73330"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L5 on F.Silkscreen",
+          "pos": {
+            "x": 84.35,
+            "y": 48.3
+          },
+          "uuid": "199e13b6-c5a9-432d-a435-ad2251691f4a"
+        },
+        {
+          "description": "Pad 1 [Net-(U5-CANH)] of L5 on F.Cu",
+          "pos": {
+            "x": 84.5,
+            "y": 46.275
+          },
+          "uuid": "d6351220-e167-4624-afbb-9c3f0d964f53"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L5 on F.Silkscreen",
+          "pos": {
+            "x": 87.65,
+            "y": 45.7
+          },
+          "uuid": "879cfa6c-9959-4653-b296-7b56075fc2e5"
+        },
+        {
+          "description": "Pad 3 [CAN0_L] of L5 on F.Cu",
+          "pos": {
+            "x": 87.5,
+            "y": 47.725
+          },
+          "uuid": "fd2b7ef0-158e-4b35-b40a-1edea99c487d"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L5 on F.Silkscreen",
+          "pos": {
+            "x": 87.65,
+            "y": 45.7
+          },
+          "uuid": "879cfa6c-9959-4653-b296-7b56075fc2e5"
+        },
+        {
+          "description": "Pad 4 [CAN0_H] of L5 on F.Cu",
+          "pos": {
+            "x": 87.5,
+            "y": 46.275
+          },
+          "uuid": "b2d4f898-4fd2-418e-b02f-7dae7eafbac8"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L5 on F.Silkscreen",
+          "pos": {
+            "x": 87.65,
+            "y": 48.3
+          },
+          "uuid": "a94ea43b-73cc-45ea-aa81-cfb2cddbc924"
+        },
+        {
+          "description": "Pad 2 [Net-(U5-CANL)] of L5 on F.Cu",
+          "pos": {
+            "x": 84.5,
+            "y": 47.725
+          },
+          "uuid": "7d068a1d-d7e1-4ebe-9846-870400a73330"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L5 on F.Silkscreen",
+          "pos": {
+            "x": 87.65,
+            "y": 48.3
+          },
+          "uuid": "a94ea43b-73cc-45ea-aa81-cfb2cddbc924"
+        },
+        {
+          "description": "Pad 3 [CAN0_L] of L5 on F.Cu",
+          "pos": {
+            "x": 87.5,
+            "y": 47.725
+          },
+          "uuid": "fd2b7ef0-158e-4b35-b40a-1edea99c487d"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L6 on F.Silkscreen",
+          "pos": {
+            "x": 90.35,
+            "y": 48.3
+          },
+          "uuid": "05e88828-de7f-42e1-8589-202236b98b20"
+        },
+        {
+          "description": "Pad 1 [Net-(U6-CANH)] of L6 on F.Cu",
+          "pos": {
+            "x": 90.5,
+            "y": 46.275
+          },
+          "uuid": "fb89d738-ba58-48ca-b329-5d97caa1e1d6"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L6 on F.Silkscreen",
+          "pos": {
+            "x": 90.35,
+            "y": 48.3
+          },
+          "uuid": "05e88828-de7f-42e1-8589-202236b98b20"
+        },
+        {
+          "description": "Pad 2 [Net-(U6-CANL)] of L6 on F.Cu",
+          "pos": {
+            "x": 90.5,
+            "y": 47.725
+          },
+          "uuid": "a17745a1-d0fb-4994-ad77-1802033669cd"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L7 on F.Silkscreen",
+          "pos": {
+            "x": 96.35,
+            "y": 45.7
+          },
+          "uuid": "9d5b7729-b98c-4dda-bfb7-84181167944b"
+        },
+        {
+          "description": "Pad 1 [Net-(U7-CANH)] of L7 on F.Cu",
+          "pos": {
+            "x": 96.5,
+            "y": 46.275
+          },
+          "uuid": "b2b65837-489e-4260-a2aa-01de6eb2f501"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L7 on F.Silkscreen",
+          "pos": {
+            "x": 96.35,
+            "y": 45.7
+          },
+          "uuid": "9d5b7729-b98c-4dda-bfb7-84181167944b"
+        },
+        {
+          "description": "Pad 4 [CAN2_H] of L7 on F.Cu",
+          "pos": {
+            "x": 99.5,
+            "y": 46.275
+          },
+          "uuid": "4e82293f-f73b-45e3-a9a3-a904f1056726"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L7 on F.Silkscreen",
+          "pos": {
+            "x": 96.35,
+            "y": 48.3
+          },
+          "uuid": "467ac7ac-016a-4248-ae08-92a6522b57d0"
+        },
+        {
+          "description": "Pad 1 [Net-(U7-CANH)] of L7 on F.Cu",
+          "pos": {
+            "x": 96.5,
+            "y": 46.275
+          },
+          "uuid": "b2b65837-489e-4260-a2aa-01de6eb2f501"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L7 on F.Silkscreen",
+          "pos": {
+            "x": 96.35,
+            "y": 48.3
+          },
+          "uuid": "467ac7ac-016a-4248-ae08-92a6522b57d0"
+        },
+        {
+          "description": "Pad 2 [Net-(U7-CANL)] of L7 on F.Cu",
+          "pos": {
+            "x": 96.5,
+            "y": 47.725
+          },
+          "uuid": "0b8d0046-27a3-496a-a8e7-2601dd896cb2"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L7 on F.Silkscreen",
+          "pos": {
+            "x": 99.65,
+            "y": 45.7
+          },
+          "uuid": "c458f58f-2611-4c29-bf3f-a1c467206f3a"
+        },
+        {
+          "description": "Pad 4 [CAN2_H] of L7 on F.Cu",
+          "pos": {
+            "x": 99.5,
+            "y": 46.275
+          },
+          "uuid": "4e82293f-f73b-45e3-a9a3-a904f1056726"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L7 on F.Silkscreen",
+          "pos": {
+            "x": 99.65,
+            "y": 45.7
+          },
+          "uuid": "c458f58f-2611-4c29-bf3f-a1c467206f3a"
+        },
+        {
+          "description": "Pad 3 [CAN2_L] of L7 on F.Cu",
+          "pos": {
+            "x": 99.5,
+            "y": 47.725
+          },
+          "uuid": "52fd3922-dae5-4879-9fc4-580d514b2076"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L7 on F.Silkscreen",
+          "pos": {
+            "x": 99.65,
+            "y": 48.3
+          },
+          "uuid": "0cdfcfb7-3fcf-4a6d-a07d-0cc95275fdb4"
+        },
+        {
+          "description": "Pad 2 [Net-(U7-CANL)] of L7 on F.Cu",
+          "pos": {
+            "x": 96.5,
+            "y": 47.725
+          },
+          "uuid": "0b8d0046-27a3-496a-a8e7-2601dd896cb2"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of L7 on F.Silkscreen",
+          "pos": {
+            "x": 99.65,
+            "y": 48.3
+          },
+          "uuid": "0cdfcfb7-3fcf-4a6d-a07d-0cc95275fdb4"
+        },
+        {
+          "description": "Pad 3 [CAN2_L] of L7 on F.Cu",
+          "pos": {
+            "x": 99.5,
+            "y": 47.725
+          },
+          "uuid": "52fd3922-dae5-4879-9fc4-580d514b2076"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U8 on F.Silkscreen",
+          "pos": {
+            "x": 62.5014,
+            "y": 35.984
+          },
+          "uuid": "dab1968f-9e98-4750-96fd-93edf442de95"
+        },
+        {
+          "description": "Pad 1 [CAN3_TX] of U8 on F.Cu",
+          "pos": {
+            "x": 62.58,
+            "y": 36.25
+          },
+          "uuid": "8d9baa3d-2821-499c-b2b0-c6ba7ccb7d32"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U8 on F.Silkscreen",
+          "pos": {
+            "x": 62.5014,
+            "y": 35.984
+          },
+          "uuid": "dab1968f-9e98-4750-96fd-93edf442de95"
+        },
+        {
+          "description": "Pad 2 [GND] of U8 on F.Cu",
+          "pos": {
+            "x": 62.58,
+            "y": 36.75
+          },
+          "uuid": "ac2e1a83-7a4b-441c-af2b-0ee0feeca2c7"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U8 on F.Silkscreen",
+          "pos": {
+            "x": 62.5014,
+            "y": 35.984
+          },
+          "uuid": "dab1968f-9e98-4750-96fd-93edf442de95"
+        },
+        {
+          "description": "Pad 3 [+5V] of U8 on F.Cu",
+          "pos": {
+            "x": 62.58,
+            "y": 37.25
+          },
+          "uuid": "12c1f5a5-ed9d-4375-bb0a-5f973380af05"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U8 on F.Silkscreen",
+          "pos": {
+            "x": 62.5014,
+            "y": 35.984
+          },
+          "uuid": "dab1968f-9e98-4750-96fd-93edf442de95"
+        },
+        {
+          "description": "Pad 4 [CAN3_RX] of U8 on F.Cu",
+          "pos": {
+            "x": 62.58,
+            "y": 37.75
+          },
+          "uuid": "17bba1f0-d6d6-4bf5-a9df-f35624273bbc"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Arc of U8 on F.Silkscreen",
+          "pos": {
+            "x": 64.0,
+            "y": 35.9967
+          },
+          "uuid": "a41894ab-fce0-4b86-b731-93625844f5f0"
+        },
+        {
+          "description": "Pad PAD [GND] of U8 on F.Cu",
+          "pos": {
+            "x": 64.0,
+            "y": 37.0
+          },
+          "uuid": "8cc3acc4-bd11-43aa-89fd-1ac579613f92"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U8 on F.Silkscreen",
+          "pos": {
+            "x": 65.4986,
+            "y": 38.016
+          },
+          "uuid": "3c327785-a89f-4a7a-b325-485e6af46d3e"
+        },
+        {
+          "description": "Pad 5 [+3V3] of U8 on F.Cu",
+          "pos": {
+            "x": 65.42,
+            "y": 37.75
+          },
+          "uuid": "3e97160e-0fd2-4121-8115-0370472a2317"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U8 on F.Silkscreen",
+          "pos": {
+            "x": 65.4986,
+            "y": 38.016
+          },
+          "uuid": "3c327785-a89f-4a7a-b325-485e6af46d3e"
+        },
+        {
+          "description": "Pad 6 [Net-(U8-CANL)] of U8 on F.Cu",
+          "pos": {
+            "x": 65.42,
+            "y": 37.25
+          },
+          "uuid": "43f50e9f-4695-430b-aeff-73bff83dc1ce"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U8 on F.Silkscreen",
+          "pos": {
+            "x": 65.4986,
+            "y": 38.016
+          },
+          "uuid": "3c327785-a89f-4a7a-b325-485e6af46d3e"
+        },
+        {
+          "description": "Pad 7 [Net-(U8-CANH)] of U8 on F.Cu",
+          "pos": {
+            "x": 65.42,
+            "y": 36.75
+          },
+          "uuid": "6f2312e9-a442-4308-b539-9b3993d0ad56"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of U8 on F.Silkscreen",
+          "pos": {
+            "x": 65.4986,
+            "y": 38.016
+          },
+          "uuid": "3c327785-a89f-4a7a-b325-485e6af46d3e"
+        },
+        {
+          "description": "Pad 8 [CAN3_EN] of U8 on F.Cu",
+          "pos": {
+            "x": 65.42,
+            "y": 36.25
+          },
+          "uuid": "02120aec-50e5-4153-9ec2-c753bfd920d7"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    }
+  ],
+  "all_drc_violations": 88,
+  "rules_preserved": {
+    "erc": true,
+    "net_settings": true,
+    "drc": true
+  },
+  "footprints_preserved": {
+    "R70": true,
+    "R77": true,
+    "R53": true,
+    "R98": true,
+    "R65": true,
+    "R60": true,
+    "C43": true,
+    "R91": true,
+    "R84": true,
+    "R85": true,
+    "Q4": true,
+    "U16": true,
+    "R63": true,
+    "R72": true,
+    "LED2": true,
+    "LED11": true,
+    "U8": true,
+    "R67": true,
+    "C47": true,
+    "U14": true,
+    "R124": true,
+    "R55": true,
+    "Q5": true,
+    "R107": true,
+    "LED9": true,
+    "Q8": true,
+    "LED4": true,
+    "R47": true,
+    "R68": true,
+    "C51": true,
+    "R116": true,
+    "L8": true,
+    "R46": true,
+    "R106": true,
+    "R81": true,
+    "R64": true,
+    "C53": true,
+    "R105": true,
+    "R103": true,
+    "R16": true,
+    "C50": true,
+    "J105": true,
+    "R122": true,
+    "R80": true,
+    "R101": true,
+    "R121": true,
+    "U10": true,
+    "R102": true,
+    "R92": true,
+    "R52": true,
+    "R15": true,
+    "U15": true,
+    "R90": true,
+    "R48": true,
+    "R94": true,
+    "R69": true,
+    "R108": true,
+    "C46": true,
+    "LED6": true,
+    "LED3": true,
+    "Q7": true,
+    "LED8": true,
+    "R89": true,
+    "R71": true,
+    "C40": true,
+    "R76": true,
+    "J6": true,
+    "R20": true,
+    "C48": true,
+    "R73": true,
+    "J104": true,
+    "C44": true,
+    "U5": true,
+    "C41": true,
+    "R79": true,
+    "R13": true,
+    "Q9": true,
+    "R66": true,
+    "R93": true,
+    "LED5": true,
+    "R78": true,
+    "LED13": true,
+    "LED7": true,
+    "U11": true,
+    "R100": true,
+    "R17": true,
+    "R61": true,
+    "R118": true,
+    "C38": true,
+    "R119": true,
+    "LED15": true,
+    "LED10": true,
+    "J4": true,
+    "R51": true,
+    "U12": true,
+    "LED17": true,
+    "C49": true,
+    "R82": true,
+    "R99": true,
+    "R19": true,
+    "C45": true,
+    "R96": true,
+    "J101": true,
+    "Q2": true,
+    "R123": true,
+    "R58": true,
+    "LED14": true,
+    "R62": true,
+    "R56": true,
+    "R54": true,
+    "R104": true,
+    "R114": true,
+    "R75": true,
+    "R83": true,
+    "R59": true,
+    "R120": true,
+    "L7": true,
+    "R57": true,
+    "R49": true,
+    "U6": true,
+    "R97": true,
+    "R111": true,
+    "R115": true,
+    "J106": true,
+    "R110": true,
+    "J103": true,
+    "R112": true,
+    "U9": true,
+    "C42": true,
+    "J102": true,
+    "R88": true,
+    "J8": true,
+    "R113": true,
+    "R86": true,
+    "L5": true,
+    "LED16": true,
+    "R14": true,
+    "Q3": true,
+    "C52": true,
+    "R95": true,
+    "J107": true,
+    "R50": true,
+    "R109": true,
+    "R117": true,
+    "LED12": true,
+    "J5": true,
+    "R125": true,
+    "U13": true,
+    "R74": true,
+    "R87": true,
+    "J7": true,
+    "R18": true,
+    "Q6": true,
+    "U7": true,
+    "C39": true,
+    "L6": true
+  },
+  "netlist_parity": true,
+  "component_count": 156,
+  "net_count": 164,
+  "widths_ok": true,
+  "via_rules_ok": true,
+  "wire_length_mm": 2862.1171034181207,
+  "vias": 35,
+  "board_sha256": "43bf23ce2907e98ece46653f2df4d07e10421803a61b047c535451d682beca83",
+  "placement_legal": true,
+  "routing_attempted": true,
+  "intrinsic_violation_count": 84,
+  "new_preflight_violations": [],
+  "erc_violations": 0
+}

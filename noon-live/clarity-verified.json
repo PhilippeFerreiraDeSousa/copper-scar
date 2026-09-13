@@ -1,0 +1,68 @@
+{
+  "panels": {
+    "scaling": {
+      "action": "Scaled 85 component positions to 90% spacing; kept part dimensions unchanged, with 3 mm edge allowance.",
+      "why": "Why this was tried: Reduce the official PCBA bounding-box volume by contracting component spacing and trimming unused edge margin. Keep physical component/pad dimensions fixed and reject all native/assembly failures.",
+      "result": "Result: Kept valid board: score 59976.20.",
+      "proposer": "Proposed by: programmatic policy \u00b7 placement spacing and outline \u00b7 no per-step LLM inference recorded",
+      "geometry": "Uniform placement scaling \u00d70.9 \u00b7 component physical dimensions unchanged \u00b7 85 parts moved \u00b7 3 mm edge allowance \u00b7 outline 70 \u00d7 60 \u2192 65 \u00d7 57 mm \u00b7 geometry source stage2/baseline \u00b7 score comparator stage2/baseline"
+    },
+    "functional": {
+      "action": "Moved each switch circuit next to its own header.",
+      "why": "Why this was tried: Keep all8independentlycontrolled SBU circuits near their own external headers; reduce cross-board signal paths. Preserve exactpads/nets/rules; reserve explicit sharedsupplysidecolumn. Fullrouting/nativeevaluation still required.",
+      "result": "Result: Kept valid board: score 45345.68. Vias fell 148\u219229; score improved 4564.84, despite larger assembly volume.",
+      "proposer": "Proposed by: programmatic policy \u00b7 connected functional block placement \u00b7 no per-step LLM inference recorded",
+      "geometry": "connected functional block placement \u00b7 outline see reference \u2192 56 \u00d7 52 mm \u00b7 geometry source grouped-input/pcbgolf.kicad_pcb \u00b7 score comparator continuation-01/candidate-02"
+    },
+    "rejected": {
+      "action": "Scaled X spacing to95% and Y spacing to85%; kept physical part dimensions unchanged.",
+      "why": "Why this was tried: Reduce the official PCBA bounding-box volume by contracting component spacing and trimming unused edge margin. Keep physical component/pad dimensions fixed and reject all native/assembly failures.",
+      "result": "Result: Rejected: 1 native opens and 0 required findings. Official score is invalid.",
+      "proposer": "Proposed by: programmatic policy \u00b7 placement spacing and outline \u00b7 no per-step LLM inference recorded",
+      "geometry": "Independent axis placement scaling \u00b7 X\u00d70.95 / Y\u00d70.85 \u00b7 outline see reference \u2192 54 \u00d7 45.5 mm \u00b7 geometry source candidate-01/pcbgolf.kicad_pcb \u00b7 score comparator primitive-axes-01/candidate-01"
+    },
+    "outline-only": {
+      "action": "Trimmed only the left/right outline margin; all component positions stayed unchanged.",
+      "why": "Why this was tried: Prior all-edge trim lost one CH2 relay header connection. Preserve top/bottom header escape margin while trimming side whitespace; all routing and native gates rerun.",
+      "result": "Result: Kept valid board: score 38347.92. Vias 26\u219225; score improved 1726.16.",
+      "proposer": "Proposed by: programmatic policy \u00b7 independent outline margin \u00b7 no per-step LLM inference recorded",
+      "geometry": "independent outline margin \u00b7 outline see reference \u2192 48.5 \u00d7 48 mm \u00b7 geometry source edge-x-input/pcbgolf.kicad_pcb \u00b7 score comparator primitive-uniform-01/candidate-02"
+    },
+    "preflight": {
+      "action": "Scaled X spacing to100% and Y spacing to90%; kept physical part dimensions unchanged.",
+      "why": "Why this was tried: Header pitch sets horizontal density; current native-valid side trim keeps26vias. Reduce vertical gaps10percent with fixed component sizes and same Xoutline; preserve3mm top/bottom escape margin.",
+      "result": "Result: Rejected: 183 native opens and 4 required findings. Official score is invalid. Rejected before routing. Native preflight: 4 findings. Clearance violation ( clearance 0.2000 mm; actual 0.1250 mm).",
+      "proposer": "Proposed by: programmatic policy \u00b7 vertical spacing after side trim \u00b7 no per-step LLM inference recorded",
+      "geometry": "Independent axis placement scaling \u00b7 X\u00d71 / Y\u00d70.9 \u00b7 outline see reference \u2192 48.5 \u00d7 44 mm \u00b7 geometry source y-contract-input/pcbgolf.kicad_pcb \u00b7 score comparator edge-x-01/candidate-01"
+    },
+    "ground-escape": {
+      "action": "Kept the vertical contraction and LED repairs; added a short ground trace and through-via at Q7.2, then rerouted every net.",
+      "why": "Why this was tried: Router and native DRC both identify isolated Q7.2 ground. Seed a0.2mm front trace to a0.60/0.30mm through via0.9mm below that pad, then route every net and independently check all physical/electrical gates.",
+      "result": "Result: Kept valid board: score 36339.76.",
+      "proposer": "Proposed by: programmatic policy \u00b7 targeted ground via escape \u00b7 no per-step LLM inference recorded",
+      "geometry": "Independent axis placement scaling \u00b7 X\u00d71 / Y\u00d70.9 \u00b7 outline see reference \u2192 48.5 \u00d7 44 mm \u00b7 geometry source ground-escape-input/pcbgolf.kicad_pcb \u00b7 score comparator edge-x-01/candidate-01"
+    }
+  },
+  "fixed_chart_points": [
+    {
+      "i": "0",
+      "x": "38",
+      "y": "25"
+    },
+    {
+      "i": "1",
+      "x": "51.6",
+      "y": "33.13595147653473"
+    }
+  ],
+  "fixed_board_rect": {
+    "x": 483.796875,
+    "y": 604.65625,
+    "width": 951.203125,
+    "height": 480
+  },
+  "accepted_circle": true,
+  "rejected_cross": true,
+  "invalid_null_rail": true,
+  "browser_errors": []
+}

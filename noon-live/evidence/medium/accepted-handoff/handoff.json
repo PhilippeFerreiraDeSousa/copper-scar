@@ -1,0 +1,618 @@
+{
+  "schema": 1,
+  "stage": "stage1-accepted-medium",
+  "created_at": "2026-09-13T18:28:35.100714+00:00",
+  "source_sha": "b26521034a51ed1056aca68fda04042ce6d49b63",
+  "parent": "/Users/philippe/.codex/worktrees/3bde/copper-scar/.local/medium-loop/relay-group-01",
+  "parent_board_sha256": "7fee39d0bf31770b353ef037721fb6f414d8ec070ffe9fc8f1625d04e4952f71",
+  "board_sha256": "53771cdb168a054d54e6c4b556ebced2a8950e5259ac1db365b54ff1c8cb0336",
+  "accepted": true,
+  "evaluation": {
+    "accepted": true,
+    "feasibility_cost": 0,
+    "native_open_count": 0,
+    "drc_opens": 0,
+    "schematic_parity_issues": 0,
+    "required_violations": [],
+    "all_drc_violations": 0,
+    "rules_preserved": {
+      "erc": true,
+      "net_settings": true,
+      "drc": true
+    },
+    "footprints_preserved": {
+      "R98": true,
+      "R91": true,
+      "R84": true,
+      "R85": true,
+      "Q4": true,
+      "LED11": true,
+      "R124": true,
+      "Q5": true,
+      "R107": true,
+      "Q8": true,
+      "R116": true,
+      "R106": true,
+      "R81": true,
+      "R105": true,
+      "J105": true,
+      "R103": true,
+      "R16": true,
+      "J103": true,
+      "C50": true,
+      "R122": true,
+      "R80": true,
+      "R101": true,
+      "R121": true,
+      "R102": true,
+      "R92": true,
+      "R15": true,
+      "R90": true,
+      "R94": true,
+      "R108": true,
+      "C46": true,
+      "LED6": true,
+      "Q7": true,
+      "R89": true,
+      "J101": true,
+      "J104": true,
+      "J108": true,
+      "R20": true,
+      "R79": true,
+      "R13": true,
+      "Q9": true,
+      "R93": true,
+      "R78": true,
+      "LED13": true,
+      "R100": true,
+      "R17": true,
+      "R118": true,
+      "R119": true,
+      "LED15": true,
+      "LED10": true,
+      "LED17": true,
+      "J107": true,
+      "R82": true,
+      "R99": true,
+      "R19": true,
+      "R96": true,
+      "Q2": true,
+      "R123": true,
+      "LED14": true,
+      "R104": true,
+      "R114": true,
+      "R83": true,
+      "R120": true,
+      "R97": true,
+      "R111": true,
+      "R115": true,
+      "R110": true,
+      "R112": true,
+      "R88": true,
+      "C5": true,
+      "R113": true,
+      "R86": true,
+      "LED16": true,
+      "R14": true,
+      "J102": true,
+      "Q3": true,
+      "J106": true,
+      "R95": true,
+      "R109": true,
+      "R117": true,
+      "LED12": true,
+      "R125": true,
+      "R74": true,
+      "R87": true,
+      "R18": true,
+      "Q6": true
+    },
+    "netlist_parity": true,
+    "component_count": 85,
+    "net_count": 67,
+    "widths_ok": true,
+    "via_rules_ok": true,
+    "wire_length_mm": 3896.6319175671497,
+    "vias": 130,
+    "board_sha256": "53771cdb168a054d54e6c4b556ebced2a8950e5259ac1db365b54ff1c8cb0336"
+  },
+  "erc_violations": 0,
+  "populated_header": "Harwin M20-9980446",
+  "header_source": "https://www.harwin.com/products/M20-9980446",
+  "model_kind": "datasheet nominal body/pins, not detailed vendor STEP",
+  "header_dimensions_mm": [
+    10.16,
+    5.08,
+    11.64
+  ],
+  "header_height_above_pcb_mm": 8.64,
+  "header_tail_mm": 3,
+  "header_model_generator_source_commit": "ad7f166b11fba43eb0c9de16fa626d21686a8fe7",
+  "models": [
+    {
+      "reference": "R98",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R91",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R84",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R85",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "Q4",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-5.step",
+      "sha256": "3b70f1b6dd947543fda90b947f91f2e2804766c39b78e56c87f1448dfd575ed8"
+    },
+    {
+      "reference": "LED11",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-3.step",
+      "sha256": "75385c48b1bfe8fdc197acee7ac7a452dabbc4c2a2e19cb35712e2f306cb320c"
+    },
+    {
+      "reference": "R124",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "Q5",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-5.step",
+      "sha256": "3b70f1b6dd947543fda90b947f91f2e2804766c39b78e56c87f1448dfd575ed8"
+    },
+    {
+      "reference": "R107",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "Q8",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-5.step",
+      "sha256": "3b70f1b6dd947543fda90b947f91f2e2804766c39b78e56c87f1448dfd575ed8"
+    },
+    {
+      "reference": "R116",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R106",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R81",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R105",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "J105",
+      "model": "models/M20-9980446-nominal.step",
+      "sha256": "2544078644662540dfb3e733afecd4d7933849ec2330a81ff1a619b6bf689da5"
+    },
+    {
+      "reference": "R103",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R16",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "J103",
+      "model": "models/M20-9980446-nominal.step",
+      "sha256": "2544078644662540dfb3e733afecd4d7933849ec2330a81ff1a619b6bf689da5"
+    },
+    {
+      "reference": "C50",
+      "model": "pcbgolf.3dshapes/Capacitor_SMD.3dshapes/C_0805_2012Metric.step",
+      "sha256": "9a669c1a2f1ea25b88b401acef6efeaa80a067bd7da9db6993de719a7fbe155c"
+    },
+    {
+      "reference": "R122",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R80",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R101",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R121",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R102",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R92",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R15",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R90",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R94",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R108",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "C46",
+      "model": "pcbgolf.3dshapes/Capacitor_SMD.3dshapes/C_0402_1005Metric.step",
+      "sha256": "03e44c4b2b727b8d4b6b1fd598cbd12dd5e614f1dfeefa96a92a07e3a3b312a2"
+    },
+    {
+      "reference": "LED6",
+      "model": "pcbgolf.3dshapes/LED_SMD.3dshapes/LED_0805_2012Metric.step",
+      "sha256": "0aa8b791804f5d72a2fc7d1bf231dd9959207d83df8ad801176fbc459f575b98"
+    },
+    {
+      "reference": "Q7",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-5.step",
+      "sha256": "3b70f1b6dd947543fda90b947f91f2e2804766c39b78e56c87f1448dfd575ed8"
+    },
+    {
+      "reference": "R89",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "J101",
+      "model": "models/M20-9980446-nominal.step",
+      "sha256": "2544078644662540dfb3e733afecd4d7933849ec2330a81ff1a619b6bf689da5"
+    },
+    {
+      "reference": "J104",
+      "model": "models/M20-9980446-nominal.step",
+      "sha256": "2544078644662540dfb3e733afecd4d7933849ec2330a81ff1a619b6bf689da5"
+    },
+    {
+      "reference": "J108",
+      "model": "models/M20-9980446-nominal.step",
+      "sha256": "2544078644662540dfb3e733afecd4d7933849ec2330a81ff1a619b6bf689da5"
+    },
+    {
+      "reference": "R20",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R79",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R13",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "Q9",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-5.step",
+      "sha256": "3b70f1b6dd947543fda90b947f91f2e2804766c39b78e56c87f1448dfd575ed8"
+    },
+    {
+      "reference": "R93",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R78",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "LED13",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-3.step",
+      "sha256": "75385c48b1bfe8fdc197acee7ac7a452dabbc4c2a2e19cb35712e2f306cb320c"
+    },
+    {
+      "reference": "R100",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R17",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R118",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R119",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "LED15",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-3.step",
+      "sha256": "75385c48b1bfe8fdc197acee7ac7a452dabbc4c2a2e19cb35712e2f306cb320c"
+    },
+    {
+      "reference": "LED10",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-3.step",
+      "sha256": "75385c48b1bfe8fdc197acee7ac7a452dabbc4c2a2e19cb35712e2f306cb320c"
+    },
+    {
+      "reference": "LED17",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-3.step",
+      "sha256": "75385c48b1bfe8fdc197acee7ac7a452dabbc4c2a2e19cb35712e2f306cb320c"
+    },
+    {
+      "reference": "J107",
+      "model": "models/M20-9980446-nominal.step",
+      "sha256": "2544078644662540dfb3e733afecd4d7933849ec2330a81ff1a619b6bf689da5"
+    },
+    {
+      "reference": "R82",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R99",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R19",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R96",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "Q2",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-5.step",
+      "sha256": "3b70f1b6dd947543fda90b947f91f2e2804766c39b78e56c87f1448dfd575ed8"
+    },
+    {
+      "reference": "R123",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "LED14",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-3.step",
+      "sha256": "75385c48b1bfe8fdc197acee7ac7a452dabbc4c2a2e19cb35712e2f306cb320c"
+    },
+    {
+      "reference": "R104",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R114",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R83",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R120",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R97",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R111",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R115",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R110",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R112",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R88",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "C5",
+      "model": "pcbgolf.3dshapes/Capacitor_SMD.3dshapes/C_0402_1005Metric.step",
+      "sha256": "03e44c4b2b727b8d4b6b1fd598cbd12dd5e614f1dfeefa96a92a07e3a3b312a2"
+    },
+    {
+      "reference": "R113",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R86",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "LED16",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-3.step",
+      "sha256": "75385c48b1bfe8fdc197acee7ac7a452dabbc4c2a2e19cb35712e2f306cb320c"
+    },
+    {
+      "reference": "R14",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "J102",
+      "model": "models/M20-9980446-nominal.step",
+      "sha256": "2544078644662540dfb3e733afecd4d7933849ec2330a81ff1a619b6bf689da5"
+    },
+    {
+      "reference": "Q3",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-5.step",
+      "sha256": "3b70f1b6dd947543fda90b947f91f2e2804766c39b78e56c87f1448dfd575ed8"
+    },
+    {
+      "reference": "J106",
+      "model": "models/M20-9980446-nominal.step",
+      "sha256": "2544078644662540dfb3e733afecd4d7933849ec2330a81ff1a619b6bf689da5"
+    },
+    {
+      "reference": "R95",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R109",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R117",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "LED12",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-3.step",
+      "sha256": "75385c48b1bfe8fdc197acee7ac7a452dabbc4c2a2e19cb35712e2f306cb320c"
+    },
+    {
+      "reference": "R125",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R74",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R87",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "R18",
+      "model": "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step",
+      "sha256": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb"
+    },
+    {
+      "reference": "Q6",
+      "model": "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-5.step",
+      "sha256": "3b70f1b6dd947543fda90b947f91f2e2804766c39b78e56c87f1448dfd575ed8"
+    }
+  ],
+  "model_reference_count": 85,
+  "via_identity_preserved": true,
+  "stage_two_score": null,
+  "not_original_challenge_submission": true,
+  "files": {
+    "render.command.json": "b902eccc08f8c85e84c5817095686f8da96668e370c4c70a13a0b932806436a0",
+    "pcbgolf.kicad_sym": "d122b5e5446372d0362531e3dc63e1efde6a452d7e0fe18ee697baebf7283f49",
+    "erc.json": "ca39c9b34c042a32562d68fd0fb9aebb25839a1f804109bad02cd185f457d3a7",
+    "pcbgolf.kicad_pro": "bad92ffa72c5a5b2ae8512cc3cb247e60e39ee9df64486e1eb2cc64bc9874072",
+    "acceptance.json": "2ce95e11ee9723ba894ac26aa84b39cf335fa3481d7f70a88752adb6e78f48c2",
+    "fp-lib-table": "161ddc17b09cfe70e6ec0f20060542b4b8f4ece3c4cdabac24e76296a5952815",
+    "pcbgolf.kicad_sch": "64eac081b154ba348b3593192f756fedb47bd79bb2173f963f8fb9c8360a9ed2",
+    "native-audit.json": "588f0b9caf714cbd14a5bcd8d8202877137e82572d401a6ac0e0c6ad9ee738f6",
+    "drc.json": "ee9e0cfee072cfc379b1afd33f0f13a9ea522b1eef1aea17a19170a602ce332c",
+    "pcbgolf.kicad_pcb": "53771cdb168a054d54e6c4b556ebced2a8950e5259ac1db365b54ff1c8cb0336",
+    "board.png": "6bf6732db40215bf0b07a618dac844b4b2e5356e0448c6743af90e10bce7a53d",
+    "raster.command.json": "55117213e4691069de75b3931f3f6df34d27a8925f2a1623cb613b1734c4ba44",
+    "drc.command.json": "c6fdc64624c23148043177808e006adb2de3128d8b2110a23b60b13b738a1c80",
+    "board.svg": "4709107cb8f1748f2a25eef77258678a88e3e6e3a84a013f92c402283572143d",
+    "sym-lib-table": "9bc1c9a7457c065df77b537bccbaa5e49125914c7f197895836f2b3a1743e437",
+    "circuit.json": "12c04230450a8684c07124a477e5b7fbf49e057e55444df5276a07526d7e6d74",
+    "evaluation.json": "f410aa66c035026289116e0169a398cc3cdd536f37c2a3e002b50015c589fcce",
+    "audit.command.json": "3bc23b0e80517fad60efd8bfd8a4789fe2a5c791dd5373a9f1d4d0d2ea59f7c1",
+    "erc.command.json": "400bae7f8bad2173f37e0091aca3d12dc0b5f33c6029e8279659d07a76b5456f",
+    "pcbgolf.pretty/SOD-123F.kicad_mod": "3e2d61339ed0fba70c0bd7b439da314946b2325d3b2bcb480874ecad4bb47ebd",
+    "pcbgolf.pretty/QFN64-9X9.kicad_mod": "0d5c78dfd141ee7050cf8163c990f5a0f797fe88c4a7166f4ee84ce7cc6af303",
+    "pcbgolf.pretty/0806.kicad_mod": "27822a9eb8881fd970a2c18230fc7f09da78df79d1b7b5d1ea4c0454c63dc314",
+    "pcbgolf.pretty/SOIC-8_3.9x4.9mm_P1.27mm.kicad_mod": "d9f40fa561e632b6b455344e541998a437ae52160ccd8bc46531c60f6e28353c",
+    "pcbgolf.pretty/0603-L.kicad_mod": "ebb97b393c605205ac965db61719384c03f56b8351b1beb0311f79d948be515f",
+    "pcbgolf.pretty/SOT23-5.kicad_mod": "c8bf732b85c5e282856030cd37c433999b4b581357752741bb3b5dfb7284a481",
+    "pcbgolf.pretty/CHOKE-3.2X2.5.kicad_mod": "a35e60e84f334c08231962782b167a0bdf7155e5dc7112d234e38acd551b6458",
+    "pcbgolf.pretty/EVQ-Q2.kicad_mod": "090365872acf2fc99991dc6fcc46d61db3a35a118e1c0c03f384c327ab5fe460",
+    "pcbgolf.pretty/SOT23-3.kicad_mod": "2e8807f9615b43c53bd2dbf0b4f24efcd06da15dfead7ae716d369638fcf9d16",
+    "pcbgolf.pretty/0402-R.kicad_mod": "e1b2ed7e4155e8d71b2b6984c29bdcea91808b81fabbd8918e959a8921bb0dd5",
+    "pcbgolf.pretty/0472192001.kicad_mod": "1db7536c3cc031a00b598600f0a03395ff6433f245708a7ca1f76182009fc0c6",
+    "pcbgolf.pretty/PP-1212-8.kicad_mod": "047a771b9745bde3d1e5a5fe50010b367a8b95c24fc9195149eb53b6858e411a",
+    "pcbgolf.pretty/DX07S024XJ1R1100.kicad_mod": "9728c3f78c431e584db70fa7c0511df0de020183be84da8b097dedf13f50b717",
+    "pcbgolf.pretty/DCJACK_2MM_SMT.kicad_mod": "c29fc14226780b0303ac1303e42c7448a8ff8d67799717b3ceb474574a54debd",
+    "pcbgolf.pretty/M2_BOLT.kicad_mod": "a7f008379a43d587303d67d8bcfc78ff63e31eac2c986c0fdc3ae4df8e3fa2a0",
+    "pcbgolf.pretty/2X04.kicad_mod": "43f6728b008ae873711dadeae45d74e1d3661040aac5c6322140170ac8e48077",
+    "pcbgolf.pretty/CHIPLED.kicad_mod": "a80a6cd7f72af6a025fff0b0ed595d86435bd0894417fd04153bbe92bce60b38",
+    "pcbgolf.pretty/XTAL-3.2X2.5.kicad_mod": "a9a078b8c9d04ca0480350a9202514ea5f41c795fcfb88143010007aed6839ba",
+    "pcbgolf.pretty/WQFN20.kicad_mod": "2dcd146f46fbd481acbd9c1b594c23247585f7feb58e44d4b13e2587c3540818",
+    "pcbgolf.pretty/CREE-RGB-CLMVC.kicad_mod": "1a08226399bc55a05b656c1d21618fb5c6b94cddfc889acc8df3af1a0531c3e6",
+    "pcbgolf.pretty/0805-C.kicad_mod": "a63988a8e601e9cf3db9f7d7ca23f078fef5acf7fc130580e7f923ba033924bd",
+    "pcbgolf.pretty/USB-C-FEMALE-VERT-GCT.kicad_mod": "165669d27b57986ada37b4190ac998e436248783200eea8e51b84c8ed55d6f00",
+    "pcbgolf.pretty/TDFN8_2X3MC_MCH.kicad_mod": "13d037182559e361a27e25c35bdcca4431310e2a5246b864fe2b9ab322f00547",
+    "pcbgolf.pretty/DO-214AA(SMB).kicad_mod": "a1429d8b77b47f6d6f57ddded6ee68989c248da73e6f1bf69d54965dd027a760",
+    "pcbgolf.pretty/LQFP-144_20x20mm_P0.5mm.kicad_mod": "ed0357db4f5e0e904278de47a72c75ac801bf0ef424be06d19bbcd875f0b72cd",
+    "pcbgolf.pretty/L-1008.kicad_mod": "3eccbf2bdd1210916c5e098247b82c267582945a9f017ed04e49e2503f1ba5f7",
+    "pcbgolf.pretty/SOT23-6.kicad_mod": "bce36b56625cdbdf71b6afc94abcf652d1313ba080c83b6f37efba32e6379343",
+    "pcbgolf.pretty/0402-C.kicad_mod": "736412158d10b4dbb98ceece49374d56c5074fd7ba72be9b70680295fc056a33",
+    "models/M20-9980446-nominal.step": "2544078644662540dfb3e733afecd4d7933849ec2330a81ff1a619b6bf689da5",
+    "pcbgolf.3dshapes/Capacitor_SMD.3dshapes/C_0805_2012Metric.step": "9a669c1a2f1ea25b88b401acef6efeaa80a067bd7da9db6993de719a7fbe155c",
+    "pcbgolf.3dshapes/Capacitor_SMD.3dshapes/C_0402_1005Metric.step": "03e44c4b2b727b8d4b6b1fd598cbd12dd5e614f1dfeefa96a92a07e3a3b312a2",
+    "pcbgolf.3dshapes/Resistor_SMD.3dshapes/R_0402_1005Metric.step": "91507e5af4251cb4ef38e04889c9b98da29904432bd83786bba13ae9b605eacb",
+    "pcbgolf.3dshapes/LED_SMD.3dshapes/LED_0805_2012Metric.step": "0aa8b791804f5d72a2fc7d1bf231dd9959207d83df8ad801176fbc459f575b98",
+    "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-3.step": "75385c48b1bfe8fdc197acee7ac7a452dabbc4c2a2e19cb35712e2f306cb320c",
+    "pcbgolf.3dshapes/Package_TO_SOT_SMD.3dshapes/SOT-23-5.step": "3b70f1b6dd947543fda90b947f91f2e2804766c39b78e56c87f1448dfd575ed8"
+  }
+}
