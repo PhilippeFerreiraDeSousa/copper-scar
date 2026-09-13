@@ -1,0 +1,23 @@
+# large-loop: PCB Golf-inspired four-port automotive I/O
+
+156 components, 164 nets, 105 x 110 mm, two copper layers. This is a separate derived circuit from commaai/PCBGolf source 7210bdb5049c5b7fdf4900a34928e2736767292a, not the original challenge submission. Small, medium and original boards remain untouched.
+
+The circuit retains all original parts from sheets 4 and 5: four CAN transceivers/chokes/termination/indicators, four protected 12 V outputs, four original 24-pin port connectors, eight dual-NMOS SBU switching/indicator blocks, and the eight original SBU sense resistors from the controller sheet. Seven populated 2x4 headers expose every net formerly connected to the omitted MCU, hub or supply circuitry. J4 is explicitly populated with its original CAN pinout. Source values and electrical pad geometry are retained. Header pinouts and external power/control/sense/data boundaries are explicit in circuit.json. The USB-shaped ports retain the original automotive pinout; this is not a USB-PD product. No powered, thermal, EMC, USB or CAN signal-integrity qualification is claimed.
+
+Initial placement is a coarse functional floorplan: accessible port bank, controller-interface banks, separate CAN/eFuse IC rows and a regular passive field. Shared CAN buses, original dense port footprints and interblock control/sense nets create genuine routing demands. Larger does not guarantee harder; placement benefit requires measured controlled comparisons.
+
+All populated parts have resolvable local models. The added headers use a generic KiCad vertical 2x4 2.54 mm visualization model, not a manufacturer-qualified scoring envelope. The original full relative footprint/symbol and 3D libraries are copied. Original project ERC, netclass, clearance, width, via and DRC rules are authoritative and restored after native saves. Nominal routing width is 0.20 mm; source global minimum remains 0.1016 mm. Both enabled copper layers and original 0.60/0.30 mm vias are used. No tracks/vias are inherited into a placement proposal.
+
+## Known input gate
+
+Native preflight finds 16 internal hole-clearance errors in J5-J8 and 68 internal silk-over-copper warnings. Each finding involves objects within one original footprint. The original pads and holes, their identities and rule values are preserved. These findings remain in acceptance and loss; allowing a router diagnostic does not waive them. A zero connectivity result could still be unaccepted. Eight source-library mismatch warnings/metadata issues must be distinguished from geometry changes using native reports (first observed count: four).
+
+The first draft used global labels on source no-connect pins. Revision v1 correctly emits native no-connect markers and passes ERC with zero violations while preserving 164 nets and exact native schematic parity. The first draft and its reports remain saved separately.
+
+## Reproduction
+
+Use Python with sexpdata for build_input.py, audit.py and campaign.py, and KiCad 10 bundled Python for native_input.py/native_stage.py. Run build_input.py SOURCE OUT, then native_input.py SOURCE OUT, restoring exact project bytes afterward. Move filtered.kicad_pcb outside OUT so JITX imports a directory with exactly one PCB. Keep authoritative-project.json in the base next to input/. Freeze intrinsic-violations.json only after verifying every recorded object belongs to the same unchanged source footprint.
+
+campaign.realize(base, fresh_folder, placements, manifest, source) exports the entire board, runs Freerouting 2.4.1 for 240 seconds / 100 passes / one thread with optional fanout and optimization disabled, imports a fresh result, restores exact project rules, independently checks native connectivity/DRC/schematic parity/pad-net membership/rules/widths/vias, and renders PNG/SVG. It refuses new preflight physical errors. Intrinsic source errors are retained in independent acceptance. Router exit status is never acceptance. Every outer proposal changes placement and reroutes the full board; routing individual extra nets is not an outer placement loop.
+
+JITX workspace is isolated under .local/large-loop/jitx, with package large_loop, design large_loop.design.LargeLoopInput and its own designs/ directory/runtime. Import with `jitx project import kicad INPUT_DIRECTORY --output PROJECT`. Build from PROJECT as cwd with PYTHONPATH=PROJECT and `jitx design build large_loop.design.LargeLoopInput --no-dependency-check`. The provided design explicitly restores effective routing width/clearance and via rules omitted by import. Native rules remain authoritative. No routed round-trip or solver-state persistence claim.
