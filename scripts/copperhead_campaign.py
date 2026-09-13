@@ -22,6 +22,7 @@ sys.path.insert(0,str(ROOT))
 from copper_scar.tools.copperhead.stage1 import LOCAL,KIPY,copy_project,write,now
 from copper_scar.tools.copperhead.records import load_record
 from copper_scar.tools.copperhead.campaign_feedback import load_failures,score_preview
+from copper_scar.tools.copperhead.routing_options import candidate_options,record_context
 from copper_scar.scars.store import save_scar
 
 
@@ -68,7 +69,9 @@ def main():
         catalog=json.loads(a.catalog.read_text())
         loop=json.loads((LOCAL/'loop/state.json').read_text());parent=Path(loop['best_feasibility']['candidate'])
         board_hash=hashlib.sha256((parent/'pcbgolf.kicad_pcb').read_bytes()).hexdigest()
+        routing_options,realization_context=candidate_options(parent,LOCAL,loop['best_feasibility']['scope']);context_digest=realization_context['digest']
         records=[load_record(p) for p in sorted((LOCAL/'runs').glob('stage1-*/attempt.json'))]
+        contexts={r['attempt']:record_context(r) for r in records}
         for pending in state['decisions']:
             if pending.get('attempt') or not pending.get('proposal'):continue
             digest=hashlib.sha256(Path(pending['proposal']).read_bytes()).hexdigest()
@@ -79,11 +82,12 @@ def main():
         evaluation=next((r.get(k) for r in reversed(records) for k in ('after','before') if r.get(k,{}).get('files',{}).get('pcbgolf.kicad_pcb')==board_hash),None)
         if not evaluation:state.update(status='needs_attention',reason='No native report for current retained board');break
         if evaluation['unconnected']==0:state.update(status='native_connectivity_complete',reason='Full engineering qualification remains separate');break
-        failures=load_failures(LOCAL/'runs');feedback_ids=[f['attempt'] for f in failures]
+        all_failures=load_failures(LOCAL/'runs');failures=[f for f in all_failures if f['realization_context'].get('digest')==context_digest];feedback_ids=[f['attempt'] for f in failures]
+        other_context_failures=[dict(attempt=f['attempt'],realization_context=f['realization_context']) for f in all_failures if f['realization_context'].get('digest')!=context_digest]
         # Native diagnostic scars reuse the store without fabricating official metrics.
         for failure in failures:
             save_scar(dict(schema_version='native-feedback-v1',created_at=now(),scar_id='scar_native_'+failure['attempt'],official_score=None,source_attempt=failure['attempt'],failure=failure),work/'scars'/('scar_native_'+failure['attempt']+'.json'))
-        used={d.get('catalog_id') for d in state['decisions']}|{s['id'] for s in state.get('screen_failures',[]) if s['parent_board_sha256']==board_hash}
+        used={d.get('catalog_id') for d in state['decisions'] if d.get('parent_board_sha256')==board_hash and (d.get('realization_context_digest') or contexts.get(d.get('attempt'),{}).get('digest'))==context_digest}|{s['id'] for s in state.get('screen_failures',[]) if s['parent_board_sha256']==board_hash and s.get('realization_context_digest')==context_digest}
         queued=[s for s in catalog if s['id'] not in used]
         endpoint_counts=collections.Counter()
         for finding in evaluation['violations']:
@@ -98,11 +102,11 @@ def main():
             specs=[spec for spec in queued if spec['kind']!='group_pose' or endpoint_counts[spec['ref']]][:2]
             for spec in queued:
                 if spec['kind']=='group_pose' and not endpoint_counts[spec['ref']]:
-                    state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,reason='Current retained native report no longer has a missing endpoint on this component',feedback_record_ids=[r['attempt'] for r in records if r.get('after',{}).get('files',{}).get('pcbgolf.kicad_pcb')==board_hash]))
+                    state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,realization_context_digest=context_digest,reason='Current retained native report no longer has a missing endpoint on this component',feedback_record_ids=[r['attempt'] for r in records if r.get('after',{}).get('files',{}).get('pcbgolf.kicad_pcb')==board_hash]))
         else:
             specs=[]
         if not specs:
-            unavailable={row['id'] for row in state.get('screen_failures',[]) if row['parent_board_sha256']==board_hash}
+            unavailable={row['id'] for row in state.get('screen_failures',[]) if row['parent_board_sha256']==board_hash and row.get('realization_context_digest')==context_digest}
             ranked=sorted([row for row in component_priority if 'adaptive-'+row['ref'] not in unavailable],key=lambda row:(-row['score'],row['ref']))
             specs=[dict(id='adaptive-'+row['ref'],kind='group_pose',group=membership[row['ref']],ref=row['ref'],steps='-.5,.5,-1,1,-2,2',rotations='0,90,180',component_priority=row) for row in ranked[:3]]
         index=len(state['decisions']);prefix=f'{index:03d}-{board_hash[:8]}-{int(time.time())}'
@@ -111,21 +115,21 @@ def main():
             if time.time()+a.route_seconds+180>=deadline:break
             label=prefix+'-'+spec['id'];proposal=LOCAL/'proposals'/('campaign-'+label+'.json')
             if spec['kind'] in ('terminal_fanout','via_seed'):
-                action={**spec['action'],'parent_board_sha256':board_hash,'feedback_used':sorted(set(feedback_ids+spec['action']['feedback_used']))}
+                action={**spec['action'],'parent_board_sha256':board_hash,'realization_context_digest':context_digest,'feedback_used':sorted(set(feedback_ids+spec['action']['feedback_used']))}
                 if spec.get('requires_successful_seed'):
                     precedent=next((r for r in records if r['attempt']==spec['requires_successful_seed']),None)
                     proof_path=LOCAL/'runs'/spec['requires_successful_seed']/'final-seed-connectivity.json'
                     proof=json.loads(proof_path.read_text()) if proof_path.exists() else {}
                     if not precedent or not precedent.get('became_incumbent') or precedent.get('after',{}).get('unconnected',99999)>=precedent.get('before',{}).get('unconnected',0) or not proof.get('all_seed_targets_connected') or proof.get('board_sha256')!=precedent['after']['files']['pcbgolf.kicad_pcb']:
-                        state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,reason='Required retained seed connection gain is not proved'));continue
+                        state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,realization_context_digest=context_digest,reason='Required retained seed connection gain is not proved'));continue
                     action['strategy_evidence']=dict(attempt=precedent['attempt'],before_opens=precedent['before']['unconnected'],after_opens=precedent['after']['unconnected'],target_attachment_proof=str(proof_path),board_sha256=proof['board_sha256'],rule='Expand the successfully realized explicit-seed strategy to currently isolated connector pads only after joint native geometry revalidation.')
                 if spec['kind']=='via_seed':
                     write(proposal,action);target_proof=work/(label+'-target-revalidation.json')
                     if run([KIPY,str(ROOT/'scripts/copperhead_seed_targets.py'),str(parent/'pcbgolf.kicad_pcb'),'--proposal',str(proposal),'--output',str(target_proof)],label+'-targets',60):
-                        state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,reason='Native seed target binding failed'));continue
+                        state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,realization_context_digest=context_digest,reason='Native seed target binding failed'));continue
                     targets=json.loads(target_proof.read_text())
                     if not targets['kept_sites']:
-                        state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,reason='No remaining isolated unseeded target',proof=str(target_proof)));continue
+                        state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,realization_context_digest=context_digest,reason='No remaining isolated unseeded target',proof=str(target_proof)));continue
                     action.update(via_sites=targets['kept_sites'],nets=sorted({site['net'] for site in targets['kept_sites']}),target_revalidation=str(target_proof),excluded_seed_sites=targets['excluded_sites'])
                     action['net']=action['nets'][0]
                 write(proposal,action);previews.append(dict(action=action,proposal=str(proposal),catalog_id=spec['id'],score=0,eligible=True,feedback_record_ids=feedback_ids,reason='Untried distinct topology hypothesis from measured failures; native fanout and full-route gates required'));continue
@@ -134,7 +138,7 @@ def main():
                 argv.extend(['--x-steps='+str(spec['translation_mm'][0]),'--y-steps='+str(spec['translation_mm'][1])])
             else:argv.append('--steps='+spec.get('steps','-.5,.5,-1,1,-2,2'))
             if run(argv,label+'-generate',90):
-                state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,reason='No untried geometry-screened proposal',feedback_record_ids=feedback_ids));write(path,state);continue
+                state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,realization_context_digest=context_digest,reason='No untried geometry-screened proposal',feedback_record_ids=feedback_ids));write(path,state);continue
             generated=json.loads(proposal.read_text());screened_specs.append(spec['id'])
             for n,variant in enumerate(generated['finalists'][:2]):
                 if time.time()+a.route_seconds+150>=deadline:break
@@ -159,18 +163,18 @@ def main():
         selection=work/(prefix+'-selection.json')
         eligible=[p for p in previews if p['eligible']]
         excluded=[dict(attempt=f['attempt'],refs=f['action'].get('refs'),translation_mm=f['action'].get('translation_mm'),rotation_deg=f['action'].get('rotation_deg',0),reason='Already evaluated unsuccessful pose on exact current parent') for f in failures if f['parent_board_sha256']==board_hash]
-        trace=dict(parent=str(parent),parent_board_sha256=board_hash,created_at=now(),feedback_record_ids=feedback_ids,component_priority=component_priority,circuit_role_filter='Adaptive moves limited to resistors; protected oscillator R26 excluded. Capacitors/inductors require explicit reviewed placement intent.',exact_parent_exclusions=excluded,screened_specs=screened_specs,previews=previews,selection_policy='native-feedback-v2')
+        trace=dict(parent=str(parent),parent_board_sha256=board_hash,realization_context=realization_context,other_context_failures=other_context_failures,created_at=now(),feedback_record_ids=feedback_ids,component_priority=component_priority,circuit_role_filter='Adaptive moves limited to resistors; protected oscillator R26 excluded. Capacitors/inductors require explicit reviewed placement intent.',exact_parent_exclusions=excluded,screened_specs=screened_specs,previews=previews,selection_policy='native-feedback-v2')
         if not eligible:
             write(selection,trace)
             if specs:
-                for spec in specs:state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,reason='No eligible preview in this finite candidate subset',selection=str(selection)))
+                for spec in specs:state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,realization_context_digest=context_digest,reason='No eligible preview in this finite candidate subset',selection=str(selection)))
                 write(path,state);continue
             state.update(status='needs_attention',reason='Finite candidate pool has no eligible native preview',selection=str(selection));break
         chosen=min(eligible,key=lambda p:p['score']);trace['chosen']={k:v for k,v in chosen.items() if k!='action'};write(selection,trace)
         if a.preview_only:
             state.update(status='preview_verified',reason='Native finalist previews completed without routing',selection=str(selection),preview_count=len(previews));break
         action=chosen['action'];action['campaign_selection']=str(selection);action['feedback_used']=sorted(set(action['feedback_used']+feedback_ids));proposal=LOCAL/'proposals'/('campaign-selected-'+prefix+'.json');write(proposal,action)
-        decision=dict(index=index,catalog_id=chosen['catalog_id'],parent=str(parent),parent_board_sha256=board_hash,proposal=str(proposal),selection=str(selection),feedback_record_ids=feedback_ids,started_at=now());state['decisions'].append(decision);write(path,state)
+        decision=dict(index=index,catalog_id=chosen['catalog_id'],parent=str(parent),parent_board_sha256=board_hash,realization_context_digest=context_digest,proposal=str(proposal),selection=str(selection),feedback_record_ids=feedback_ids,started_at=now());state['decisions'].append(decision);write(path,state)
         run([python,'-m','copper_scar.tools.copperhead.stage1','--source',str(parent),'--proposal',str(proposal),'--route-seconds',str(a.route_seconds),'--budget',str(a.route_seconds+420)],prefix+'-evaluate',a.route_seconds+450)
         digest=hashlib.sha256(proposal.read_bytes()).hexdigest()
         matches=[load_record(p) for p in sorted((LOCAL/'runs').glob('stage1-*/attempt.json')) if json.loads(p.read_text()).get('action',{}).get('proposal_sha256')==digest]

@@ -24,6 +24,7 @@ from .metrics import measure, ordering, VERSION
 from .effects import compare as compare_effects, missing_by_net, geometry_scope
 from .manufacturing import findings as manufacturing_findings
 from .selection import manufacturing_repair_decision, VERSION as SELECTION_VERSION
+from .routing_options import candidate_options,context as routing_context,SMALL,verify_after_exports
 
 ROOT = Path(__file__).resolve().parents[3]
 LOCAL = ROOT / '.local/copperhead'
@@ -217,6 +218,11 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
             view=json.loads(viewpath.read_text());view.update(actively_generating=str(candidate),phase='Stage 1: evaluate, select bounded action, recheck',updated_at=now());write(viewpath,view)
         try:
             copy_project(current,run/'input');copy_project(current,candidate)
+            options,expected_context=candidate_options(current,LOCAL,scope)
+            if proposal and proposal.get('new_via_definition') and SMALL not in options['allowed_via_options']:
+                options={**options,'allowed_via_options':options['allowed_via_options']+[SMALL],'qualification':'Explicit experimental proposal; native gate required'};expected_context=routing_context(options['allowed_via_options'],scope)
+            write(candidate/'routing-options.json',options)
+            record.update(routing_options=options,realization_context=expected_context,realization_context_verified=False)
             with tracer.span('native.stage1.evaluate_before',attributes={'policy_version':POLICY,'attempt':uid}) as span:
                 initial=evaluate(run/'input',run,'before',frozen);span.set_output({k:v for k,v in initial.items() if k not in ['files','violations']})
             if not state.get('best_feasibility') or state['best_feasibility'].get('scope')!=scope:
@@ -227,6 +233,8 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
             record['incumbent_before']=state.get('best_feasibility')
             if not legacy_inner and (not initial['invariants_ok'] or initial['errors']):raise ValueError('Whole-board routing requires preserved native invariants and no physical errors')
             action=validate_proposal(proposal,initial) if proposal else choose_action(initial,feedback,scope) if legacy_inner else dict(kind='initial_route',reason='Initial whole-board autoroute from preserved starting placement',hypothesis='Attempt all remaining connections with legal multilayer vias and explicit effort limit',feedback_used=[]);record.update(action=action,before=initial,metric_version=VERSION)
+            if action.get('realization_context_digest') and action['realization_context_digest']!=expected_context['digest']:raise ValueError('Proposal was selected for a different realization context')
+            action['realization_context_digest']=expected_context['digest']
             write(run/'attempt.json',record)
             if action['kind']=='stop':
                 record.update(status='needs_proposal',stop_reason=action['reason']);state['stop_reason']=action['reason'];write(run/'attempt.json',record);state['attempts'].append(str(run));break
@@ -259,7 +267,7 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                     commands=[('fanout_export',full_commands[0][1],60),('terminal_fanout',[PYTHON,str(ROOT/'scripts/copperhead_terminal_fanout.py'),str(candidate),'--proposal',str(fanout_proposal)],420),('fanout_import',full_commands[2][1],60)]+full_commands
                     if action.get('new_via_definition'):
                         if action['new_via_definition']!={'diameter_mm':.45,'drill_mm':.2,'span':['F.Cu','B.Cu']}:raise ValueError('Only the reviewed additional through-via definition is supported')
-                        commands=[step for entry in commands for step in ([entry,(entry[0]+'_via_definition',[PYTHON,str(ROOT/'scripts/copperhead_via_definition.py'),str(candidate),'--phase',entry[0]],60)] if entry[0] in ('export','fanout_export') else [entry])]
+                commands=verify_after_exports(commands,PYTHON,ROOT/'scripts/copperhead_effective_options.py',candidate)
                 record['comparison_kind']='initial_routed_placement' if action['kind']=='initial_route' else 'routed_placement'
                 if action['kind'] in ('terminal_fanout','via_consolidation','via_seed'):record['comparison_kind']='terminal_topology_then_full_routing'
                 record['routing_scope']=dict(kind='whole_board',net_filter=None,fanout_enabled=False,via_count_limit=None,effort_limit_seconds=route_seconds,pass_limit=100,completion='pending')
@@ -275,6 +283,10 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                     if name in ('route','krt_reconnect','ground_escape'):
                         record['inner_effort'].append(dict(command=name,elapsed_seconds=item['elapsed_seconds'],returncode=item['returncode'],timed_out=item.get('timed_out',False)))
                     if item['returncode']!=0:raise RuntimeError(name+' failed; see command record')
+                    if name.endswith('_effective_options'):
+                        phase=name.removesuffix('_effective_options');actual=json.loads((candidate/'via-definition'/phase/'realization.json').read_text())
+                        if actual['realization_context']['digest']!=expected_context['digest'] or not actual['engine_rule_verified']:raise RuntimeError('Loaded engine routing options differ from declared candidate context')
+                        record.setdefault('effective_routing_options',{})[phase]=actual;record['realization_context_verified']=True;write(run/'attempt.json',record)
                     if name=='route':
                         execution=json.loads((candidate/'execution.json').read_text())
                         if execution.get('returncode')!=0 or execution.get('timeout') or not execution.get('session_exists'):

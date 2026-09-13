@@ -2,6 +2,8 @@
 import argparse,hashlib,json,sys,time,math,re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1];LOCAL=ROOT/'.local/copperhead';repo=LOCAL/'tools/KiCadRoutingTools'
+sys.path.insert(0,str(ROOT))
+from copper_scar.tools.copperhead.routing_options import candidate_options,feedback_in_context
 ap=argparse.ArgumentParser();ap.add_argument('parent',type=Path);ap.add_argument('--manifest',type=Path,required=True);ap.add_argument('--output',type=Path,required=True);ap.add_argument('--group',default='sd_card_interface');ap.add_argument('--move-refs');ap.add_argument('--rotations',default='0');ap.add_argument('--steps',default='-15,-10,-5,5,10,15');ap.add_argument('--feedback',type=Path);ap.add_argument('--allow-proxy-regression',action='store_true');ap.add_argument('--x-steps');ap.add_argument('--y-steps');ap.add_argument('--native-targets',type=Path);a=ap.parse_args();started=time.monotonic()
 if bool(a.x_steps)!=bool(a.y_steps):ap.error('--x-steps and --y-steps must be supplied together')
 provenance=json.loads((LOCAL/'tools/krt-provenance.json').read_text())
@@ -50,6 +52,8 @@ def local_approach(dx,dy,rotation):
 steps=[float(x) for x in a.steps.split(',')];deltas=list(dict.fromkeys([(x,0) for x in steps]+[(0,x) for x in steps]+[(x,y) for x in steps for y in steps if abs(x)==abs(y)]))
 if a.x_steps:deltas=[(float(x),float(y)) for x in a.x_steps.split(',') for y in a.y_steps.split(',')]
 feedback=json.loads(a.feedback.read_text()) if a.feedback else []
+scope=json.loads((LOCAL/'loop/constraints.json').read_text())['scope'];routing_options,realization_context=candidate_options(a.parent,LOCAL,scope)
+feedback,other_context_feedback=feedback_in_context(feedback,LOCAL/'runs',realization_context['digest'])
 tried={(tuple(f['action_parameters']['translation_mm']),f['action_parameters'].get('rotation_deg',0)) for f in feedback if f.get('action_parameters',{}).get('group')==group and f.get('action_parameters',{}).get('parent_board_sha256')==before_hash and f.get('action_parameters',{}).get('refs')==refs}
 trials=[]
 for dx,dy in deltas+([(0,0)] if any(rotations) else []):
@@ -67,6 +71,7 @@ legal=sorted([r for r in trials if r['geometry_screen']],key=lambda r:(r['local_
 selected=legal[:3];affected=sorted({p.net_name for ref in refs for p in data.footprints[ref].pads if p.net_name})
 result={'schema_version':1,'kind':'group_pose','parent_candidate':str(a.parent.resolve()),'parent_board_sha256':before_hash,'group':group,'refs':refs,'group_members':members,'anchor_refs':sorted(set(members)-set(refs)),'rotation_deg':selected[0]['rotation_deg'],'groups':groups,'locked_refs':sorted(set(flat)-set(refs)),'from_poses':poses,'translation_mm':selected[0]['translation_mm'],'nets':affected,'net':affected[0], 'copper_policy':'detach_moved_pad_incident','reason':f'Bounded KRT pose search for {group}; exclude {len(tried)} evaluated moves on this exact parent; preserve declared fixed components','hypothesis':'Improve relative interface placement while keeping outline and declared fixed-component poses unchanged; geometric proxy does not establish routing gain','feedback_used':[f['attempt'] for f in feedback[-8:]] or ['pcb-placement-research.md'],'ranking':'local_failed_endpoint_approach_then_global_proxy' if a.move_refs else 'global_proxy','generator_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'local_approach':dict(native_report=diagnostic_source,targets=local_targets,before_mm=local_approach(0,0,0),after_mm=selected[0]['local_approach_mm'],qualification='Native representative disconnected-item distance proxy; not a legal route or complete copper-island distance'),'proxy_before':baseline,'proxy_after':selected[0]['proxy'],'proxy_ignored_nets':['GND','+3V3','+5V','+12V'],'full_board_evaluation_includes_ignored_proxy_nets':True,'excluded_moves':[dict(translation_mm=list(t),rotation_deg=r) for t,r in sorted(tried)],'trials':trials,'finalists':selected,'diagnosis':diagnosis,'krt_groups_derived':derived,'krt_revision':'1c428c0b2285a4dfe8901ca7035109ded6cfbb4d','screen_limitation':'KRT ranking/geometry only, pad legality layer off; native physical/invariant recheck mandatory, retained copper not modeled by KRT','elapsed_seconds':time.monotonic()-started}
 assert hashlib.sha256(board.read_bytes()).hexdigest()==before_hash
+result.update(realization_context_digest=realization_context['digest'],realization_context=realization_context,other_context_feedback=other_context_feedback)
 for ref,pose in poses.items():assert abs(state.parts[ref].x-pose['x_mm'])<1e-7 and abs(state.parts[ref].y-pose['y_mm'])<1e-7
 assert a.allow_proxy_regression or result['proxy_after']['total']<baseline['total'],'No cheaper proposal; native diagnostic hypothesis required to explore proxy regression'
 a.output.write_text(json.dumps(result,indent=2));print(json.dumps({k:result[k] for k in ['group','translation_mm','proxy_before','proxy_after','elapsed_seconds']},indent=2))

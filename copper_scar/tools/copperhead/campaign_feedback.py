@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 from .records import load_record
+from .routing_options import record_context
 
 
 def load_failures(runs):
@@ -13,7 +14,7 @@ def load_failures(runs):
         proof_path=path.parent/'final-pad-partitions.json'
         proof=json.loads(proof_path.read_text()) if proof_path.exists() else {}
         collision=record.get('placement_delta',{}).get('collision_ripup',{})
-        failures.append(dict(attempt=record['attempt'],source=str(path),parent_board_sha256=before.get('files',{}).get('pcbgolf.kicad_pcb'),action=record['action'],native_delta=after.get('unconnected',0)-before.get('unconnected',0),split_groups=proof.get('split_groups',[]),connectivity_proof=str(proof_path) if proof else None,collision_removals=collision.get('removed',[]),runtime_seconds=sum(c.get('elapsed_seconds',0) for c in record.get('commands',[]))))
+        failures.append(dict(attempt=record['attempt'],source=str(path),parent_board_sha256=before.get('files',{}).get('pcbgolf.kicad_pcb'),action=record['action'],realization_context=record_context(record),native_delta=after.get('unconnected',0)-before.get('unconnected',0),split_groups=proof.get('split_groups',[]),connectivity_proof=str(proof_path) if proof else None,collision_removals=collision.get('removed',[]),runtime_seconds=sum(c.get('elapsed_seconds',0) for c in record.get('commands',[]))))
     return failures
 
 
@@ -22,6 +23,7 @@ def score_preview(action, collisions, partitions, failures):
     exact=[];repeated=[]
     removed={x['uuid'] for x in collisions.get('removed',[])}
     for failure in failures:
+        if action.get('realization_context_digest') and failure.get('realization_context',{}).get('digest')!=action['realization_context_digest']:continue
         prior=failure['action']
         if prior.get('parent_board_sha256')==action['parent_board_sha256'] and prior.get('refs')==action['refs'] and prior.get('translation_mm')==action['translation_mm'] and prior.get('rotation_deg',0)==action.get('rotation_deg',0):exact.append(failure['attempt'])
         if failure['split_groups'] or failure['native_delta']>0:
