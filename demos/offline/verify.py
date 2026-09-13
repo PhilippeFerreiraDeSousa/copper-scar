@@ -42,6 +42,14 @@ for r in d['history']:
  checked+=1
 for f in ['index.html','data.js','docs/3-minute-demo-script.md','docs/submission-draft.md','docs/architecture.svg','docs/copperhead-placement-results.md','docs/jitx-topology-capture-integration-report.md','jitx/index.html']:
  assert (root/f).is_file(),f
+publication=root/'publication/summary.json'
+if publication.exists():
+ from package_publication import verify as verify_publication
+ verify_publication(root)
+seed=root/'seed-gain/summary.json'
+if seed.exists():
+ from package_seed_gain import verify as verify_seed
+ verify_seed(seed.parent)
 selector=root/'selector-audit/selector-feedback-audit.json'
 if selector.exists():
  audit=json.loads(selector.read_text())
@@ -78,7 +86,9 @@ if feedback.exists():
  for key in ['prior_id','following_id']:assert (root/'evidence'/chain[key]/'evaluation.json').exists()
 for f in ['copper-scar-demo-normal.mp4','copper-scar-demo-5x.mp4']:
  m=json.loads((root/'video-manifest.json').read_text());assert sha(root/f)==m['video_sha256'][f]
-report=dict(selector_private_replay_verified=selector.exists(),new_via_independent_proof_verified=via.exists(),selection_confirmations_verified=sum(bool(r.get('selection_confirmation')) for r in d['history']),placement_pose_graph_verified=placement.exists(),retention_corrections_verified=sum(bool(r.get('retention_correction')) for r in d['history']),final_topology_graph_verified=gain.exists(),additive_diagnostic_pairs_verified=32 if diagnostics.exists() else None,board_evaluation_joins_verified=checked,completed_records=len(d['history']),excluded=d['excluded'],native_checks='Stored native evaluation reports; packaging does not rerun DRC.',status='pass')
+ if publication.exists():
+  published=json.loads(publication.read_text());shown=[frame for frame in m['frames'] if frame.get('attempt')==published['attempt']];assert shown and all(frame.get('displayed_board_sha256')==published['board_sha256'] for frame in shown)
+report=dict(refilled_publication_and_STEP_verified=publication.exists(),guarded_seed_expansion_verified=seed.exists(),selector_private_replay_verified=selector.exists(),new_via_independent_proof_verified=via.exists(),selection_confirmations_verified=sum(bool(r.get('selection_confirmation')) for r in d['history']),placement_pose_graph_verified=placement.exists(),retention_corrections_verified=sum(bool(r.get('retention_correction')) for r in d['history']),final_topology_graph_verified=gain.exists(),additive_diagnostic_pairs_verified=32 if diagnostics.exists() else None,board_evaluation_joins_verified=checked,completed_records=len(d['history']),excluded=d['excluded'],native_checks='Historical joins use stored native reports; separate refilled publication has fresh saved-file DRC and independent STEP checks.' if publication.exists() else 'Stored native evaluation reports; packaging does not rerun DRC.',status='pass')
 (root/'package-QA.json').write_text(json.dumps(report,indent=2)+'\n')
 files={str(f.relative_to(root)):sha(f) for f in sorted(root.rglob('*')) if f.is_file() and f != root/'SHA256SUMS.json'}
 (root/'SHA256SUMS.json').write_text(json.dumps(files,indent=2)+'\n');print(json.dumps(report))

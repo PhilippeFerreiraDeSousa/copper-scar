@@ -58,3 +58,11 @@ The importer applies separate `retention-correction.json` records using the owne
 `selector-audit/` preserves the private R71 feedback replay and its ten hash-verified source/input files. It proves implemented heuristic exclusion and penalties. R71 feedback did not change the actual live R123/R66 ranking. Build with `package_selector_audit.py`; read its README before describing this as learning.
 
 After staging, browser/video QA and `freeze.py`, use `promote.py STAGED CANONICAL --backup PRIVATE_BACKUP` to preserve the previous package, check every staged ZIP entry, update files within the stable canonical directory, and replace the ZIP. It verifies the directory inode is unchanged and avoids macOS directory-swap renaming. Individual files replace atomically; the directory update is not a single transaction, and the previous downloadable ZIP stays valid until replacement.
+
+## Guarded seed expansion and saved publication CAD
+
+`seed-gain/` preserves the firstJ5pad join, source-bound eligibility guard, current-parent revalidation, and completed seven-seed45/0/18 result. Seven attachments remove six missing pairs; CAN2_H J5/J6.B2 remain separate from its trunk. R12 retained51/0/18 on a diagnostic tie-break, not an electrical gain. Frozen DSN definitions and use_via rules distinguish existing450/200seeds from600/300-only new-router-via eligibility; later persistence repairs are separate. `package_seed_gain.py` rebuilds these joins and receipts.
+
+The raw historical45board154b132b has stale saved zone fills. `publication/` contains a separately hashed refilled/saved copy54effefd with fresh45/0/18DRC without another refill, original authored subtrees preserved, and exact candidate footprint libraries. History/W&B receipts retain the source hash. The latest dashboard CAD/image/DRC links show the publication copy and both hashes; video frames also record displayed_board_sha256. `package_publication.py` checks these joins.
+
+`assembly/` is freshly regenerated from the published54effefd board and independently read:238recorded populated components, valid solids, original DNP flags. It is not a qualified assembly or official score. Earlier52/raw45STEP exports are kept outside this primary package.

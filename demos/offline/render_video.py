@@ -6,12 +6,14 @@ import argparse, hashlib, json, subprocess
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 p=argparse.ArgumentParser();p.add_argument('package',type=Path);p.add_argument('--browser',default='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome');a=p.parse_args();out=a.package.resolve();frames=out/'video-frames';frames.mkdir(exist_ok=True)
-d=json.loads((out/'data.json').read_text());hist=d['history'];manifest=[]
-def item(name,seconds,**extra): return dict(frame='video-frames/'+name,seconds=seconds,**extra)
+d=json.loads((out/'data.json').read_text());hist=d['history'];manifest=[];publication=json.loads((out/'publication/summary.json').read_text()) if (out/'publication/summary.json').exists() else None
+def item(name,seconds,**extra):
+ if publication and extra.get('attempt')==publication['attempt']:extra['displayed_board_sha256']=publication['board_sha256'];extra['display_method']='Saved/refilled publication copy; historical source hash remains separately recorded'
+ return dict(frame='video-frames/'+name,seconds=seconds,**extra)
 with sync_playwright() as pw:
  b=pw.chromium.launch(executable_path=a.browser,headless=True);page=b.new_page(viewport={'width':1920,'height':1080},device_scale_factor=1)
  errors=[];page.on('pageerror',lambda e: errors.append(str(e)));page.goto((out/'index.html').as_uri())
- page.add_style_tag(content='main{padding:24px 42px}.intro{margin-bottom:18px}header{margin-bottom:18px}.board{height:470px}#via-gain,#placement-gain,#gain,#diagnostics,#feedback,.lower,details,footer{display:none}.flow{margin:16px 0}h1{font-size:38px}')
+ page.add_style_tag(content='main{padding:24px 42px}.intro{margin-bottom:18px}header{margin-bottom:18px}.board{height:470px}#seed-gain,#via-gain,#placement-gain,#gain,#diagnostics,#feedback,.lower,details,footer{display:none}.flow{margin:16px 0}h1{font-size:38px}')
  retained=max((i for i,r in enumerate(hist) if r.get('retained') and r.get('image') and not r.get('failed')),default=0)
  for i,r in enumerate(hist):
   page.evaluate('(i)=>showAttempt(i)',i);page.wait_for_function('document.querySelector("#board").hidden || (document.querySelector("#board").complete && document.querySelector("#board").naturalWidth>0)')
@@ -24,7 +26,14 @@ with sync_playwright() as pw:
  gain_path=out/'topology-gain/summary.json'
  placement_path=out/'placement-gain/summary.json'
  via_path=out/'via-gain/summary.json'
- if via_path.exists():
+ seed_path=out/'seed-gain/summary.json'
+ if seed_path.exists():
+  seed=json.loads(seed_path.read_text());first=next(i for i,r in enumerate(hist) if r['id']==seed['first_attempt']);after=next(i for i,r in enumerate(hist) if r['id']==seed['attempt'])
+  manifest.append(item(f'{first:03}.png',10,chapter='First explicit J5 seed: original pad joins trunk;52to51',attempt=hist[first]['id'],board_sha256=hist[first]['board_sha256']))
+  page.goto((out/'index.html').as_uri());page.add_style_tag(content='#via-gain,#placement-gain,#gain,#diagnostics,#feedback,.intro,.layout,.flow,.lower,details,footer,nav{display:none}#seed-gain{margin-top:80px;padding:30px}#seed-gain h2{font-size:30px}#seed-gain p{font-size:19px}#seed-gain a{font-size:16px}')
+  page.screenshot(path=str(frames/'seed-gain.png'));manifest.append(item('seed-gain.png',10,chapter='Retained seed proof gates revalidated seven-site expansion'))
+  manifest.append(item(f'{after:03}.png',10,chapter='Retained45: six fewer opens; CAN2 J5/J6 island still separate',attempt=hist[after]['id'],board_sha256=hist[after]['board_sha256']))
+ elif via_path.exists():
   via=json.loads(via_path.read_text());before=next(i for i,r in enumerate(hist) if r.get('board_sha256')==via['parent_board_sha256']);after=next(i for i,r in enumerate(hist) if r['id']==via['attempt'])
   manifest.append(item(f'{before:03}.png',10,chapter='53-open parent after duplicate-via repair',attempt=hist[before]['id'],board_sha256=hist[before]['board_sha256']))
   page.goto((out/'index.html').as_uri());page.add_style_tag(content='#placement-gain,#gain,#diagnostics,#feedback,.intro,.layout,.flow,.lower,details,footer,nav{display:none}#via-gain{margin-top:110px;padding:35px}#via-gain h2{font-size:32px}#via-gain p{font-size:20px}#via-gain a{font-size:17px}')
@@ -58,7 +67,7 @@ with sync_playwright() as pw:
  else:
   page.goto((out/'index.html').as_uri());page.add_style_tag(content='.layout,.intro,.flow,details,footer{display:none}.lower{margin-top:100px}.lower h2{font-size:48px}.lower p{font-size:22px}.lower .panel{padding:35px}.eyebrow{font-size:15px}')
   page.screenshot(path=str(frames/'fixture-scope.png'));manifest.append(item('fixture-scope.png',30,chapter='Separate fixture scope; report-derived'))
- page.goto((out/'index.html').as_uri());page.evaluate("document.querySelector('.layout').remove();document.querySelector('.intro').remove();document.querySelector('.flow').remove();document.querySelector('#feedback').remove();document.querySelector('#diagnostics').remove();document.querySelector('#gain').remove();document.querySelector('#placement-gain').remove();document.querySelector('#via-gain').remove();document.querySelector('details').remove();document.querySelector('footer').style.fontSize='18px';document.querySelector('.lower').insertAdjacentHTML('beforebegin','<div style=\"margin:65px 0 40px\"><div class=\"eyebrow\">Inspect the chain of evidence</div><h1>One board. One evaluation. One decision.</h1><p style=\"font-size:24px\">Native board hash → rendered image → exact metrics → proposal / decision receipt</p><p style=\"font-size:20px;margin-top:25px\">The offline package preserves the evidence. Online observability links are optional.</p></div>')")
+ page.goto((out/'index.html').as_uri());page.evaluate("document.querySelector('.layout').remove();document.querySelector('.intro').remove();document.querySelector('.flow').remove();document.querySelector('#feedback').remove();document.querySelector('#diagnostics').remove();document.querySelector('#gain').remove();document.querySelector('#placement-gain').remove();document.querySelector('#via-gain').remove();document.querySelector('#seed-gain').remove();document.querySelector('details').remove();document.querySelector('footer').style.fontSize='18px';document.querySelector('.lower').insertAdjacentHTML('beforebegin','<div style=\"margin:65px 0 40px\"><div class=\"eyebrow\">Inspect the chain of evidence</div><h1>One board. One evaluation. One decision.</h1><p style=\"font-size:24px\">Native board hash → rendered image → exact metrics → proposal / decision receipt</p><p style=\"font-size:20px;margin-top:25px\">The offline package preserves the evidence. Online observability links are optional.</p></div>')")
  page.screenshot(path=str(frames/'provenance.png'));manifest.append(item('provenance.png',25,chapter='Evidence and limitations'))
  manifest.append(item(f'{retained:03}.png',15,chapter='Closing: incomplete product board',attempt=hist[retained]['id'],board_sha256=hist[retained].get('board_sha256')))
  if errors: raise RuntimeError(errors)
