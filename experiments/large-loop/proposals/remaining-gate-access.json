@@ -1,0 +1,7 @@
+{
+  "kind": "targeted_rotation_and_spacing",
+  "rationale": "Current retained placement-02 has three specific transistor control-pad islands: Q3.3 CH2_SBU1_RELAY, Q5.3 CH4_SBU1_RELAY, and Q8.1 CH3_SBU2_IGN. Q2/Q7/Q9 drain plans are pruned because their pads are already connected. Rotate Q3 by180deg and Q5 by90deg to point those relay pads toward the lower resistor field; move Q8 six millimeters right into free space to change gate access away from the crowded transistor row. All changes preserve exact relative footprint geometry through the native API, and require native preflight before fresh full-board routing.",
+  "diagnostic_nets": ["CH2_SBU1_RELAY", "CH4_SBU1_RELAY", "CH3_SBU2_IGN"],
+  "expected_score_terms": {"native_opens": "Attempt to resolve three diagnosed gate-pad islands; total full-board effect may regress", "required_physical_findings": "No new findings;84inherited findings stay in loss", "official_assembled_score": "Not eligible until full Stage1nativevalidity; no changes to models/BOM/outline/layer count"},
+  "after": {"Q3": [68,57,180], "Q5": [80,57,90], "Q8": [104,57,0]}
+}
