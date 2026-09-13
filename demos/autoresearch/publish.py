@@ -92,6 +92,9 @@ def main():
    cid=stable(experiment+'/event/'+event['event_id']);found=list(client.get_calls(filter={'call_ids':[cid]},limit=2));assert len(found)==1 and found[0].ended_at;assert dict(found[0].output)['event_id']==event['event_id']
    receipt={'event_id':event['event_id'],'event_sha256':digest,'wandb_run_id':run_id,'wandb_url':'https://wandb.ai/'+PROJECT+'/runs/'+run_id,'weave_call_id':cid,'weave_url':'https://wandb.ai/'+PROJECT+'/r/call/'+cid,'remote_history_rows':len(matches),'media_verified':True,'weave_verified':True};verified.append(receipt)
   runlinks.append({'policy_id':pid,'run_id':run_id,'url':'https://wandb.ai/'+PROJECT+'/runs/'+run_id})
+ for expected in [root,*parents.values(),*lowercalls.values()]:
+  found=list(client.get_calls(filter={'call_ids':[expected.id]},limit=1));assert len(found)==1,'Missing remote parent span'
+  if expected.ended_at:assert found[0].ended_at,'Unflushed remote completed span'
  receipt={'experiment_id':experiment,'verified_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'verified_events':len(verified),'source_events_sha256':state['events_sha256'],'runs':runlinks,'events':verified,'root_weave_call_id':stable(experiment),'root_weave_url':'https://wandb.ai/'+PROJECT+'/r/call/'+stable(experiment)}
- (remote/'verified.json').write_text(json.dumps(receipt,indent=2));append(remote/'publication-journal.jsonl',{'state':'verified','verified_events':len(verified),'events_sha256':state['events_sha256'],'at':receipt['verified_at']});print(json.dumps({'verified_events':len(verified),'runs':runlinks}),flush=True);weave.finish()
+ (remote/'verified.json').write_text(json.dumps(receipt,indent=2));append(remote/'publication-journal.jsonl',{'state':'verified','verified_events':len(verified),'events_sha256':state['events_sha256'],'at':receipt['verified_at']});print(json.dumps({'verified_events':len(verified),'runs':runlinks}),flush=True);os._exit(0) # All runs finished and every explicit event/parent span remotely read back; avoid SDK shutdown hanging on open experiment spans.
 if __name__=='__main__':main()
