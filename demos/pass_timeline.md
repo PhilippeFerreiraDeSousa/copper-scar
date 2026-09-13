@@ -1,39 +1,89 @@
-# 90s demo pass timeline — Copper Scar
+# Copper Scar: 110-second demo
 
-Target: ~90 seconds live, narrated.
+A reproducible simulation of a loop that remembers geometric failures as typed rules.
+Use the `demo` command. The separate `loop` command writes placeholder metrics.
 
-| t (s) | Beat | What to show |
-|------:|------|--------------|
-| 0–10  | Hook | One-liner: agent loop that scars PCBGolf attempts with Weave + official score |
-| 10–25 | Demo | `.venv/bin/copper-scar demo` — 3-pass sim loop |
-| 25–40 | Pass 1 | Stock DRC fail → typed scar write; spans like `[loop.pass.1] improve.scar.write` |
-| 40–55 | Pass 2 | `scar_001 → keepout U1` credit; plan = apply_scars; SVG changes |
-| 55–70 | Pass 3 | Gates OK + score lower than pass 1; open `demos/out/pass_timeline.txt` |
-| 70–80 | Score + Weave | Formula: `volume_mm3 + 50*vias + 5000*copper_layers`. If `WANDB_API_KEY` is set, open the printed Weave UI (`copper-scar` project → Traces → `loop.pass.{i}`) |
-| 80–90 | Ship/cut | Dual timeline; Mentra out of scope |
+## Prepare before recording
 
-## Commands
+From the repository root, using Python 3.11 or newer:
 
 ```bash
-.venv/bin/pip install -e ".[dev]"
-.venv/bin/copper-scar demo
-.venv/bin/copper-scar eval
-.venv/bin/pytest -q
+python3 -m venv .venv
+.venv/bin/python -m pip install pydantic pytest
+.venv/bin/python -m pytest -q -p no:cacheprovider
+bash demos/record-demo.sh
 ```
 
-With `WANDB_API_KEY`: after demo+eval, open the printed Weave URL — Traces (instrumented loop), Evaluations (`copper-scar-loop-eval`), Scores / Monitors (online Signal). Inference credits: kickoff form.
+The rehearsal script runs entirely offline even if W&B credentials exist. Each run
+creates a fresh directory under `demos/out/rehearsal.*` and prints its absolute
+path. It retains the terminal log, timeline, three SVGs, scar JSON and eval table.
+It does not clear a previous scar store. To use an existing Python environment:
 
-## Ship / cut
+```bash
+COPPER_SCAR_PYTHON=/absolute/path/to/venv/bin/python bash demos/record-demo.sh
+```
 
-**Ship for CoreWeave Hacks**
+Open `board_pass_1.svg`, `board_pass_2.svg`, `scars/scar_001.json` and `eval.txt`
+from the printed directory before starting the recording. Increase terminal text
+size and rehearse the tab switches. Keep package installation outside the film.
 
-- Runnable `copper-scar demo`
-- Official score exact match
-- Sim loop writing typed scars + SVGs
-- Weave-style span names
-- Hard gates module
+## Spoken script and screen sequence
 
-**Cut / defer**
+| Time | Screen | Narration |
+|---|---|---|
+| 0–12s | Pass 1 SVG | “Copper Scar remembers a failed board-placement attempt as a typed rule. This prototype uses a deterministic geometry simulator to demonstrate the feedback loop.” |
+| 12–30s | Run `bash demos/record-demo.sh`; show table | “The first pass makes a small heuristic move and shrink, but two parts still overlap. It scores 23,418.4 and fails the simulated geometry check.” |
+| 30–48s | Scar JSON | “That failure writes this keepout rule for U1 to disk, with half a millimeter of clearance and the affected part references. This is the memory that changes the next attempt.” |
+| 48–67s | Pass 2 SVG and table | “Pass two reloads the original board, reads the stored rule, moves the conflicting part and tightens the outline. Its score is 21,797.2. Pass three reuses the rule and reproduces that result.” |
+| 67–85s | Eval table | “Eight small fixtures check expected clearance, score bounds and whether a rule should be written. All eight pass locally. These are authored regression examples, not evidence of general PCB-solving ability.” |
+| 85–100s | Verified Weave view, or local span log | Use one of the two evidence lines below. |
+| 100–110s | Pass 2 SVG | “The prototype demonstrates persistent failure feedback and observable decisions. Real KiCad routing, electrical checks and manufacturing validation remain future work.” |
 
-- Full KiCad / PCBGolf clone integration
-- Mentra / glasses UX
+**Current local fallback line:** “The local log records observe, act, evaluate and
+write-back steps. Weave instrumentation is implemented, but I have not verified
+its hosted traces in this session.” Show `demo.log` at `act.apply_scar` and
+`improve.scar.write`. Do not describe local text span names as hosted traces.
+
+**Only after live verification:** “Here is the recorded pass, the applied keepout
+rule and its score. The evaluation and attached scorer results let us inspect the
+same behavior across our fixtures.” Show actual bookmarked records, as specified
+in [weave-evidence.md](weave-evidence.md); do not imply a Monitor exists merely
+because the code defines scorers.
+
+## Numbers and claim boundaries
+
+| Measurement | Verified local result |
+|---|---:|
+| Untouched stock baseline | 23,700.0 |
+| Pass 1, after heuristic action | 23,418.4; simulated geometry fails |
+| Pass 2 | 21,797.2; simulated geometry passes |
+| Pass 3 | 21,797.2; repeats pass 2 |
+| Pass 1 → pass 2 reduction | 1,621.2 (6.92%) |
+| Dataset expectations | 8/8 pass |
+
+The arithmetic uses `volume + 50 * vias + 5000 * copper_layers`, matching the
+[PCBGolf leaderboard](https://comma.ai/leaderboard). Here volume is board width ×
+height × thickness; the competition measures the assembled PCBA bounding box.
+The untouched baseline is not the displayed pass-1 score.
+
+“Learning” means persisting and replaying a rule generated by hand-written code.
+There is no LLM planning, model training or autonomous tool generation in this
+path. The policy selects mild heuristics without scars and a stronger repair plus
+tight shrink with scars; the score improvement does not isolate the effect of
+memory from that policy change. The third pass is repeatability, not another
+improvement. The demo reloads the baseline each pass, rather than continuing the
+previous layout. Running a fresh demo intentionally resets its designated scar
+store; the rehearsal script avoids overwriting prior runs by using new directories.
+
+The simulator checks part rectangles and the board outline. Its ERC, netlist and
+via-annular flags are inferred from geometry, not independently validated.
+“Gates OK” on screen means simulator gates only. Several scorer results are
+vacuously true when no scar applies, and 8/8 refers to dataset expectations, not
+8/8 boards improving. Clean and via-heavy fixtures have unchanged scores.
+
+## Rehearsal verification
+
+Validated September 12, 2026, from source base `27846f9`: 20 tests pass and the
+optional Weave-import test skips without the extra installed. Offline demo and
+8-fixture evaluation run successfully. See `weave-evidence.md` for hosted evidence
+status. No recording or hosted run is created by this runbook.
