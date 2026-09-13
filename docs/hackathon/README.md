@@ -2,6 +2,14 @@
 
 This index identifies the public implementation branches and preserved research checkpoints. The repository root also contains the earlier simulation/observability scaffold; it should not be confused with the later native board experiments below.
 
+## Presentations and technical explanation
+
+- [3-minute presentation](presentations/3min/PCB-Loop-3min.pptx), [PDF](presentations/3min/PCB-Loop-3min.pdf), and [timed speaker notes](presentations/3min/Speaker-notes.md): six main slides and two hidden Q&A slides in the PowerPoint.
+- [10-minute presentation](presentations/10min/PCB-Loop-10min.pptx), [PDF](presentations/10min/PCB-Loop-10min.pdf), and [timed speaker notes](presentations/10min/Speaker-notes.md): twelve main slides and two hidden Q&A slides in the PowerPoint, including time for a W&B walkthrough.
+- [Technical walkthrough and presentation Q&A](TECHNICAL_WALKTHROUGH.md): actual agent prompts, update inputs/outputs, candidate generation and storage, routing roles, acceptance checks, result lineage, and observability limits.
+
+The PDFs contain the main talk only. Deck results are a recorded snapshot from 2026-09-13. W&B links require project access. Local artifact paths in slide source notes identify the original evidence workspace; they are not public download URLs.
+
 ## Actual routing architecture
 
 The **small, medium, large, and original/full demo families used Freerouting for full-board autorouting**, with KiCad exporting DSN, importing SES, and independently checking results. Some earlier original/full-board repairs also used KiCadRoutingTools. The small/medium/large JITX projects imported and displayed their initial boards; they did not generate or route the evolving demo candidates.
