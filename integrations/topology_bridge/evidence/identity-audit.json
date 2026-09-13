@@ -1,0 +1,42 @@
+[
+  {
+    "stage": "01-0-candidate",
+    "unchanged_native_records_by_net": [
+      "CROSS_B",
+      "CROSS_C",
+      "HOLD"
+    ],
+    "unchanged_route_ids_and_bodies": 7,
+    "unchanged_via_ids_and_records": 4
+  },
+  {
+    "stage": "01-1-candidate",
+    "unchanged_native_records_by_net": [
+      "CROSS_B",
+      "CROSS_C",
+      "HOLD"
+    ],
+    "unchanged_route_ids_and_bodies": 7,
+    "unchanged_via_ids_and_records": 4
+  },
+  {
+    "stage": "02-0-candidate",
+    "unchanged_native_records_by_net": [
+      "CROSS_A",
+      "CROSS_C",
+      "HOLD"
+    ],
+    "unchanged_route_ids_and_bodies": 7,
+    "unchanged_via_ids_and_records": 4
+  },
+  {
+    "stage": "02-1-candidate",
+    "unchanged_native_records_by_net": [
+      "CROSS_A",
+      "CROSS_C",
+      "HOLD"
+    ],
+    "unchanged_route_ids_and_bodies": 7,
+    "unchanged_via_ids_and_records": 4
+  }
+]

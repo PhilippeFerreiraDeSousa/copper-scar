@@ -1,0 +1,45 @@
+[
+  {
+    "stage": "before",
+    "definition_ids": [
+      6
+    ],
+    "geometry_ids": [
+      52,
+      53,
+      57,
+      58,
+      62,
+      63
+    ],
+    "collisions": []
+  },
+  {
+    "stage": "after-overrides-and-enum",
+    "definition_ids": [
+      6,
+      52,
+      53,
+      57,
+      58,
+      62,
+      63
+    ],
+    "geometry_ids": [
+      52,
+      53,
+      57,
+      58,
+      62,
+      63
+    ],
+    "collisions": [
+      52,
+      53,
+      57,
+      58,
+      62,
+      63
+    ]
+  }
+]

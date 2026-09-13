@@ -1,0 +1,55 @@
+[
+  {
+    "mode": "attachments_only",
+    "source_build": {
+      "opens": 10,
+      "violations": [
+        [
+          [
+            "via_dangling",
+            "warning"
+          ],
+          6
+        ]
+      ],
+      "via_count": 6
+    },
+    "after_same_layer_calls": {
+      "opens": 0,
+      "violations": [],
+      "via_count": 6
+    },
+    "policy": {
+      "top": "all pads plus vias",
+      "bottom": "all vias",
+      "calls": 2,
+      "force": false
+    }
+  },
+  {
+    "source_build": {
+      "opens": 0,
+      "violations": [],
+      "via_count": 6
+    },
+    "after_same_layer_calls": {
+      "opens": 0,
+      "violations": [],
+      "via_count": 6
+    },
+    "mode": "explicit_routes",
+    "policy": {
+      "top": "all pads plus vias",
+      "bottom": "all vias",
+      "calls": 2,
+      "force": false
+    },
+    "termination": {
+      "original_call_timeout_s": 60,
+      "read_only_export_barrier_succeeded": true,
+      "worker_completion_via_export": true,
+      "timeout_marker_preserved": true,
+      "timing_comparison_valid": false
+    }
+  }
+]

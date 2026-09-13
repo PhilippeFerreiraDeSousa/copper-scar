@@ -1,0 +1,61 @@
+{
+  "fixed_geometry_transfer_passed": true,
+  "export_primitive": "net-bearing gr_poly, not mutable Route/segment",
+  "fixed_plane_exact": true,
+  "plane_refill_or_thermal_equivalence_tested": false,
+  "arc_transfer_tested": false,
+  "input_straight_segments": 10,
+  "retained_through_vias": 6,
+  "added_plane_vias": 1,
+  "maximum_round_cap_sagitta_mm": 7.529816085549702e-06,
+  "rows": [
+    {
+      "net": "CROSS_A",
+      "layer": 0,
+      "hausdorff_mm": 6.217883318693089e-13,
+      "symmetric_difference_mm2": 3.055429618012646e-13
+    },
+    {
+      "net": "CROSS_A",
+      "layer": 1,
+      "hausdorff_mm": 6.217883318693089e-13,
+      "symmetric_difference_mm2": 2.593382352263224e-13
+    },
+    {
+      "net": "CROSS_B",
+      "layer": 0,
+      "hausdorff_mm": 6.217625615497569e-13,
+      "symmetric_difference_mm2": 3.0847689318527257e-13
+    },
+    {
+      "net": "CROSS_B",
+      "layer": 1,
+      "hausdorff_mm": 6.217625615497569e-13,
+      "symmetric_difference_mm2": 2.6835804407679775e-13
+    },
+    {
+      "net": "CROSS_C",
+      "layer": 0,
+      "hausdorff_mm": 6.217883318693089e-13,
+      "symmetric_difference_mm2": 3.0914518776874994e-13
+    },
+    {
+      "net": "CROSS_C",
+      "layer": 1,
+      "hausdorff_mm": 6.217883318693089e-13,
+      "symmetric_difference_mm2": 2.7002207571899113e-13
+    },
+    {
+      "net": "HOLD",
+      "layer": 0,
+      "hausdorff_mm": 4.92899813497983e-13,
+      "symmetric_difference_mm2": 1.3983329964146737e-13
+    },
+    {
+      "net": "HOLD",
+      "layer": 1,
+      "hausdorff_mm": 0.0,
+      "symmetric_difference_mm2": 0.0
+    }
+  ]
+}

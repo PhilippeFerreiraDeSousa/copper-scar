@@ -1,0 +1,24 @@
+{
+  "stages": [
+    {
+      "name": "01-native-routed",
+      "opens": 0,
+      "violations": []
+    },
+    {
+      "name": "02-captured-resubmitted",
+      "opens": 0,
+      "violations": []
+    },
+    {
+      "name": "03-moved-resubmitted",
+      "opens": 0,
+      "violations": []
+    }
+  ],
+  "roundtrip_equal": true,
+  "unaffected_equal": true,
+  "moved_refs": [
+    "TP4"
+  ]
+}

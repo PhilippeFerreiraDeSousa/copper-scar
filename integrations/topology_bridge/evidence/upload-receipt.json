@@ -1,0 +1,16 @@
+{
+  "state": "verified",
+  "run_url": "https://wandb.ai/philippe-fdesousa/copper-scar/runs/topology-search-82b7d2050019",
+  "trace_urls": [
+    "https://wandb.ai/philippe-fdesousa/copper-scar/r/call/0fbff5c8-1184-5d71-9ad5-6632925b0544",
+    "https://wandb.ai/philippe-fdesousa/copper-scar/r/call/1e130db6-018a-5e86-bd36-475063ae6e05",
+    "https://wandb.ai/philippe-fdesousa/copper-scar/r/call/f4d556d8-d9b2-5c99-9d2f-02566bbb4fbe",
+    "https://wandb.ai/philippe-fdesousa/copper-scar/r/call/7691dda3-3c45-5748-8fd6-e5340aede706",
+    "https://wandb.ai/philippe-fdesousa/copper-scar/r/call/ac2cfa65-3e1b-5383-b737-ca4bfa69f71f"
+  ],
+  "history_rows": 5,
+  "remote_artifact": "philippe-fdesousa/copper-scar/topology-search-82b7d2050019-proof:v0",
+  "all_allowlisted_artifact_hashes_verified": true,
+  "remote_final_image_sha256": "ab09f89be2cb83b45a4b4ae650fffd3fceb0e50fca01a31867723104ddfea4f0",
+  "product_valid": false
+}

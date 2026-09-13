@@ -1,0 +1,116 @@
+{
+  "kind": "research-driven-synthetic-topology-proposals",
+  "whole_product_board_qualified": false,
+  "objective": "strict wire length reduction; no added vias; zero opens and violations; unchanged other nets and rules",
+  "rows": [
+    {
+      "stage": "00-parent",
+      "decision": "parent",
+      "opens": 0,
+      "violations": [],
+      "wire_length_mm": 53.0,
+      "build_wall_s": 3.220066500005487,
+      "completion_timestamp": 1789270534.3864532
+    },
+    {
+      "stage": "01-0-candidate",
+      "candidate_sha256": "87a3b9ee4c909433fbf08b1f3e16e099f4488e0d7564b63a5dd4cbfe999a8ef3",
+      "parent_sha256": "48299811185d01aa7ca4f6c2854e2c1d662aa9f9eb5e8f39a35d54fc0d3e6bd3",
+      "parent_board_sha256": "6f0b15b15186da56ed9979cb1b91ee0720efa74b0355282c01f78296c019413c",
+      "choice": {
+        "escape_offset_mm": 1.5,
+        "cross_layer": 1
+      },
+      "build_wall_s": 1.1135847080004169,
+      "completion_timestamp": 1789270541.3110409,
+      "opens": 0,
+      "violations": [],
+      "changed_refs": [
+        "TP4"
+      ],
+      "unaffected_copper_preserved": true,
+      "via_count": 6,
+      "wire_length_mm": 51.0,
+      "parent_wire_length_mm": 53.0,
+      "geometry_valid": true,
+      "board_sha256": "b561e9888f573df6355b9e3e378e9268f22052573b13967e8169679177484154",
+      "project_sha256": "a9a50010a3b03c9ba1627f399a2c2246a1e5c92c2f5fae3a51b442c47c92ff95",
+      "decision": "retain"
+    },
+    {
+      "stage": "01-1-candidate",
+      "candidate_sha256": "6435b93df65159d6bf035784a8cdc7f36004a98149a5ee3b69a6995c1c62f736",
+      "parent_sha256": "48299811185d01aa7ca4f6c2854e2c1d662aa9f9eb5e8f39a35d54fc0d3e6bd3",
+      "parent_board_sha256": "6f0b15b15186da56ed9979cb1b91ee0720efa74b0355282c01f78296c019413c",
+      "choice": {
+        "escape_offset_mm": 2.5,
+        "cross_layer": 1
+      },
+      "build_wall_s": 0.8992412500010687,
+      "completion_timestamp": 1789270547.2903588,
+      "opens": 0,
+      "violations": [],
+      "changed_refs": [
+        "TP4"
+      ],
+      "unaffected_copper_preserved": true,
+      "via_count": 6,
+      "wire_length_mm": 51.0,
+      "parent_wire_length_mm": 53.0,
+      "geometry_valid": true,
+      "board_sha256": "e2aca86742f3da7f7bc42fdb17011652f9041474285d30fdc46c77f713a5cd1d",
+      "project_sha256": "a9a50010a3b03c9ba1627f399a2c2246a1e5c92c2f5fae3a51b442c47c92ff95",
+      "decision": "reject"
+    },
+    {
+      "stage": "02-0-candidate",
+      "candidate_sha256": "b6f00150d9e927dd0c73d7c1dea2c4abe02edc535083c76897e27e92b959f53c",
+      "parent_sha256": "99e88fc071da6f0f3a823928c76886cd578265c60d964b9aa0930aebb3d8812a",
+      "parent_board_sha256": "b561e9888f573df6355b9e3e378e9268f22052573b13967e8169679177484154",
+      "choice": {
+        "escape_offset_mm": 1.5,
+        "cross_layer": 1
+      },
+      "build_wall_s": 0.8344799999977113,
+      "completion_timestamp": 1789270553.7809293,
+      "opens": 0,
+      "violations": [],
+      "changed_refs": [
+        "TP6"
+      ],
+      "unaffected_copper_preserved": true,
+      "via_count": 6,
+      "wire_length_mm": 49.0,
+      "parent_wire_length_mm": 51.0,
+      "geometry_valid": true,
+      "board_sha256": "8348513e1034030105fa146ef7e3fdea22fefe608e666e341e96f231c0233a30",
+      "project_sha256": "a9a50010a3b03c9ba1627f399a2c2246a1e5c92c2f5fae3a51b442c47c92ff95",
+      "decision": "retain"
+    },
+    {
+      "stage": "02-1-candidate",
+      "candidate_sha256": "c78fa9cc25c963f632d12315fb7e3553adc8a097b59f633c5808dfd386a14ff1",
+      "parent_sha256": "99e88fc071da6f0f3a823928c76886cd578265c60d964b9aa0930aebb3d8812a",
+      "parent_board_sha256": "b561e9888f573df6355b9e3e378e9268f22052573b13967e8169679177484154",
+      "choice": {
+        "escape_offset_mm": 2.5,
+        "cross_layer": 1
+      },
+      "build_wall_s": 1.0870027499986463,
+      "completion_timestamp": 1789270560.2292428,
+      "opens": 0,
+      "violations": [],
+      "changed_refs": [
+        "TP6"
+      ],
+      "unaffected_copper_preserved": true,
+      "via_count": 6,
+      "wire_length_mm": 49.0,
+      "parent_wire_length_mm": 51.0,
+      "geometry_valid": true,
+      "board_sha256": "f384e4834747bd1997ec5fca0459dae20298d15199871b4e334e722f985e7d5d",
+      "project_sha256": "a9a50010a3b03c9ba1627f399a2c2246a1e5c92c2f5fae3a51b442c47c92ff95",
+      "decision": "reject"
+    }
+  ]
+}

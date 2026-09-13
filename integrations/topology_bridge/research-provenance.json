@@ -1,0 +1,11 @@
+{
+  "upstream": "/Users/philippe/dev/copper-scar-demo/scripts/copperhead_pose_proposals.py",
+  "upstream_commit": "b1473ba00fec9c78045e632fdc7a7ff52d1c250c",
+  "upstream_source_sha256": "4e79fdd4db587cf7a8dfcd755d191a2a987dfdf6e99fd99f2a4943fda03daa25",
+  "changes": [
+    "parameterized group, board filename, translation grid and rule screen",
+    "removed historical SD feedback/expanded-parent claims",
+    "no improvement reported as boolean rather than fabricated success"
+  ],
+  "krt_revision": "1c428c0b2285a4dfe8901ca7035109ded6cfbb4d"
+}

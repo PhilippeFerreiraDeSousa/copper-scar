@@ -1,0 +1,125 @@
+{
+  "status": "technical_blocker",
+  "scope": "245-component original-board proxy; all net boundaries and obstacles; four local top-layer Route intents; no vias; not full-board routing",
+  "initial_parent_export_sha256": "9e709cb9536b443e4ed99a59ed777a11d2334383bdb60b25b5d377673c9b6a46",
+  "initial_parent_twice_drc": {
+    "source_board_sha256": "9e709cb9536b443e4ed99a59ed777a11d2334383bdb60b25b5d377673c9b6a46",
+    "runs": [
+      {
+        "opens": 499,
+        "counts": {
+          "error": 51,
+          "warning": 44
+        },
+        "by_type": {
+          "hole_clearance": 16,
+          "solder_mask_bridge": 35,
+          "lib_footprint_mismatch": 6,
+          "text_height": 9,
+          "silk_overlap": 19,
+          "silk_over_copper": 10
+        },
+        "ignored_checks": [
+          {
+            "description": "Footprint has no courtyard defined",
+            "key": "missing_courtyard"
+          },
+          {
+            "description": "Track endpoint not centered on via",
+            "key": "track_not_centered_on_via"
+          },
+          {
+            "description": "Tuning profile track geometries",
+            "key": "tuning_profile_track_geometries"
+          },
+          {
+            "description": "Footprint doesn't match symbol's footprint filters",
+            "key": "footprint_filters_mismatch"
+          },
+          {
+            "description": "PTH inside courtyard",
+            "key": "pth_inside_courtyard"
+          },
+          {
+            "description": "NPTH inside courtyard",
+            "key": "npth_inside_courtyard"
+          }
+        ],
+        "elapsed_s": 1.453741416997218
+      },
+      {
+        "opens": 499,
+        "counts": {
+          "error": 51,
+          "warning": 44
+        },
+        "by_type": {
+          "hole_clearance": 16,
+          "solder_mask_bridge": 35,
+          "lib_footprint_mismatch": 6,
+          "text_height": 9,
+          "silk_overlap": 19,
+          "silk_over_copper": 10
+        },
+        "ignored_checks": [
+          {
+            "description": "Footprint has no courtyard defined",
+            "key": "missing_courtyard"
+          },
+          {
+            "description": "Track endpoint not centered on via",
+            "key": "track_not_centered_on_via"
+          },
+          {
+            "description": "Tuning profile track geometries",
+            "key": "tuning_profile_track_geometries"
+          },
+          {
+            "description": "Footprint doesn't match symbol's footprint filters",
+            "key": "footprint_filters_mismatch"
+          },
+          {
+            "description": "PTH inside courtyard",
+            "key": "pth_inside_courtyard"
+          },
+          {
+            "description": "NPTH inside courtyard",
+            "key": "npth_inside_courtyard"
+          }
+        ],
+        "elapsed_s": 1.2667401250000694
+      }
+    ],
+    "repeated_agreement": true,
+    "zones_refilled_in_memory": true,
+    "board_saved": false,
+    "scope": "all objects/terminals in supplied project copy; geometry probes have omitted external boundaries"
+  },
+  "capture": {
+    "route_count": 4,
+    "restored_objects": 0
+  },
+  "failed_operation": "unchanged captured_parent_roundtrip Runtime.submit(rd.root)",
+  "timeout_seconds": 180,
+  "native_failure": "FATAL ERROR: Illegal tag bits",
+  "native_first_failure_line": 846,
+  "native_stack": [
+    "core/no-method-error",
+    "core/hash",
+    "hamt/key-hash",
+    "Feature/layer-data",
+    "inject-cache-effect/geometric-match cache.stanza:438"
+  ],
+  "native_exit": 255,
+  "runtime_stopped": {
+    "pid": 2496,
+    "signal": "SIGTERM",
+    "cli_stopped": true
+  },
+  "candidate_started": false,
+  "parent_to_roundtrip_geometry_rules_twice_drc": "unavailable: no completed roundtrip export",
+  "rejected_candidate_restore_gate": "not applicable: no candidate",
+  "original_owner_designs_modified": false,
+  "runtime_log_sha256": "bfaf3cf7a6d9e52a0c7558ecdebe423fa405d11a05f5456937c5af04db989135",
+  "interpretation": "Native cache geometric-match crash observed after capture/resubmit; stack alone does not establish root cause. No equivalent retry or cache manipulation performed."
+}
