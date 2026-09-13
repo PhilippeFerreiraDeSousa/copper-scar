@@ -1,0 +1,185 @@
+{
+  "actual_changed_copper_nets": [
+    "CROSS_A"
+  ],
+  "actual_pose_delta": {
+    "TP4": {
+      "after": [
+        149.5,
+        100.0,
+        0.0
+      ],
+      "before": [
+        147.5,
+        102.0,
+        0.0
+      ]
+    }
+  },
+  "artifact_sha256": {
+    "action-00-reposition.json": "b9b8937a7f1b89f82c78340d0f772de58ed16ad98895a9f96dc2efa3c2f8b305",
+    "before.json": "81be37c565c9bb8ba10891747f953dedc43b317761fcebda5f8a7f7d23ef69e8",
+    "completion.json": "fd8825693e52b0a7e4e1989fb31390912b95da13f2de5fd2941eb6f2554f1d0b",
+    "current-parent/export/bridge_fixture.design.BridgeProof.kicad_kws": "e3289ab29fc8360ef675f301e9eafa285361d59fc7bef9cb2ace68b996957084",
+    "current-parent/export/bridge_fixture.design.BridgeProof.kicad_pcb": "3bfdfd6118cb62f5c86b0317b9814dd25d8be133a4df98a5e55f41aebb3e4fc9",
+    "current-parent/export/bridge_fixture.design.BridgeProof.kicad_pro": "a9a50010a3b03c9ba1627f399a2c2246a1e5c92c2f5fae3a51b442c47c92ff95",
+    "current-parent/export/bridge_fixture.design.BridgeProof.kicad_sch": "f3ed2347f01d554ee0e30335f4c79dbaf04819b1c021c814cb09a3784d82c3e1",
+    "current-parent/export/bridge_fixture.design.BridgeProof.pretty/TESTLANDPATTERN.kicad_mod": "1cf08aedff54adcdaeb07ac30f728418a4a95a705f5bfd3730139f0135122d3c",
+    "current-parent/export/fp-lib-table": "279a6c8fe15f5e7d29ef56553cd72dcc8f3b70cdecdab43c16638eedaad41f7f",
+    "current-parent/export/project_symbols.lib": "a1bd1fd1f957a8f1b4dc30d04bca0164c8e09b1bd10ef972c32805a9b13b2d5d",
+    "current-parent/export/sym-lib-table": "0c2c80f8c4307ed592e170f9e23b27cfacb35a88ad33a0889f50abb4d64048c0",
+    "export/bridge_fixture.design.BridgeProof.kicad_kws": "e3289ab29fc8360ef675f301e9eafa285361d59fc7bef9cb2ace68b996957084",
+    "export/bridge_fixture.design.BridgeProof.kicad_pcb": "8c63841ada91d19a98886c3806f96637cbd36eb34c567ddc0c98e77d65e6cb3c",
+    "export/bridge_fixture.design.BridgeProof.kicad_pro": "a9a50010a3b03c9ba1627f399a2c2246a1e5c92c2f5fae3a51b442c47c92ff95",
+    "export/bridge_fixture.design.BridgeProof.kicad_sch": "e3a7ab654438ae1346ae72e9871aa31cb9162a72988f4f3a499e5c505d8f6624",
+    "export/bridge_fixture.design.BridgeProof.pretty/TESTLANDPATTERN.kicad_mod": "e23b28399746e68f2631fbd9bf12ea7391f997900f199caa6d2ce985c0dd1a47",
+    "export/fp-lib-table": "279a6c8fe15f5e7d29ef56553cd72dcc8f3b70cdecdab43c16638eedaad41f7f",
+    "export/project_symbols.lib": "a1bd1fd1f957a8f1b4dc30d04bca0164c8e09b1bd10ef972c32805a9b13b2d5d",
+    "export/sym-lib-table": "0c2c80f8c4307ed592e170f9e23b27cfacb35a88ad33a0889f50abb4d64048c0",
+    "final.json": "c897576e0e874b0189d446fc171249e9fb3579610d0966d72db153c1d7e127c9",
+    "plan.json": "6ac894835bfcc939de88ed9688141acfc301ffd12f10a61c638baf3f8e2e5211",
+    "qualified-mapping.json": "892ca22721d48e822a5f669fee7b0ea0477e2dac899c417164e4fa3e9a95a4f8"
+  },
+  "comparison_kind": "synthetic_fixture_bridge",
+  "decision": "retain_fixture",
+  "diagnostics": {
+    "generic_layer_or_via_planner": false,
+    "native_messages": [
+      "area-region-info",
+      "board",
+      "control-info",
+      "design-checks",
+      "nets",
+      "ok",
+      "pad-info",
+      "patsnest",
+      "placed-labels",
+      "placements",
+      "progress-stats",
+      "routed",
+      "via-info"
+    ],
+    "realization": "existing anchored via and incident routes updated by native reposition",
+    "scope": "all eight terminals / all four complete fixture nets"
+  },
+  "independent_whole_fixture_drc": {
+    "opens": 0,
+    "runs": 2,
+    "violations": []
+  },
+  "native_delta": {
+    "route_ids_preserved": 10,
+    "route_records_identical": 8,
+    "via_ids_preserved": 6,
+    "vias_added_during_move": 0
+  },
+  "output_sha256": "8c63841ada91d19a98886c3806f96637cbd36eb34c567ddc0c98e77d65e6cb3c",
+  "parent_sha256": "1f1a18f707deebf861aa20ceacef60b8e47874e5a0792004cb08b81dd5e61ced",
+  "per_net_realization": {
+    "CROSS_A": {
+      "all_copper_islands": 1,
+      "layers": [
+        "B.Cu",
+        "F.Cu"
+      ],
+      "realized": true,
+      "segments": 3,
+      "terminal_islands": 1,
+      "terminals": [
+        "TP3.p",
+        "TP4.p"
+      ],
+      "vias": 2
+    },
+    "CROSS_B": {
+      "all_copper_islands": 1,
+      "layers": [
+        "B.Cu",
+        "F.Cu"
+      ],
+      "realized": true,
+      "segments": 3,
+      "terminal_islands": 1,
+      "terminals": [
+        "TP5.p",
+        "TP6.p"
+      ],
+      "vias": 2
+    },
+    "CROSS_C": {
+      "all_copper_islands": 1,
+      "layers": [
+        "B.Cu",
+        "F.Cu"
+      ],
+      "realized": true,
+      "segments": 3,
+      "terminal_islands": 1,
+      "terminals": [
+        "TP7.p",
+        "TP8.p"
+      ],
+      "vias": 2
+    },
+    "HOLD": {
+      "all_copper_islands": 1,
+      "layers": [
+        "F.Cu"
+      ],
+      "realized": true,
+      "segments": 1,
+      "terminal_islands": 1,
+      "terminals": [
+        "TP1.p",
+        "TP2.p"
+      ],
+      "vias": 0
+    }
+  },
+  "request_sha256": "d629a97686bb45a09fa44cc651c792382fb060ad3cf998eed4955b4c61802f15",
+  "schema": "copperhead-jitx-fixture-result-v1",
+  "termination": {
+    "design": "bridge_fixture.design.BridgeProof",
+    "elapsed_s": 0.14523216600355227,
+    "export_barrier": true,
+    "native_worker_state": "completed",
+    "whole_board_valid": "requires independent checks"
+  },
+  "unrelated_copper_preserved": {
+    "CROSS_B": true,
+    "CROSS_C": true,
+    "HOLD": true
+  },
+  "via_count": 6,
+  "whole_product_board_qualified": false,
+  "consumer_result_sha256": "8bf003e4146161611034d3a13ae0c69a0824e3a7d11873de952b680ce58c1d93",
+  "result_file_sha256": "f92372eaa79cfe10e98c0360e81bb447073231c879246628db6e8507246a6879",
+  "evidence_root": "/Users/philippe/.codex/worktrees/ff86/copper-scar/.local/placement-bridge-reproduction-03",
+  "observability": {
+    "state": "verified",
+    "run_url": "https://wandb.ai/philippe-fdesousa/copper-scar/runs/fixture-bridge-f92372eaa79c",
+    "trace_urls": [
+      "https://wandb.ai/philippe-fdesousa/copper-scar/r/call/6c44c67b-a915-57c9-859f-eaf3f63953b0",
+      "https://wandb.ai/philippe-fdesousa/copper-scar/r/call/238b394c-8234-5e5a-ac5e-c51f757d7d47",
+      "https://wandb.ai/philippe-fdesousa/copper-scar/r/call/dc71d183-3250-58b0-a809-63af48620372",
+      "https://wandb.ai/philippe-fdesousa/copper-scar/r/call/c77b3dab-7bbc-5a3c-80d1-99e472f68a64"
+    ],
+    "history_rows": 4,
+    "remote_artifact": "philippe-fdesousa/copper-scar/fixture-bridge-f92372eaa79c-proof:v0",
+    "all_allowlisted_artifact_hashes_verified": true,
+    "remote_final_image_sha256": "bf3326dcda90c20fcde2c3e6b6b550588520c2629c7976b96d8587904d83c14e",
+    "product_valid": false
+  },
+  "validation": {
+    "bridge_tests_passed": 16,
+    "shared_tests_passed": 20,
+    "shared_tests_skipped": 1,
+    "fresh_runtime_reproduction_passed": true,
+    "negative_native_contract_checks": [
+      "stale parent",
+      "invalid pad mapping"
+    ],
+    "negative_consumer_check": "forged output hash",
+    "runtime_status": "stopped after confirmed completion"
+  }
+}

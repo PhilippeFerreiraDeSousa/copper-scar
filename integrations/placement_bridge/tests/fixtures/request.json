@@ -1,0 +1,192 @@
+{
+  "comparison_kind": "synthetic_fixture_bridge",
+  "copper_policy": {
+    "may_change": [
+      "CROSS_A"
+    ],
+    "preserve_exactly": [
+      "CROSS_B",
+      "CROSS_C",
+      "HOLD"
+    ]
+  },
+  "fixed_refs": [
+    "TP1",
+    "TP2",
+    "TP3",
+    "TP5",
+    "TP6",
+    "TP7",
+    "TP8"
+  ],
+  "frame": {
+    "angle": "degrees",
+    "coordinates": "KiCad global, X right, Y down",
+    "native_transform": {
+      "reflect_y": true,
+      "x_offset": 139.5,
+      "y_offset": 108.0
+    },
+    "units": "mm"
+  },
+  "intent": "Fixed correspondence-qualified exchange proof; no placement-quality claim",
+  "inventory": {
+    "refs": {
+      "TP1": {
+        "pads": [
+          {
+            "geometry": "(pad p smd custom (at 0.0 0.0 0.0) (size 0.01 0.01) (options (clearance outline) (anchor circle)) (primitives (gr_poly (pts (xy 0.6 -0.6) (xy -0.6 -0.6) (xy -0.6 0.6) (xy 0.6 0.6)) (width 0) (fill yes))) (layers F.Cu))",
+            "name": "p",
+            "net": "HOLD"
+          }
+        ],
+        "pose": [
+          127.5,
+          98.0,
+          0.0
+        ],
+        "side": "F.Cu"
+      },
+      "TP2": {
+        "pads": [
+          {
+            "geometry": "(pad p smd custom (at 0.0 0.0 0.0) (size 0.01 0.01) (options (clearance outline) (anchor circle)) (primitives (gr_poly (pts (xy 0.6 -0.6) (xy -0.6 -0.6) (xy -0.6 0.6) (xy 0.6 0.6)) (width 0) (fill yes))) (layers F.Cu))",
+            "name": "p",
+            "net": "HOLD"
+          }
+        ],
+        "pose": [
+          132.5,
+          98.0,
+          0.0
+        ],
+        "side": "F.Cu"
+      },
+      "TP3": {
+        "pads": [
+          {
+            "geometry": "(pad p smd custom (at 0.0 0.0 0.0) (size 0.01 0.01) (options (clearance outline) (anchor circle)) (primitives (gr_poly (pts (xy 0.6 -0.6) (xy -0.6 -0.6) (xy -0.6 0.6) (xy 0.6 0.6)) (width 0) (fill yes))) (layers F.Cu))",
+            "name": "p",
+            "net": "CROSS_A"
+          }
+        ],
+        "pose": [
+          131.5,
+          102.0,
+          0.0
+        ],
+        "side": "F.Cu"
+      },
+      "TP4": {
+        "pads": [
+          {
+            "geometry": "(pad p smd custom (at 0.0 0.0 0.0) (size 0.01 0.01) (options (clearance outline) (anchor circle)) (primitives (gr_poly (pts (xy 0.6 -0.6) (xy -0.6 -0.6) (xy -0.6 0.6) (xy 0.6 0.6)) (width 0) (fill yes))) (layers F.Cu))",
+            "name": "p",
+            "net": "CROSS_A"
+          }
+        ],
+        "pose": [
+          147.5,
+          102.0,
+          0.0
+        ],
+        "side": "F.Cu"
+      },
+      "TP5": {
+        "pads": [
+          {
+            "geometry": "(pad p smd custom (at 0.0 0.0 0.0) (size 0.01 0.01) (options (clearance outline) (anchor circle)) (primitives (gr_poly (pts (xy 0.6 -0.6) (xy -0.6 -0.6) (xy -0.6 0.6) (xy 0.6 0.6)) (width 0) (fill yes))) (layers F.Cu))",
+            "name": "p",
+            "net": "CROSS_B"
+          }
+        ],
+        "pose": [
+          131.5,
+          108.0,
+          0.0
+        ],
+        "side": "F.Cu"
+      },
+      "TP6": {
+        "pads": [
+          {
+            "geometry": "(pad p smd custom (at 0.0 0.0 0.0) (size 0.01 0.01) (options (clearance outline) (anchor circle)) (primitives (gr_poly (pts (xy 0.6 -0.6) (xy -0.6 -0.6) (xy -0.6 0.6) (xy 0.6 0.6)) (width 0) (fill yes))) (layers F.Cu))",
+            "name": "p",
+            "net": "CROSS_B"
+          }
+        ],
+        "pose": [
+          147.5,
+          108.0,
+          0.0
+        ],
+        "side": "F.Cu"
+      },
+      "TP7": {
+        "pads": [
+          {
+            "geometry": "(pad p smd custom (at 0.0 0.0 0.0) (size 0.01 0.01) (options (clearance outline) (anchor circle)) (primitives (gr_poly (pts (xy 0.6 -0.6) (xy -0.6 -0.6) (xy -0.6 0.6) (xy 0.6 0.6)) (width 0) (fill yes))) (layers F.Cu))",
+            "name": "p",
+            "net": "CROSS_C"
+          }
+        ],
+        "pose": [
+          131.5,
+          111.0,
+          0.0
+        ],
+        "side": "F.Cu"
+      },
+      "TP8": {
+        "pads": [
+          {
+            "geometry": "(pad p smd custom (at 0.0 0.0 0.0) (size 0.01 0.01) (options (clearance outline) (anchor circle)) (primitives (gr_poly (pts (xy 0.6 -0.6) (xy -0.6 -0.6) (xy -0.6 0.6) (xy 0.6 0.6)) (width 0) (fill yes))) (layers F.Cu))",
+            "name": "p",
+            "net": "CROSS_C"
+          }
+        ],
+        "pose": [
+          147.5,
+          111.0,
+          0.0
+        ],
+        "side": "F.Cu"
+      }
+    },
+    "static_geometry_sha256": "931c9ed60ad3dce05f209c9e90384a8a1271f384e11e6bbaf638e4dcf5f7c72c"
+  },
+  "net_memberships": {
+    "CROSS_A": [
+      "TP3.p",
+      "TP4.p"
+    ],
+    "CROSS_B": [
+      "TP5.p",
+      "TP6.p"
+    ],
+    "CROSS_C": [
+      "TP7.p",
+      "TP8.p"
+    ],
+    "HOLD": [
+      "TP1.p",
+      "TP2.p"
+    ]
+  },
+  "parent": {
+    "board_sha256": "b17f3d5baa5ffc084f7d08aefd4a8d0d1aafe8ca26e74a03546fa0fafee86c2a",
+    "project_sha256": "a9a50010a3b03c9ba1627f399a2c2246a1e5c92c2f5fae3a51b442c47c92ff95",
+    "source_sha256": "5b5e0b5958cc3edb197deb08f072cdbac86caf2e4255567a874206f73061039f",
+    "state_sha256": "f81aa482a4db6eccad3365c8f6ad8e0da77969e0272deb16430089d2454c5af7"
+  },
+  "schema": "copperhead-jitx-fixture-pose-v1",
+  "target": {
+    "pose": [
+      149.5,
+      100.0,
+      0.0
+    ],
+    "ref": "TP4",
+    "side": "F.Cu"
+  }
+}

@@ -1,0 +1,3 @@
+
+# Preserve raw synthetic export bytes used by exact-hash tests.
+integrations/placement_bridge/tests/fixtures/*/export/* -whitespace

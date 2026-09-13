@@ -1,0 +1,14 @@
+{
+  "jitx_commit": "d1e545cfc30a324e075dc2c6e76e004e512d16da",
+  "copperhead_commit": "b1473ba00fec9c78045e632fdc7a7ff52d1c250c",
+  "upstream_sha256": {
+    "fixture_control.py": "0b254018feade8b6b88e7b2a6f6fedd9baafa124b1237c9c05c97e06c42b56c5",
+    "verify_incremental_fixture.py": "f43651b687da78adfc495d6be3250ed78d04c2f79ea500e02f8306303aef5cae",
+    "incremental_fixture/design.py": "0fbdc849379ca52354fc6002a74c9f7435d8e1124c3873e372452f8aa5bf7f95",
+    "incremental_fixture/__init__.py": "965544045c33be395ad2ef27513c40e61dd2b3d0429b79cf6101d07c48e3c4e0"
+  },
+  "additional_pattern_source": {
+    "integrations/jitx/wandb_backfill.py": "24265efcd2a76bce39cd77731c088874d6f3f072a41dc8230c11643995e3585a"
+  },
+  "test_fixture_source": "Local first successful bridge .local/placement-bridge/02-parent and03-moved; synthetic generated evidence only"
+}

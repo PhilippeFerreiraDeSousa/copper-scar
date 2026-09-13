@@ -1,0 +1,807 @@
+[
+  {
+    "type": "board",
+    "body": {
+      "stackup": {
+        "numlayers": 2
+      },
+      "module": {
+        "groups": [
+          {
+            "id": "5BzBiPEzFHPqdVLgPTsZcU",
+            "pose": {
+              "center": {
+                "x": 8,
+                "y": 6
+              },
+              "angle": 0,
+              "flipx": false
+            },
+            "side": "top",
+            "instances": [
+              {
+                "id": "5BzBiPEzFHPqdVLgPTsZcU",
+                "ref": "a_right",
+                "designator": "TP4",
+                "component": "6wft6rNgF8qMLntnQNqg7P",
+                "source": {
+                  "index": 0,
+                  "line": 46,
+                  "col": 0
+                },
+                "objects": [
+                  {
+                    "pad": "5BzBiPEzFHPqdVLgPTsZcU/EUXmcKmP2Uf1uiw9a5XkZD",
+                    "side": "top",
+                    "type": "SMD",
+                    "shapes": [
+                      {
+                        "layers": [
+                          0
+                        ],
+                        "shape": {
+                          "type": "polygon",
+                          "elements": [
+                            {
+                              "x": 0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": -0.6
+                            },
+                            {
+                              "x": 0.6,
+                              "y": -0.6
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "padname": "TestPad",
+                    "padref": "p",
+                    "fullpinref": "a_right.p",
+                    "pinref": "p"
+                  },
+                  {
+                    "specifier": "soldermask",
+                    "side": "top",
+                    "shape": {
+                      "type": "polygon",
+                      "elements": [
+                        {
+                          "x": 0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": -0.7
+                        },
+                        {
+                          "x": 0.7,
+                          "y": -0.7
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ],
+            "objects": []
+          },
+          {
+            "id": "7hE9ZZzi5DiJ2bVTmjXFHj",
+            "pose": {
+              "center": {
+                "x": 8,
+                "y": 0
+              },
+              "angle": 0,
+              "flipx": false
+            },
+            "side": "top",
+            "instances": [
+              {
+                "id": "7hE9ZZzi5DiJ2bVTmjXFHj",
+                "ref": "b_right",
+                "designator": "TP6",
+                "component": "7HBgvZkm3jJpLryobpkbwK",
+                "source": {
+                  "index": 0,
+                  "line": 48,
+                  "col": 0
+                },
+                "objects": [
+                  {
+                    "pad": "7hE9ZZzi5DiJ2bVTmjXFHj/EUXmcKmP2Uf1uiw9a5XkZD",
+                    "side": "top",
+                    "type": "SMD",
+                    "shapes": [
+                      {
+                        "layers": [
+                          0
+                        ],
+                        "shape": {
+                          "type": "polygon",
+                          "elements": [
+                            {
+                              "x": 0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": -0.6
+                            },
+                            {
+                              "x": 0.6,
+                              "y": -0.6
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "padname": "TestPad",
+                    "padref": "p",
+                    "fullpinref": "b_right.p",
+                    "pinref": "p"
+                  },
+                  {
+                    "specifier": "soldermask",
+                    "side": "top",
+                    "shape": {
+                      "type": "polygon",
+                      "elements": [
+                        {
+                          "x": 0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": -0.7
+                        },
+                        {
+                          "x": 0.7,
+                          "y": -0.7
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ],
+            "objects": []
+          },
+          {
+            "id": "AUyMjqTEedaWQBs8oeSTrA",
+            "pose": {
+              "center": {
+                "x": -7,
+                "y": 10
+              },
+              "angle": 0,
+              "flipx": false
+            },
+            "side": "top",
+            "instances": [
+              {
+                "id": "AUyMjqTEedaWQBs8oeSTrA",
+                "ref": "hold_right",
+                "designator": "TP2",
+                "component": "873WB1vKr1Li2J9AAtDXZo",
+                "source": {
+                  "index": 0,
+                  "line": 44,
+                  "col": 0
+                },
+                "objects": [
+                  {
+                    "pad": "AUyMjqTEedaWQBs8oeSTrA/EUXmcKmP2Uf1uiw9a5XkZD",
+                    "side": "top",
+                    "type": "SMD",
+                    "shapes": [
+                      {
+                        "layers": [
+                          0
+                        ],
+                        "shape": {
+                          "type": "polygon",
+                          "elements": [
+                            {
+                              "x": 0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": -0.6
+                            },
+                            {
+                              "x": 0.6,
+                              "y": -0.6
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "padname": "TestPad",
+                    "padref": "p",
+                    "fullpinref": "hold_right.p",
+                    "pinref": "p"
+                  },
+                  {
+                    "specifier": "soldermask",
+                    "side": "top",
+                    "shape": {
+                      "type": "polygon",
+                      "elements": [
+                        {
+                          "x": 0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": -0.7
+                        },
+                        {
+                          "x": 0.7,
+                          "y": -0.7
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ],
+            "objects": []
+          },
+          {
+            "id": "D7FeM7VkDJHbvhCto6sBKh",
+            "pose": {
+              "center": {
+                "x": -8,
+                "y": 0
+              },
+              "angle": 0,
+              "flipx": false
+            },
+            "side": "top",
+            "instances": [
+              {
+                "id": "D7FeM7VkDJHbvhCto6sBKh",
+                "ref": "b_left",
+                "designator": "TP5",
+                "component": "4WBBRXxov6oeQTiYtnnAc5",
+                "source": {
+                  "index": 0,
+                  "line": 47,
+                  "col": 0
+                },
+                "objects": [
+                  {
+                    "pad": "D7FeM7VkDJHbvhCto6sBKh/EUXmcKmP2Uf1uiw9a5XkZD",
+                    "side": "top",
+                    "type": "SMD",
+                    "shapes": [
+                      {
+                        "layers": [
+                          0
+                        ],
+                        "shape": {
+                          "type": "polygon",
+                          "elements": [
+                            {
+                              "x": 0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": -0.6
+                            },
+                            {
+                              "x": 0.6,
+                              "y": -0.6
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "padname": "TestPad",
+                    "padref": "p",
+                    "fullpinref": "b_left.p",
+                    "pinref": "p"
+                  },
+                  {
+                    "specifier": "soldermask",
+                    "side": "top",
+                    "shape": {
+                      "type": "polygon",
+                      "elements": [
+                        {
+                          "x": 0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": -0.7
+                        },
+                        {
+                          "x": 0.7,
+                          "y": -0.7
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ],
+            "objects": []
+          },
+          {
+            "id": "9GHTca44SRjeyF3j3nPGYP",
+            "pose": {
+              "center": {
+                "x": -8,
+                "y": 6
+              },
+              "angle": 0,
+              "flipx": false
+            },
+            "side": "top",
+            "instances": [
+              {
+                "id": "9GHTca44SRjeyF3j3nPGYP",
+                "ref": "a_left",
+                "designator": "TP3",
+                "component": "GbwekwC96qfCHr8J8wphoj",
+                "source": {
+                  "index": 0,
+                  "line": 45,
+                  "col": 0
+                },
+                "objects": [
+                  {
+                    "pad": "9GHTca44SRjeyF3j3nPGYP/EUXmcKmP2Uf1uiw9a5XkZD",
+                    "side": "top",
+                    "type": "SMD",
+                    "shapes": [
+                      {
+                        "layers": [
+                          0
+                        ],
+                        "shape": {
+                          "type": "polygon",
+                          "elements": [
+                            {
+                              "x": 0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": -0.6
+                            },
+                            {
+                              "x": 0.6,
+                              "y": -0.6
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "padname": "TestPad",
+                    "padref": "p",
+                    "fullpinref": "a_left.p",
+                    "pinref": "p"
+                  },
+                  {
+                    "specifier": "soldermask",
+                    "side": "top",
+                    "shape": {
+                      "type": "polygon",
+                      "elements": [
+                        {
+                          "x": 0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": -0.7
+                        },
+                        {
+                          "x": 0.7,
+                          "y": -0.7
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ],
+            "objects": []
+          },
+          {
+            "id": "CpvmCw8f8TXBN7iwr3ZiUT",
+            "pose": {
+              "center": {
+                "x": -12,
+                "y": 10
+              },
+              "angle": 0,
+              "flipx": false
+            },
+            "side": "top",
+            "instances": [
+              {
+                "id": "CpvmCw8f8TXBN7iwr3ZiUT",
+                "ref": "hold_left",
+                "designator": "TP1",
+                "component": "AGGkqdLfDiYWoJ33eixpAS",
+                "source": {
+                  "index": 0,
+                  "line": 43,
+                  "col": 0
+                },
+                "objects": [
+                  {
+                    "pad": "CpvmCw8f8TXBN7iwr3ZiUT/EUXmcKmP2Uf1uiw9a5XkZD",
+                    "side": "top",
+                    "type": "SMD",
+                    "shapes": [
+                      {
+                        "layers": [
+                          0
+                        ],
+                        "shape": {
+                          "type": "polygon",
+                          "elements": [
+                            {
+                              "x": 0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": -0.6
+                            },
+                            {
+                              "x": 0.6,
+                              "y": -0.6
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "padname": "TestPad",
+                    "padref": "p",
+                    "fullpinref": "hold_left.p",
+                    "pinref": "p"
+                  },
+                  {
+                    "specifier": "soldermask",
+                    "side": "top",
+                    "shape": {
+                      "type": "polygon",
+                      "elements": [
+                        {
+                          "x": 0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": -0.7
+                        },
+                        {
+                          "x": 0.7,
+                          "y": -0.7
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ],
+            "objects": []
+          },
+          {
+            "id": "CtUYXQzoWFvDxHN9qKz9kx",
+            "pose": {
+              "center": {
+                "x": -8,
+                "y": -3
+              },
+              "angle": 0,
+              "flipx": false
+            },
+            "side": "top",
+            "instances": [
+              {
+                "id": "CtUYXQzoWFvDxHN9qKz9kx",
+                "ref": "c_left",
+                "designator": "TP7",
+                "component": "8CCGMZ6WkpiWTxY9vcBtDP",
+                "source": {
+                  "index": 0,
+                  "line": 49,
+                  "col": 0
+                },
+                "objects": [
+                  {
+                    "pad": "CtUYXQzoWFvDxHN9qKz9kx/EUXmcKmP2Uf1uiw9a5XkZD",
+                    "side": "top",
+                    "type": "SMD",
+                    "shapes": [
+                      {
+                        "layers": [
+                          0
+                        ],
+                        "shape": {
+                          "type": "polygon",
+                          "elements": [
+                            {
+                              "x": 0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": -0.6
+                            },
+                            {
+                              "x": 0.6,
+                              "y": -0.6
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "padname": "TestPad",
+                    "padref": "p",
+                    "fullpinref": "c_left.p",
+                    "pinref": "p"
+                  },
+                  {
+                    "specifier": "soldermask",
+                    "side": "top",
+                    "shape": {
+                      "type": "polygon",
+                      "elements": [
+                        {
+                          "x": 0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": -0.7
+                        },
+                        {
+                          "x": 0.7,
+                          "y": -0.7
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ],
+            "objects": []
+          },
+          {
+            "id": "4QnbLhwCFZbuhzBVCWVfg6",
+            "pose": {
+              "center": {
+                "x": 8,
+                "y": -3
+              },
+              "angle": 0,
+              "flipx": false
+            },
+            "side": "top",
+            "instances": [
+              {
+                "id": "4QnbLhwCFZbuhzBVCWVfg6",
+                "ref": "c_right",
+                "designator": "TP8",
+                "component": "FuMgdTrhJAQKK7D8sgLS4b",
+                "source": {
+                  "index": 0,
+                  "line": 50,
+                  "col": 0
+                },
+                "objects": [
+                  {
+                    "pad": "4QnbLhwCFZbuhzBVCWVfg6/EUXmcKmP2Uf1uiw9a5XkZD",
+                    "side": "top",
+                    "type": "SMD",
+                    "shapes": [
+                      {
+                        "layers": [
+                          0
+                        ],
+                        "shape": {
+                          "type": "polygon",
+                          "elements": [
+                            {
+                              "x": 0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": 0.6
+                            },
+                            {
+                              "x": -0.6,
+                              "y": -0.6
+                            },
+                            {
+                              "x": 0.6,
+                              "y": -0.6
+                            }
+                          ]
+                        }
+                      }
+                    ],
+                    "padname": "TestPad",
+                    "padref": "p",
+                    "fullpinref": "c_right.p",
+                    "pinref": "p"
+                  },
+                  {
+                    "specifier": "soldermask",
+                    "side": "top",
+                    "shape": {
+                      "type": "polygon",
+                      "elements": [
+                        {
+                          "x": 0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": 0.7
+                        },
+                        {
+                          "x": -0.7,
+                          "y": -0.7
+                        },
+                        {
+                          "x": 0.7,
+                          "y": -0.7
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ],
+            "objects": []
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "nets",
+    "body": {
+      "complete": true,
+      "nets": [
+        {
+          "id": 166,
+          "name": "HOLD",
+          "connected": [
+            {
+              "pads": [
+                "AUyMjqTEedaWQBs8oeSTrA/EUXmcKmP2Uf1uiw9a5XkZD",
+                "CpvmCw8f8TXBN7iwr3ZiUT/EUXmcKmP2Uf1uiw9a5XkZD"
+              ]
+            }
+          ],
+          "short-traces": []
+        },
+        {
+          "id": 165,
+          "name": "CROSS_B",
+          "connected": [
+            {
+              "pads": [
+                "7hE9ZZzi5DiJ2bVTmjXFHj/EUXmcKmP2Uf1uiw9a5XkZD",
+                "D7FeM7VkDJHbvhCto6sBKh/EUXmcKmP2Uf1uiw9a5XkZD"
+              ],
+              "vias": [
+                "7hE9ZZzi5DiJ2bVTmjXFHj/8LN6MSQsPSaupYqVixwzD5",
+                "D7FeM7VkDJHbvhCto6sBKh/CPqT6NuMhcJrzHsptih2hd"
+              ]
+            }
+          ],
+          "short-traces": []
+        },
+        {
+          "id": 164,
+          "name": "CROSS_A",
+          "connected": [
+            {
+              "pads": [
+                "5BzBiPEzFHPqdVLgPTsZcU/EUXmcKmP2Uf1uiw9a5XkZD",
+                "9GHTca44SRjeyF3j3nPGYP/EUXmcKmP2Uf1uiw9a5XkZD"
+              ],
+              "vias": [
+                "5BzBiPEzFHPqdVLgPTsZcU/D9JYcqUuXS8cm65g1Va7Dj",
+                "9GHTca44SRjeyF3j3nPGYP/DodXQNW6AMzXCoFdSEKvxS"
+              ]
+            }
+          ],
+          "short-traces": []
+        },
+        {
+          "id": 163,
+          "name": "CROSS_C",
+          "connected": [
+            {
+              "pads": [
+                "CtUYXQzoWFvDxHN9qKz9kx/EUXmcKmP2Uf1uiw9a5XkZD",
+                "4QnbLhwCFZbuhzBVCWVfg6/EUXmcKmP2Uf1uiw9a5XkZD"
+              ],
+              "vias": [
+                "CtUYXQzoWFvDxHN9qKz9kx/2JMp2LJvmiDXskL34xQGTs",
+                "4QnbLhwCFZbuhzBVCWVfg6/74NQjjTULRzdcsrv51jxa5"
+              ]
+            }
+          ],
+          "short-traces": []
+        }
+      ],
+      "orphan-pours": {}
+    }
+  }
+]
