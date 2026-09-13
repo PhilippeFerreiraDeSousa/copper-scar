@@ -18,13 +18,14 @@ def board(src,out):
   if isinstance(el,list) and el and el[0] in ['gr_line','gr_rect'] and one(el,'layer')==['Edge.Cuts']:
    edgepoints += [list(map(float,one(el,k)[:2])) for k in ['start','end'] if one(el,k)]
  ox=min(x[0] for x in edgepoints) if edgepoints else 0;oy=min(x[1] for x in edgepoints) if edgepoints else 0
- for layer in ['F.Cu','B.Cu','Both']:
+ layers=re.findall(r'\(\d+ \"([^\"]+\.Cu)\"',p.read_text());layers=list(dict.fromkeys(layers)) or ['F.Cu','B.Cu']
+ for layer in layers+['Both']:
   svg=dest/(layer+'.svg')
-  if not svg.exists():subprocess.run([CLI,'pcb','export','svg','--layers',(layer if layer!='Both' else 'F.Cu,B.Cu')+',F.SilkS,Edge.Cuts','--mode-single','--page-size-mode','2','--exclude-drawing-sheet','-o',str(svg),str(p)],capture_output=True,check=True)
+  if not svg.exists():subprocess.run([CLI,'pcb','export','svg','--layers',(layer if layer!='Both' else ','.join(layers))+',F.SilkS,Edge.Cuts','--mode-single','--page-size-mode','2','--exclude-drawing-sheet','-o',str(svg),str(p)],capture_output=True,check=True)
   labeled=dest/(layer+'-labels.svg')
   text=svg.read_text();labels=''.join(f'<text x="{v[0]-ox:.4f}" y="{v[1]-oy-1.8:.4f}" font-family="sans-serif" font-size="1.0" text-anchor="middle" fill="white" stroke="#091320" stroke-width="0.3" paint-order="stroke">{html.escape(ref)}</text>' for ref,v in poses.items());labeled.write_text(text.replace('</svg>',labels+'</svg>'));images[layer]=str(labeled.relative_to(out))
  assert sha(src)==h
- return {'cad':str(p.relative_to(out)),'sha256':h,'images':images}
+ return {'cad':str(p.relative_to(out)),'sha256':h,'images':images,'size_mm':[max(x[0] for x in edgepoints)-ox,max(x[1] for x in edgepoints)-oy] if edgepoints else None}
 def state(folder,out,title,phase,receipt=None,preview=False,action=None,retained=None,source=None,at=None):
  p=folder/('preview.kicad_pcb' if preview else 'pcbgolf.kicad_pcb');e=read(receipt) if receipt else None
  if not p.exists():p=folder/'medium-loop.kicad_pcb'
@@ -77,7 +78,7 @@ def main():
   def scorestate(folder,title,score,event=None,preview=False):
    native=score['native'];evaluation={'accepted':score['valid'],'drc_opens':native['opens'],'all_drc_violations':native['violations'],'parity_findings':native['parity_findings'],'erc_findings':native['erc_findings'],'board_sha256':score['board_sha256']}
    (folder/'demo-native-summary.json').write_text(json.dumps(evaluation));st=state(folder,out,title,'Stage 2 preview' if preview else 'Stage 2 official formula',folder/'demo-native-summary.json',preview=preview,action=event.get('action') if event else None,retained=event.get('retained') if event else True,source=event.get('source_sha') if event else s2protocol['source_sha'],at=event.get('finished_at') if event else None)
-   st.update({'score':None if preview else score,'score_receipt':str((folder/'score.json').relative_to(out)),'incumbent_score':event.get('incumbent_score') if event else score['official_formula_score'],'routing_attempted':event.get('routing_attempted') if event else None,'commands':event.get('commands') if event else [],'qualification':'Stage 2 uses complete nominal assembly and stricter native parity/ERC gates. Invalid candidates have no accepted score.'});return st
+   st.update({'score':None if preview else score,'score_receipt':str((folder/'score.json').relative_to(out)),'incumbent_score':event.get('incumbent_score') if event else score['official_formula_score'],'routing_attempted':event.get('routing_attempted') if event else None,'proposal_context':{k:v for k,v in (event or {}).items() if k not in ['result','commands','action']},'commands':event.get('commands') if event else [],'qualification':'Stage 2 uses complete nominal assembly and stricter native parity/ERC gates. Invalid candidates have no accepted score.'});st['preflight_findings']=read(folder/'preflight.json').get('violations',[]) if (folder/'preflight.json').exists() else [];return st
   baseline_score=read(s2/'baseline/score.json');s2states.append(scorestate(s2/'baseline','Complete-assembly valid baseline',baseline_score))
   for epoch in ['margin3','closer-packing','margin2']:
    ep=stage2src/epoch
@@ -109,7 +110,7 @@ def main():
   m2.mkdir(exist_ok=True);shutil.copy2(m2src/'lineage.json',m2/'lineage.json');mp['lineage']=read(m2/'lineage.json');mp['lineage_receipt']=str((m2/'lineage.json').relative_to(out));mp['summary']='Stage 1: 183 opens → routing-only 1 → placement 0. Stage 2 starts from the explicitly selected policy incumbent; the diagnostic first-zero branch is preserved separately. Exact transition hashes are in the lineage receipt.'
  if (m2src/'baseline/score.json').exists():
   copytree(m2src/'baseline',m2/'baseline');sc=read(m2/'baseline/score.json');st=scorestate(m2/'baseline','Stage boundary · accepted-best becomes Stage 2 baseline',sc);st['source']=mp['states'][-1]['source'];st['phase']='Stage 2 official formula · same accepted circuit';st['qualification']='Explicit selected-policy branch → model-only accepted-best → identical board SHA at Stage 2 baseline. Diagnostic first-zero branch is not silently substituted.';mp['states'].append(st)
-  for study_name in ['compact-v1','edge-space-v1']:
+  for study_name in [p.name for p in sorted(m2src.iterdir(),key=lambda p:p.stat().st_mtime) if (p/'events.json').exists() and p.name in ['compact-v1','edge-space-v1']]:
    study=m2src/study_name
    if not (study/'events.json').exists():continue
    if (study/'events.json').exists():
@@ -123,22 +124,22 @@ def main():
     if (dst/'current.json').exists():mp['stage2_current']=read(dst/'current.json')
  if (large/'v1/routing-control-01/completed.json').exists():
   target=raw/'large/v1';target.mkdir(parents=True,exist_ok=True);lp=next(p for p in projects if p['id']=='large');lp['states']=[]
-  for name in ['input-verified','routing-control-01','placement-01']:
+  for name in [p.name for p in sorted((large/'v1').iterdir(),key=lambda p: read(p/'completed.json').get('started_at','') if (p/'completed.json').exists() else '') if (p/'completed.json').exists()]:
    src=large/'v1'/name
    if not (src/'completed.json').exists():continue
    copytree(src,target/name);f=target/name;rec=read(f/'completed.json')
    if name=='placement-01' and (f/'preview.kicad_pcb').exists():lp['states'].append(state(f,out,'large-loop · six-swap proposal','Placement preview',f/'acceptance.json',True,action=rec.get('action'),source=rec.get('source_sha')))
-   st=state(f,out,'large-loop · '+name,'Ongoing Stage 1 · saved completed record',f/'acceptance.json',action=rec.get('action'),retained=rec.get('retained'),source=rec.get('source_sha'),at=rec.get('finished_at'));st['commands']=rec.get('commands',[]);st['qualification']='Still invalid. Routing-only109 opens retained; placement proposal worsened connectivity and was rejected.';lp['states'].append(st)
-  lp['summary']='472 → 109 opens from routing alone. The subsequent six-swap placement trial worsened opens to 345 and was rejected. 84 inherited required findings remain; no accepted large-loop result.'
+   st=state(f,out,'large-loop · '+name,'Ongoing Stage 1 · saved completed record',f/'acceptance.json',action=rec.get('action'),retained=rec.get('retained'),source=rec.get('source_sha'),at=rec.get('finished_at'));st['commands']=rec.get('commands',[]);st['qualification']='Diagnostic search incumbent only. Required findings remain unwaived; this board is not fully valid.';lp['states'].append(st)
+  lp['summary']='Candidate and retained native measurements are shown separately. 84 inherited required findings remain; no fully valid large-loop result.'
  if (m2src/'final-accepted/frozen.json').exists():
   f=m2/'final-accepted';copytree(m2src/'final-accepted',f);fr=read(f/'frozen.json');sc=read(f/'score.json');st=scorestate(f,'medium-loop · independently frozen Stage 2 final',sc);st['source']=fr['source_sha'];st['phase']='Stage 2 official formula · frozen final';st['qualification']='Stage 1 accepted-best → identical Stage 2 seed → valid score improvement. Fresh independent native + complete assembly checks passed. Search completed.';mp['states'].append(st)
- continuation=m2src/'continuation-01'
- if (continuation/'events.json').exists():
-  dst=m2/'continuation-01';dst.mkdir(exist_ok=True)
+ for continuation in sorted([p for p in m2src.iterdir() if (p/'events.json').exists() and p.name not in ['compact-v1','edge-space-v1']],key=lambda p:p.stat().st_mtime):
+  if not (continuation/'events.json').exists():continue
+  dst=m2/continuation.name;dst.mkdir(exist_ok=True)
   for name in ['protocol.json','events.json','current.json','live-status.json']:
    if (continuation/name).exists():shutil.copy2(continuation/name,dst/name)
   for event in read(continuation/'events.json'):
-   f=Path(event['folder']);target=dst/f.name;copytree(f,target);score=event['result'];mp['states'].append(scorestate(target,'LIVE continuation · '+str(event['index']),score,event));mp['states'][-1]['qualification']='New live continuation after the frozen noon film; excluded from its immutable snapshot.'
+   f=Path(event['folder']);target=dst/f.name;copytree(f,target);score=event['result'];mp['states'].append(scorestate(target,continuation.name+' · candidate '+str(event['index']),score,event));mp['states'][-1]['qualification']='New live continuation after the frozen noon film; excluded from its immutable snapshot.'
  status=read(a.status) if a.status else {}
  if 'current' in locals() and current.get('status')=='completed_idle':status['stage2']={'state':'completed_idle','operation':'Search frozen; replay available','last_completed_at':current['frozen_at'],'text':'COMPLETED / IDLE · search frozen · retained official score '+str(current['score']['official_formula_score'])+' · last completed '+current['frozen_at']}
  if (stage2src/'live-status.json').exists():
@@ -148,7 +149,7 @@ def main():
  if (m2src/'status.json').exists():status['medium']['stage2_status']=read(m2src/'status.json')
  if (out/'remote').exists():
   remote_links=[]
-  for name in ['small-verified.json','stage2-chapter-verified.json']:
+  for name in ['small-verified.json','stage2-chapter-verified.json','original-live-verified.json','large-live-verified.json']:
    if (out/'remote'/name).exists():
     r=read(out/'remote'/name);remote_links += [{'label':name.replace('-verified.json','')+' · W&B','url':r['run_url']},{'label':name.replace('-verified.json','')+' · Weave','url':r['trace_url']}]
  else:remote_links=[]
@@ -158,6 +159,17 @@ def main():
    remote_links.append({'label':'medium-loop · '+run['id'],'url':run['url']})
    for row in run['verified_rows']:
     remote_links.append({'label':'medium-loop · decision '+str(row['decision'])+' · trace','url':'https://wandb.ai/philippe-fdesousa/copper-scar/r/call/'+row['call_id']})
+ for rel in ['stage2/observability/verified.json','stage2/continuation-observability/verified.json']:
+  f=a.medium/rel
+  if f.exists():
+   rr=read(f);(out/'remote').mkdir(exist_ok=True);shutil.copy2(f,out/'remote'/('medium-'+f.parent.name+'-verified.json'));remote_links.append({'label':'medium-loop · '+f.parent.name,'url':rr.get('run_url',rr.get('url','https://wandb.ai/philippe-fdesousa/copper-scar/runs/medium-stage2-continuation-20260913' if 'continuation' in rel else 'https://wandb.ai/philippe-fdesousa/copper-scar/runs/medium-stage2-bca7861dec65'))})
  data={'remote':remote_links,'live':True,'title':'PCB Loop','generated_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'snapshot':True,'projects':projects,'status':status,'official_formula':'PCBA bounding-box volume (mm³) + 50 × vias + 5000 × copper layers','qualification':'Stage 2 score is considered only after native feasibility and complete-assembly validation. Lower is better. Wire length is a separate proxy.'}
- (out/'data.json.tmp').write_text(json.dumps(data,indent=2));(out/'data.json.tmp').replace(out/'data.json');(out/'data.js.tmp').write_text('window.DATA='+json.dumps(data)+';');(out/'data.js.tmp').replace(out/'data.js');shutil.copy2(Path(__file__).with_name('index.html'),out/'index.html');print(json.dumps({'out':str(out),'states':{p['id']:len(p['states']) for p in projects},'data_sha256':sha(out/'data.json')}))
+ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'live'))
+ from adapt import extend
+ data=extend(data,out,board,read,sha)
+ from normalize import normalize
+ data=normalize(data,out)
+ from world import apply
+ data=apply(data,out)
+ (out/'data.json.tmp').write_text(json.dumps(data,indent=2));(out/'data.json.tmp').replace(out/'data.json');(out/'data.js.tmp').write_text('window.DATA='+json.dumps(data)+';');(out/'data.js.tmp').replace(out/'data.js');shutil.copy2(Path(__file__).resolve().parents[1]/'live/index.html',out/'index.html.tmp');(out/'index.html.tmp').replace(out/'index.html');print(json.dumps({'out':str(out),'states':{p['id']:len(p['states']) for p in projects},'data_sha256':sha(out/'data.json')}))
 if __name__=='__main__':main()
