@@ -12,9 +12,9 @@ def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def write(p,v):
  tmp=p.with_name(p.name+'.tmp');tmp.write_text(json.dumps(v,indent=2)+'\n');os.replace(tmp,p)
 def command(argv,f,label):
- t=time.monotonic();start=now()
+ t=time.monotonic();start=now();script_hashes={str(v):sha(v) for v in argv if str(v).endswith('.py') and Path(v).is_file()}
  with (f/(label+'.log')).open('w') as log:r=subprocess.run(list(map(str,argv)),stdout=log,stderr=subprocess.STDOUT,timeout=360)
- record={'command':list(map(str,argv)),'started_at':start,'finished_at':now(),'elapsed_seconds':time.monotonic()-t,'returncode':r.returncode};write(f/(label+'.command.json'),record)
+ record={'script_sha256_at_start':script_hashes,'command':list(map(str,argv)),'started_at':start,'finished_at':now(),'elapsed_seconds':time.monotonic()-t,'returncode':r.returncode};write(f/(label+'.command.json'),record)
  if r.returncode:raise RuntimeError(record)
  return record
 
