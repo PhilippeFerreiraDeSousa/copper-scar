@@ -12,7 +12,7 @@ def evaluate(request,folder,emit):
         shutil.copy2(template/name,folder/name)
     for name in ['pcbgolf.pretty','pcbgolf.3dshapes','models']:
         shutil.copytree(template/name,folder/name)
-    board=sx.loads(Path(request['proposal_board']).read_text());board[:]=[v for v in board if not(isinstance(v,list) and v and str(v[0]) in ['segment','via','arc','zone'])];(folder/'pcbgolf.kicad_pcb').write_text(sx.dumps(board));project=(folder/'pcbgolf.kicad_pro').read_bytes()
+    board=sx.loads(Path(request['proposal_board']).read_text());board[:]=[v for v in board if not(isinstance(v,list) and v and str(v[0]) in (['zone'] if request.get('preserve_seed_copper') is True else ['segment','via','arc','zone']))];(folder/'pcbgolf.kicad_pcb').write_text(sx.dumps(board));project=(folder/'pcbgolf.kicad_pro').read_bytes()
     def run(argv,label):
         stop=threading.Event();tick=time.monotonic()
         def pulse():
