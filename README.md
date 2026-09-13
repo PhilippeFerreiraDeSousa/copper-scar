@@ -1,5 +1,9 @@
 # Copper Scar
 
+**Native board experiments, implementation branches, prompts, and candidate history:** [Hackathon work index](docs/hackathon/README.md).
+
+The sections below describe the earlier scaffold. See the index for the actual KiCad/Freerouting demo pipeline and separate JITX research.
+
 **One-liner:** Agent loop that scars PCBGolf attempts — Weave spans, hard gates, official comma.ai score — for CoreWeave Hacks.
 
 ## Loop
