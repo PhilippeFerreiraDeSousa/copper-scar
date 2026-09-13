@@ -110,7 +110,7 @@ def main():
   m2.mkdir(exist_ok=True);shutil.copy2(m2src/'lineage.json',m2/'lineage.json');mp['lineage']=read(m2/'lineage.json');mp['lineage_receipt']=str((m2/'lineage.json').relative_to(out));mp['summary']='Stage 1: 183 opens → routing-only 1 → placement 0. Stage 2 starts from the explicitly selected policy incumbent; the diagnostic first-zero branch is preserved separately. Exact transition hashes are in the lineage receipt.'
  if (m2src/'baseline/score.json').exists():
   copytree(m2src/'baseline',m2/'baseline');sc=read(m2/'baseline/score.json');st=scorestate(m2/'baseline','Stage boundary · accepted-best becomes Stage 2 baseline',sc);st['source']=mp['states'][-1]['source'];st['phase']='Stage 2 official formula · same accepted circuit';st['qualification']='Explicit selected-policy branch → model-only accepted-best → identical board SHA at Stage 2 baseline. Diagnostic first-zero branch is not silently substituted.';mp['states'].append(st)
-  for study_name in [p.name for p in sorted(m2src.iterdir(),key=lambda p:p.stat().st_mtime) if (p/'events.json').exists() and p.name in ['compact-v1','edge-space-v1']]:
+  for study_name in ['compact-v1','edge-space-v1']:
    study=m2src/study_name
    if not (study/'events.json').exists():continue
    if (study/'events.json').exists():
@@ -133,7 +133,7 @@ def main():
   lp['summary']='Candidate and retained native measurements are shown separately. 84 inherited required findings remain; no fully valid large-loop result.'
  if (m2src/'final-accepted/frozen.json').exists():
   f=m2/'final-accepted';copytree(m2src/'final-accepted',f);fr=read(f/'frozen.json');sc=read(f/'score.json');st=scorestate(f,'medium-loop · independently frozen Stage 2 final',sc);st['source']=fr['source_sha'];st['phase']='Stage 2 official formula · frozen final';st['qualification']='Stage 1 accepted-best → identical Stage 2 seed → valid score improvement. Fresh independent native + complete assembly checks passed. Search completed.';mp['states'].append(st)
- for continuation in sorted([p for p in m2src.iterdir() if (p/'events.json').exists() and p.name not in ['compact-v1','edge-space-v1']],key=lambda p:p.stat().st_mtime):
+ for continuation in sorted([p for p in m2src.iterdir() if (p/'events.json').exists() and p.name not in ['compact-v1','edge-space-v1']],key=lambda p: (read(p/'events.json') or [{}])[0].get('started_at',p.name)):
   if not (continuation/'events.json').exists():continue
   dst=m2/continuation.name;dst.mkdir(exist_ok=True)
   for name in ['protocol.json','events.json','current.json','live-status.json']:
