@@ -30,8 +30,11 @@ def main():
     ap.add_argument('--until',required=True)
     ap.add_argument('--route-seconds',type=int,default=600)
     ap.add_argument('--catalog',type=Path,required=True)
+    ap.add_argument('--preview-only',action='store_true',help='Verify finite native previews in isolated state without starting a router')
     a=ap.parse_args();deadline=datetime.fromisoformat(a.until).timestamp()
-    work=LOCAL/'campaign';work.mkdir(exist_ok=True)
+    work=LOCAL/'campaign'
+    if a.preview_only:work=work/'verification'/str(int(time.time()))
+    work.mkdir(parents=True,exist_ok=True)
     lock=(work/'supervisor.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
     path=work/'state.json';state=json.loads(path.read_text()) if path.exists() else dict(decisions=[])
     state.update(selector_version='native-feedback-v2',pid=os.getpid(),status='running',worker_pid=None,until=a.until,catalog=str(a.catalog.resolve()))
@@ -143,6 +146,8 @@ def main():
         if not eligible:
             write(selection,trace);state.update(status='needs_attention',reason='Finite candidate pool has no eligible native preview',selection=str(selection));break
         chosen=min(eligible,key=lambda p:p['score']);trace['chosen']={k:v for k,v in chosen.items() if k!='action'};write(selection,trace)
+        if a.preview_only:
+            state.update(status='preview_verified',reason='Native finalist previews completed without routing',selection=str(selection),preview_count=len(previews));break
         action=chosen['action'];action['campaign_selection']=str(selection);action['feedback_used']=sorted(set(action['feedback_used']+feedback_ids));proposal=LOCAL/'proposals'/('campaign-selected-'+prefix+'.json');write(proposal,action)
         decision=dict(index=index,catalog_id=chosen['catalog_id'],parent=str(parent),parent_board_sha256=board_hash,proposal=str(proposal),selection=str(selection),feedback_record_ids=feedback_ids,started_at=now());state['decisions'].append(decision);write(path,state)
         run([python,'-m','copper_scar.tools.copperhead.stage1','--source',str(parent),'--proposal',str(proposal),'--route-seconds',str(a.route_seconds),'--budget',str(a.route_seconds+420)],prefix+'-evaluate',a.route_seconds+450)
