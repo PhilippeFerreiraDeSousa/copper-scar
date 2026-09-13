@@ -36,6 +36,9 @@ while time.time()+a.route_seconds+180<deadline:
    digest=hashlib.sha256(Path(pending['proposal']).read_bytes()).hexdigest();matches=[r for r in records if r.get('action',{}).get('proposal_sha256')==digest and r.get('status')!='running']
    if matches:
     r=matches[-1];pending.update(attempt=r['attempt'],status=r['status'],finished_at=r.get('finished_at'),became_incumbent=r.get('became_incumbent',False),after={k:r.get('after',{}).get(k) for k in ('unconnected','errors','warnings','invariants_ok')})
+    if r.get('effects'):
+     effects=json.loads(Path(r['effects']).read_text());before=effects.get('missing_before',{});after=effects.get('missing_after',{});nets=set(r['action']['nets']);changes={n:dict(before=before.get(n,0),after=after.get(n,0)) for n in before.keys()|after.keys() if before.get(n,0)!=after.get(n,0)}
+     pending['incident_net_changes']={n:v for n,v in changes.items() if n in nets};pending['other_net_changes']={n:v for n,v in changes.items() if n not in nets}
  write(path,state)
  controls=[r for r in records if Path(r.get('input',''))==epoch_parent and r.get('action',{}).get('kind')=='initial_route' and r.get('routing_scope',{}).get('effort_limit_seconds')==a.route_seconds and r.get('status')=='completed']
  if not controls:
@@ -58,10 +61,14 @@ while time.time()+a.route_seconds+180<deadline:
   scores.append((len(findings)/(1+penalty)+max(0,native_gain),group,findings,history))
  if not scores:state.update(status='needs_attention',reason='All available diagnostic group moves exhausted for current parent');break
  queue=json.loads((work/'queue.json').read_text()) if (work/'queue.json').exists() else []
- queued=next((q for q in queue if q['id'] not in {d.get('queued_id') for d in state['decisions']}),None)
- if queued:
-  scores=[x for x in scores if x[1]==queued['group']]
-  if not scores:state.update(status='needs_attention',reason='Queued group has no current failed endpoints');break
+ used={d.get('queued_id') for d in state['decisions']}|{d['id'] for d in state.get('skipped_queue',[])}
+ queued=None
+ for q in queue:
+  if q['id'] in used:continue
+  if any(x[1]==q['group'] for x in scores):queued=q;break
+  state.setdefault('skipped_queue',[]).append(dict(id=q['id'],group=q['group'],reason='No current failed endpoints or no untried legal proposal for this parent',parent_board_sha256=board_hash,recorded_at=now()))
+ write(path,state)
+ if queued:scores=[x for x in scores if x[1]==queued['group']]
  _,group,findings,history=max(scores,key=lambda x:(not state['decisions'] and x[1]=='can_channel_0',x[0]));index=len(state['decisions']);label=f'{index:03d}-{group}';proposal=LOCAL/'proposals'/('campaign-'+label+'.json')
  code=run([krt,str(ROOT/'scripts/copperhead_pose_proposals.py'),str(epoch_parent),'--manifest',str(manifest),'--output',str(proposal),'--group',group,'--steps='+queued.get('steps','-0.5,0.5,-1,1') if queued else '--steps=-0.5,0.5,-1,1,-2,2,-3,3,-5,5',*(['--move-refs',queued['move_refs'],'--rotations',queued.get('rotations','0')] if queued and queued.get('move_refs') else []),'--feedback',str(LOCAL/'loop/feedback.json'),'--allow-proxy-regression'],label+'-generate')
  if code:exhausted.add(group);continue
@@ -72,7 +79,7 @@ while time.time()+a.route_seconds+180<deadline:
  if not matching:state.update(status='needs_attention',reason='Evaluation produced no attributable attempt');break
  result=matching[-1];decision.update(attempt=result['attempt'],status=result['status'],finished_at=now(),became_incumbent=result.get('became_incumbent',False),error=result.get('error'),after={k:result.get('after',{}).get(k) for k in ('unconnected','errors','warnings','invariants_ok')})
  if result.get('effects'):
-  effects=json.loads(Path(result['effects']).read_text());before=effects.get('missing_before',{});after=effects.get('missing_after',{});decision['incident_net_changes']={n:dict(before=before.get(n,0),after=after.get(n,0)) for n in action['nets'] if before.get(n,0)!=after.get(n,0)}
+  effects=json.loads(Path(result['effects']).read_text());before=effects.get('missing_before',{});after=effects.get('missing_after',{});decision['incident_net_changes']={n:dict(before=before.get(n,0),after=after.get(n,0)) for n in action['nets'] if before.get(n,0)!=after.get(n,0)};decision['other_net_changes']={n:dict(before=before.get(n,0),after=after.get(n,0)) for n in before.keys()|after.keys() if n not in action['nets'] and before.get(n,0)!=after.get(n,0)}
  write(path,state);epoch_trials+=1
  if result.get('became_incumbent'):epoch_parent=None
  if result.get('status')=='failed' and 'Placement failed native' not in result.get('error',''):
