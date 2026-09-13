@@ -1,16 +1,21 @@
 """Finish native ERC and write source-bound replay records for saved stages."""
 from pathlib import Path
 import argparse,json,subprocess
-from campaign import command,KICAD,sha,write,now,ROOT
+from campaign import command,KICAD,KIPY,sha,write,now,ROOT
 from audit import audit
 
 def finish(base,folder,source,action,parent=None,retained=False):
  base,folder,source=map(Path,[base,folder,source])
  command([KICAD,'sch','erc','--format','json','-o',folder/'erc.json',folder/'pcbgolf.kicad_sch'],folder,'erc')
+ command([KIPY,ROOT/'experiments/large-loop/native_geometry.py',source/'pcbgolf.kicad_pcb',folder/'pcbgolf.kicad_pcb',base/'input/circuit.json',folder/'full-geometry.json'],folder,'geometry')
  result=audit(folder,base/'input/circuit.json',source)
  existing=json.loads((folder/'evaluation.json').read_text())
  existing.update(result);result=existing
  erc=[v for sheet in json.loads((folder/'erc.json').read_text())['sheets'] for v in sheet['violations']]
+ geometry=json.loads((folder/'full-geometry.json').read_text())['all_electrical_and_mechanical_pads_preserved']
+ result['all_pad_geometry_preserved']=geometry
+ result['feasibility_cost']+=0 if geometry else 10000
+ result['accepted']=result['accepted'] and geometry
  result['erc_violations']=len(erc);result['feasibility_cost']+=len(erc);result['accepted']=result['accepted'] and not erc
  write(folder/'evaluation.json',result);write(folder/'acceptance.json',result)
  commands=sorted([json.loads(f.read_text()) for f in folder.glob('*.command.json')],key=lambda c:c['started_at'])

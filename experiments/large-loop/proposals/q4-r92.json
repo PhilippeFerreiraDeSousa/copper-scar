@@ -1,0 +1,6 @@
+{
+  "kind": "swap_component_locations",
+  "rationale": "Native baseline opens involve both Q4 drain nets and CH3_SBU1_RELAY. Q4 sits 25 mm above its resistor field. Move Q4 into that field at R92's location; move R92 next to its actual transistor Q3. This shortens several broken net spans without moving a port, changing a net, adding copper or altering rules. Native preflight must verify unlike package sizes fit both existing clearances.",
+  "diagnostic_nets": ["Net-(Q4-D1)", "Net-(Q4-D2)", "CH3_SBU1_RELAY"],
+  "after": {"Q4": [74, 82, 0], "R92": [74, 57, 0]}
+}
