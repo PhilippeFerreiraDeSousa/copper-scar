@@ -9,6 +9,15 @@ from datetime import datetime
 ROOT=Path(__file__).resolve().parents[1];LOCAL=ROOT/'.local/copperhead'
 PROJECT='philippe-fdesousa/copper-scar'
 
+def unique_remote_rows(rows):
+ # The history API can replay identical rows after resume. Never collapse
+ # conflicting values, timestamps, media paths or step identities.
+ seen=set();unique=[]
+ for row in rows:
+  key=json.dumps(row,sort_keys=True,separators=(',',':'))
+  if key not in seen:seen.add(key);unique.append(row)
+ return unique
+
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--credential-file',type=Path,required=True);a=ap.parse_args()
  out=LOCAL/'observability';out.mkdir(exist_ok=True)
@@ -88,7 +97,7 @@ def main():
   run.finish();client.flush()
   # Read back actual remote rows/media/calls. A successful local SDK exit is insufficient.
   for retry in range(6):
-   api.flush();remote=api.run(run_path);history=list(remote.scan_history())
+   api.flush();remote=api.run(run_path);raw_history=list(remote.scan_history());history=unique_remote_rows(raw_history)
    if all(sum(h.get('attempt_id')==entry['attempt_id'] for h in history)==1 for entry in entries):break
    time.sleep(2)
   files=[f.name for f in remote.files()];verified=[]
@@ -102,6 +111,6 @@ def main():
   for entry in failure_entries:
    calls=list(client.get_calls(filter={'call_ids':[entry['call_id']]},limit=2));assert len(calls)==1 and calls[0].ended_at
   assert len(remote.summary.get('failed_outer_attempts',[]))==len(failure_entries)
-  report['runs'].append({'failed_outer_attempts':failure_entries,'run_id':run_id,'url':'https://wandb.ai/'+PROJECT+'/runs/'+run_id,'rows':verified,'history_rows':len(history)})
+  report['runs'].append({'failed_outer_attempts':failure_entries,'run_id':run_id,'url':'https://wandb.ai/'+PROJECT+'/runs/'+run_id,'rows':verified,'history_rows':len(history),'raw_history_rows':len(raw_history),'identical_remote_duplicates':len(raw_history)-len(history)})
  (out/'verified.json').write_text(json.dumps(report,indent=2));print(json.dumps(report,indent=2))
 if __name__=='__main__':main()
