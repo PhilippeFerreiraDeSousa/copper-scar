@@ -131,13 +131,23 @@ def choose_action(result, feedback, scope):
         return dict(kind='route_continue',reason='Connectivity remains incomplete without native short/clearance regressions',hypothesis='Continue routing from retained copper, preserving rules, placement and planes',feedback_used=[f['attempt'] for f in previous[-2:]])
     return dict(kind='stop', reason='Routing complete; remaining native/model/engineering requirements need explicit closure before Stage 2')
 
-def evaluate(candidate, run, label, frozen_support):
+def finalize_board(candidate, run):
+    """Persist native zone fills before hashing and checking the delivered board."""
+    board=candidate/'pcbgolf.kicad_pcb'
+    before=hashlib.sha256(board.read_bytes()).hexdigest()
+    invocation=command([KICAD,'pcb','drc','--format','json','--schematic-parity','--refill-zones','--save-board','-o',str(run/'saved-fill-drc.json'),str(board)],run,'persist_zone_fills',120)
+    if invocation['returncode']!=0:raise RuntimeError('Persisting native zone fills failed')
+    result=dict(before_board_sha256=before,after_board_sha256=hashlib.sha256(board.read_bytes()).hexdigest(),invocation=invocation,subsequent_check='Fresh saved-file DRC without refill required')
+    write(run/'saved-fill.json',result)
+    return result
+
+def evaluate(candidate, run, label, frozen_support, *, saved_board=False):
     d=run/label;d.mkdir()
     before=design_files(candidate)
     invocations={}
     jobs=[('netlist',[KICAD,'sch','export','netlist','--format','kicadxml','-o',str(candidate/'reference.net.xml'),str(candidate/'pcbgolf.kicad_sch')]),
           ('erc',[KICAD,'sch','erc','--format','json','-o',str(candidate/'erc.json'),str(candidate/'pcbgolf.kicad_sch')]),
-          ('drc',[KICAD,'pcb','drc','--format','json','--schematic-parity','--refill-zones','-o',str(d/'drc.json'),str(candidate/'pcbgolf.kicad_pcb')]),
+          ('drc',[KICAD,'pcb','drc','--format','json','--schematic-parity',*([] if saved_board else ['--refill-zones']),'-o',str(d/'drc.json'),str(candidate/'pcbgolf.kicad_pcb')]),
           ('reference',[PYTHON,str(ROOT/'scripts/copperhead_check_reference.py'),str(REFERENCE),str(candidate)])]
     for name,argv in jobs:invocations[name]=command(argv,d,name,120)
     erc=native_report(json.loads((candidate/'erc.json').read_text()),'erc',invocations['erc']['returncode'],'pcbgolf.kicad_sch')
@@ -151,6 +161,7 @@ def evaluate(candidate, run, label, frozen_support):
     manufacturing=manufacturing_findings(raw)
     result.update(manufacturing_findings=manufacturing,manufacturing_findings_count=len(manufacturing),manufacturing_rules_clear=not manufacturing)
     result['constraint_scope']=design_digest(frozen_support)
+    result['zone_fill_check']='saved_file_without_refill' if saved_board else 'unsaved_native_refill'
     result['native_cad_ok']=result['native_cad_ok'] and not manufacturing
     # This implementation has no authority to invent engineering acceptance.
     write(d/'evaluation.json',result)
@@ -332,7 +343,8 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                         if not record['placement_evaluation']['invariants_ok'] or record['placement_evaluation']['errors']:raise RuntimeError('Placement failed native physical/invariant check before routing')
                 span.set_output({'commands':record['commands']})
             with tracer.span('native.stage1.evaluate_after',attributes={'attempt':uid,'policy_version':POLICY}) as span:
-                after=evaluate(candidate,run,'after',frozen);span.set_output({k:v for k,v in after.items() if k not in ['files','violations']})
+                record['saved_fill']=finalize_board(candidate,run)
+                after=evaluate(candidate,run,'after',frozen,saved_board=True);span.set_output({k:v for k,v in after.items() if k not in ['files','violations']})
             if not legacy_inner:
                 record['routing_scope']['execution']=json.loads((candidate/'execution.json').read_text())
                 record['routing_scope']['completion']='routed_and_natively_evaluated'
