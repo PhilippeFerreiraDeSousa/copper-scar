@@ -11,9 +11,12 @@ def now():return datetime.now(timezone.utc).isoformat()
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def write(p,v):p.write_text(json.dumps(v,indent=2)+'\n')
 def command(argv,f,label):
- t=time.monotonic();start=now()
- with (f/(label+'.log')).open('w') as log:r=subprocess.run(list(map(str,argv)),stdout=log,stderr=subprocess.STDOUT,timeout=360)
- record={'command':list(map(str,argv)),'started_at':start,'finished_at':now(),'elapsed_seconds':time.monotonic()-t,'returncode':r.returncode};write(f/(label+'.command.json'),record)
+ t=time.monotonic();start=now();arguments=list(map(str,argv));scripts={v:sha(v) for v in arguments if v.endswith('.py') and Path(v).is_file()};error=None;r=None
+ try:
+  with (f/(label+'.log')).open('w') as log:r=subprocess.run(arguments,stdout=log,stderr=subprocess.STDOUT,timeout=360)
+ except subprocess.TimeoutExpired as exc:error=exc
+ record={'command':arguments,'script_sha256':scripts,'started_at':start,'finished_at':now(),'elapsed_seconds':time.monotonic()-t,'returncode':r.returncode if r else None,'timeout':error is not None};write(f/(label+'.command.json'),record)
+ if error:raise error
  if r.returncode:raise RuntimeError(record)
  return record
 
@@ -47,7 +50,7 @@ def propose(ps,nets,policy,tried):
  _,candidate,action=min(options,key=lambda v:v[0]);tried.add(json.dumps(candidate,sort_keys=True));return candidate,action
 
 def realize(base,folder,placements,manifest,source,route=True):
- folder.mkdir();shutil.copy2(base/'authoritative-project.json',folder/'pcbgolf.kicad_pro');shutil.copytree(base/'input/pcbgolf.pretty',folder/'pcbgolf.pretty');shutil.copy2(base/'input/fp-lib-table',folder/'fp-lib-table');putposes(base/'input/large-loop.kicad_pcb',folder/'pcbgolf.kicad_pcb',placements)
+ folder.mkdir();write(folder/'source-receipt.json',{'source_sha':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'source_files':{str(p.relative_to(ROOT)):sha(p) for p in (ROOT/'experiments/large-loop').rglob('*.py')},'input_board_sha256':sha(base/'input/large-loop.kicad_pcb'),'input_manifest_sha256':sha(manifest),'created_at':now()});shutil.copy2(base/'authoritative-project.json',folder/'pcbgolf.kicad_pro');shutil.copytree(base/'input/pcbgolf.pretty',folder/'pcbgolf.pretty');shutil.copy2(base/'input/fp-lib-table',folder/'fp-lib-table');putposes(base/'input/large-loop.kicad_pcb',folder/'pcbgolf.kicad_pcb',placements)
  shutil.copytree(base/'input/models',folder/'models')
  shutil.copytree(base/'input/pcbgolf.3dshapes',folder/'pcbgolf.3dshapes')
  shutil.copy2(base/'input/large-loop.kicad_sch',folder/'pcbgolf.kicad_sch');shutil.copy2(base/'input/pcbgolf.kicad_sym',folder/'pcbgolf.kicad_sym');shutil.copy2(base/'input/sym-lib-table',folder/'sym-lib-table')

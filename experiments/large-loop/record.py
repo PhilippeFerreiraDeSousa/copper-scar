@@ -20,6 +20,8 @@ def finish(base,folder,source,action,parent=None,retained=False):
  write(folder/'evaluation.json',result);write(folder/'acceptance.json',result)
  commands=sorted([json.loads(f.read_text()) for f in folder.glob('*.command.json')],key=lambda c:c['started_at'])
  rec={'id':'large-loop-'+folder.name,'source_sha':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'source_files':{str(p.relative_to(ROOT)):sha(p) for p in (ROOT/'experiments/large-loop').rglob('*.py')},'started_at':commands[0]['started_at'],'finished_at':now(),'action':action,'parent_board_sha256':sha(Path(parent)/'pcbgolf.kicad_pcb') if parent else None,'after':result,'commands':commands,'retained':retained,'preview_sha256':sha(folder/'preview.kicad_pcb'),'folder':str(folder.resolve()),'loss_components':{'opens':result['drc_opens'],'required_physical_findings':len(result['required_violations']),'schematic_parity':result['schematic_parity_issues'],'erc':len(erc)},'limitations':'Intrinsic original footprint errors retained; no claim of native feasibility until all acceptance gates pass.'}
+ if (folder/'source-receipt.json').exists():
+  producer=json.loads((folder/'source-receipt.json').read_text());rec['source_sha']=producer['source_sha'];rec['source_files']=producer['source_files'];rec['producer_receipt']=producer
  write(folder/'completed.json',rec);return rec
 
 if __name__=='__main__':
