@@ -22,6 +22,11 @@ def main():
    log=root/'candidates'/record['attempt']/'router.log';command=rp.parent/'route.command.json'
    if not log.exists():continue
    digest=sha(log);heartbeat=json.loads(command.read_text()) if command.exists() else {};signature=(digest,heartbeat.get('state'));prior=seen.get(record['attempt'])
+   if not prior:
+    saved=remote/'router-logs'/record['attempt']/'remote-verified.json'
+    if saved.exists():
+     receipt=json.loads(saved.read_text());hashes={e['file']:e['sha256'] for e in receipt.get('sources',[])}
+     if hashes.get('router.log')==digest and command.exists() and hashes.get('route.command.json')==sha(command):seen[record['attempt']]=(signature,time.monotonic());continue
    if prior and prior[0]==signature and (heartbeat.get('state')!='running' or time.monotonic()-prior[1]<120):continue
    run_id='policy-'+hashlib.sha256((state['experiment_id']+'/'+pid).encode()).hexdigest()[:16]
    subprocess.run([sys.executable,str(scripts/'publish_logs.py'),'--run-id',run_id,'--attempt',record['attempt'],'--output',str(remote)],check=True,timeout=90)

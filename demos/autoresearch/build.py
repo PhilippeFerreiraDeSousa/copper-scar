@@ -111,7 +111,13 @@ def build(source,out):
     if p and expected:incumbent=asset(p,expected,out);point['stages']=[{'name':'Initial native baseline; no routing',**incumbent}]
    lower=point['raw_lower']
    if not state['fixture'] and lower.get('retained_board_path') and lower.get('retained_board_sha256'):incumbent=asset(lower['retained_board_path'],lower['retained_board_sha256'],out)
-   if not point['stages'] and not state['fixture'] and lower.get('pre_board_path') and lower.get('pre_board_sha256'):point['stages']=[{'name':'Precheck only; no full routing',**asset(lower['pre_board_path'],lower['pre_board_sha256'],out)}]
+   point['action']=point.get('action') or lower.get('action')
+   if not point['stages'] and not state['fixture'] and point['index']:
+    if lower.get('input_board_path') and lower.get('input_board_sha256'):point['stages'].append({'name':'Original screening input',**asset(lower['input_board_path'],lower['input_board_sha256'],out)})
+    else:point['stages'].append({'name':'Original input','missing':'No verified input snapshot'})
+    if lower.get('pre_board_path') and lower.get('pre_board_sha256'):point['stages'].append({'name':'Screened update; no full routing',**asset(lower['pre_board_path'],lower['pre_board_sha256'],out)})
+    else:point['stages'].append({'name':'Updated pre-route','missing':'No feasible update available'})
+    point['stages'].append({'name':'After routing','missing':'NOT ROUTED: screening-only decision'})
    point['incumbent']=incumbent
    # Keep detailed evaluations once in the copied receipt, not repeated in live JSON.
    for stage in point['stages']:
