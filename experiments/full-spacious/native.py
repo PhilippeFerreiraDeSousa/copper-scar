@@ -7,7 +7,7 @@ ap=argparse.ArgumentParser()
 ap.add_argument('action',choices=['prepare','export','import','audit'])
 ap.add_argument('folder',type=Path)
 ap.add_argument('--groups',type=Path)
-ap.add_argument('--mode',choices=['spacious','original','compact'],default='spacious')
+ap.add_argument('--mode',choices=['spacious','original','prior'],default='spacious')
 ap.add_argument('--gap',type=float,default=3)
 a=ap.parse_args(); folder=a.folder; path=folder/'pcbgolf.kicad_pcb'
 project=folder/'pcbgolf.kicad_pro'; project_bytes=project.read_bytes()
@@ -25,6 +25,7 @@ def save():
  # KiCad may serialize settings as a side effect; retain exact frozen support.
  project.write_bytes(project_bytes)
 before=identity();poses={r:pos(f) for r,f in fs.items()}
+exact_positions={r:(f.GetPosition().x,f.GetPosition().y) for r,f in fs.items()}
 if a.action=='prepare':
  assert len(fs)==245 and len(list(b.GetTracks()))==0 and len(list(b.Zones()))==0
  b.SetCopperLayerCount(6)
@@ -34,7 +35,7 @@ if a.action=='prepare':
  groups=json.loads(a.groups.read_text());flat=[r for rs in groups.values() for r in rs]
  assert len(flat)==245 and set(flat)==set(fs)
  records=[]
- if a.mode!='original':
+ if a.mode=='spacious':
   # Package-aware shelf cells adapt the demo grids. Original angles are retained.
   # Functional group membership is fixed; within each group preserve spatial order.
   gx,gy=25.,25.;rowh=0.;group_gap=8.;column=0
@@ -56,6 +57,12 @@ if a.action=='prepare':
   zs=[bounds(f) for r,f in fs.items() if not r.startswith('BH')]
   outline=[15.,15.,math.ceil(max(z[2] for z in zs)+10),math.ceil(max(z[3] for z in zs)+10)]
   for r,xy in zip(['BH1','BH2','BH3','BH4'],[(19,19),(outline[2]-4,19),(outline[2]-4,outline[3]-4),(19,outline[3]-4)]):fs[r].SetPosition(p.VECTOR2I(p.FromMM(xy[0]),p.FromMM(xy[1])))
+ elif a.mode=='prior':
+  baseline=Path(__file__).resolve().parents[2]/'.local/copperhead/candidates/baseline-007/placement.json'
+  previous=json.loads(baseline.read_text());assert {row['ref'] for row in previous['moves']}==set(fs)
+  for row in previous['moves']:
+   x,y=row['to_mm'];fs[row['ref']].SetPosition(p.VECTOR2I(p.FromMM(x),p.FromMM(y)))
+  outline=previous['outline_mm'];records=[dict(source=str(baseline),sha256=hashlib.sha256(baseline.read_bytes()).hexdigest(),method=previous['method'])]
  else:
   zs=[bounds(f) for f in fs.values()]
   outline=[math.floor(min(z[0] for z in zs)-10),math.floor(min(z[1] for z in zs)-10),math.ceil(max(z[2] for z in zs)+10),math.ceil(max(z[3] for z in zs)+10)]
@@ -73,7 +80,7 @@ elif a.action=='export':
 elif a.action=='import':
  assert p.ImportSpecctraSES(b,str(folder/'pcbgolf.ses'))
  for r,f in fs.items():
-  x,y,angle=poses[r];f.SetPosition(p.VECTOR2I(p.FromMM(x),p.FromMM(y)));f.SetOrientationDegrees(angle)
+  x,y=exact_positions[r];f.SetPosition(p.VECTOR2I(x,y));f.SetOrientationDegrees(poses[r][2])
  assert before==identity()
  save()
 else:

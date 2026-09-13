@@ -82,7 +82,7 @@ def trial(root,name,mode,gap,seconds):
  run([s.KICAD,'pcb','export','svg','--layers','F.Cu,B.Cu,Edge.Cuts','--mode-single','--page-size-mode','2','-o',out/'visual',candidate/'pcbgolf.kicad_pcb'],out,'visual')
  return result
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--root',type=Path,required=True);ap.add_argument('--seconds',type=int,default=600);ap.add_argument('--mode',choices=['spacious','original','compact'],default='spacious');ap.add_argument('--gap',type=float,default=3);ap.add_argument('--name',required=True);a=ap.parse_args()
+ ap=argparse.ArgumentParser();ap.add_argument('--root',type=Path,required=True);ap.add_argument('--seconds',type=int,default=600);ap.add_argument('--mode',choices=['spacious','original','prior'],default='spacious');ap.add_argument('--gap',type=float,default=3);ap.add_argument('--name',required=True);a=ap.parse_args()
  a.root=a.root.resolve();a.root.mkdir(parents=True,exist_ok=True)
  write(a.root/(a.name+'-source.json'),dict(commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),sources={str(p.relative_to(ROOT)):sha(p) for p in HERE.glob('*') if p.is_file()},original_board_sha256=sha(s.REFERENCE/'pcbgolf.kicad_pcb'),route_seconds=a.seconds,net_filter=None,layers=6,passes=100,threads=1,fanout=False,created_at=s.now()))
  print(json.dumps(trial(a.root,a.name,a.mode,a.gap,a.seconds),indent=2))
