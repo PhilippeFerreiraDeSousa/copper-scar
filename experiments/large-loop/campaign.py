@@ -9,7 +9,8 @@ KIPY='/Users/philippe/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.fr
 KICAD='/Users/philippe/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli'
 def now():return datetime.now(timezone.utc).isoformat()
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
-def write(p,v):p.write_text(json.dumps(v,indent=2)+'\n')
+def write(p,v):
+ p=Path(p);temporary=p.with_name(p.name+'.tmp');temporary.write_text(json.dumps(v,indent=2)+'\n');temporary.replace(p)
 def command(argv,f,label):
  t=time.monotonic();start=now();arguments=list(map(str,argv));scripts={v:sha(v) for v in arguments if v.endswith('.py') and Path(v).is_file()};error=None;r=None
  try:
