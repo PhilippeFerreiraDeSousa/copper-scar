@@ -23,6 +23,8 @@ jdk = ROOT / '.local/copperhead/tools/jdk25/jdk-25.0.4.1+1/Contents/Home/bin'
 source = ROOT / 'scripts/native/CopperheadFanout.java'
 evidence = folder / 'terminal-fanout'
 evidence.mkdir()
+kipy='/Users/philippe/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3.9'
+subprocess.run([kipy,str(ROOT/'scripts/copperhead_terminal_targets.py'),str(board),'--proposal',str(a.proposal.resolve()),'--output',str(evidence/'terminal-bindings.json')],check=True,timeout=30)
 (evidence / source.name).write_bytes(source.read_bytes())
 (evidence/'input.dsn').write_bytes((folder/'pcbgolf.dsn').read_bytes())
 subprocess.run([str(jdk / 'javac'), '-proc:none', '-cp', str(jar), '-d', str(evidence), str(source)], check=True, timeout=30)

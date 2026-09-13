@@ -1,92 +1,144 @@
-"""Deadline-bounded placement campaign driven by recorded native outcomes.
+"""Serial placement/topology campaign using native failures to select each action.
 
-One writer, matched routing controls, explicit group moves, immutable attempts.
-A rejected candidate never becomes the parent. This is diagnostic search only.
+The incumbent is re-read after every full route. Native preview collisions and
+pad partitions rank finite pose candidates; only final native checks can retain.
 """
-import argparse,collections,fcntl,hashlib,json,os,re,subprocess,sys,time
-from datetime import datetime,timezone
+import argparse
+import collections
+import fcntl
+import hashlib
+import json
+import os
 from pathlib import Path
-ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
-from copper_scar.tools.copperhead.stage1 import LOCAL,write,now
-ap=argparse.ArgumentParser();ap.add_argument('--source',type=Path);ap.add_argument('--until',required=True);ap.add_argument('--route-seconds',type=int,default=600);a=ap.parse_args();deadline=datetime.fromisoformat(a.until).timestamp()
-work=LOCAL/'campaign';work.mkdir(exist_ok=True);lock=(work/'supervisor.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-path=work/'state.json';state=json.loads(path.read_text()) if path.exists() else dict(started_at=now(),decisions=[]);state.update(pid=os.getpid(),status='running',until=a.until);state.pop('finished_at',None)
-manifest=LOCAL/'proposals/global-expanded.json';groups=json.loads(manifest.read_text())['groups'];python=str(ROOT/'.venv/bin/python');krt=str(LOCAL/'tools/krt-venv/bin/python')
-def run(argv,label):
- with (work/(label+'.log')).open('w') as log:
-  child=subprocess.Popen(argv,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT)
-  while child.poll() is None:
-   state.update(heartbeat_at=now(),worker_pid=child.pid,phase=label);write(path,state);time.sleep(5)
-  state.update(worker_pid=None,heartbeat_at=now());write(path,state)
-  return child.returncode
-# Wait for an already-authorized control to finish, without touching its worker.
-with (LOCAL/'loop/runner.lock').open('a') as runner:
- while True:
-  try:fcntl.flock(runner,fcntl.LOCK_EX|fcntl.LOCK_NB);fcntl.flock(runner,fcntl.LOCK_UN);break
-  except BlockingIOError:state.update(phase='waiting for existing native worker',heartbeat_at=now());write(path,state);time.sleep(5)
-epoch_parent=a.source.resolve() if a.source else None;epoch_trials=0;exhausted=set()
-while time.time()+a.route_seconds+180<deadline:
- loop=json.loads((LOCAL/'loop/state.json').read_text());best=Path(loop['best_feasibility']['candidate'])
- if epoch_parent is None or epoch_trials>=6:
-  epoch_parent=best;epoch_trials=0;exhausted=set()
- board_hash=hashlib.sha256((epoch_parent/'pcbgolf.kicad_pcb').read_bytes()).hexdigest()
- records=[json.loads(p.read_text()) for p in sorted((LOCAL/'runs').glob('stage1-*/attempt.json'))]
- for pending in state['decisions']:
-  if 'attempt' not in pending:
-   digest=hashlib.sha256(Path(pending['proposal']).read_bytes()).hexdigest();matches=[r for r in records if r.get('action',{}).get('proposal_sha256')==digest and r.get('status')!='running']
-   if matches:
-    r=matches[-1];pending.update(attempt=r['attempt'],status=r['status'],finished_at=r.get('finished_at'),became_incumbent=r.get('became_incumbent',False),after={k:r.get('after',{}).get(k) for k in ('unconnected','errors','warnings','invariants_ok')})
-    if r.get('effects'):
-     effects=json.loads(Path(r['effects']).read_text());before=effects.get('missing_before',{});after=effects.get('missing_after',{});nets=set(r['action']['nets']);changes={n:dict(before=before.get(n,0),after=after.get(n,0)) for n in before.keys()|after.keys() if before.get(n,0)!=after.get(n,0)}
-     pending['incident_net_changes']={n:v for n,v in changes.items() if n in nets};pending['other_net_changes']={n:v for n,v in changes.items() if n not in nets}
- write(path,state)
- controls=[r for r in records if Path(r.get('input',''))==epoch_parent and r.get('action',{}).get('kind')=='initial_route' and r.get('routing_scope',{}).get('effort_limit_seconds')==a.route_seconds and r.get('status')=='completed']
- if not controls:
-  label='control-'+board_hash[:12];state['phase']=label;write(path,state)
-  run([python,'-m','copper_scar.tools.copperhead.stage1','--source',str(epoch_parent),'--route-seconds',str(a.route_seconds),'--budget',str(a.route_seconds+240)],label)
-  records=[json.loads(p.read_text()) for p in sorted((LOCAL/'runs').glob('stage1-*/attempt.json'))];controls=[r for r in records if Path(r.get('input',''))==epoch_parent and r.get('action',{}).get('kind')=='initial_route' and r.get('routing_scope',{}).get('effort_limit_seconds')==a.route_seconds and r.get('status')=='completed']
-  if not controls:state.update(status='needs_attention',reason='No completed matched routing control; inspect preserved failure before new placement');break
- control=controls[-1];baseline=control['before'];feedback=json.loads((LOCAL/'loop/feedback.json').read_text());scores=[]
- for group,refs in groups.items():
-  if group.startswith('mechanical') or group in exhausted:continue
-  findings=[v for v in baseline['violations'] if v['type']=='unconnected_items' and any(any('of '+ref+' on ' in i.get('description','') for ref in refs) for i in v.get('items',[]))]
-  if not findings:continue
-  history=[r for r in records if r.get('action',{}).get('group')==group and r.get('action',{}).get('parent_board_sha256')==board_hash]
-  # Actual failed attempts lower priority; never interpret the geometric proxy as native improvement.
-  penalty=len(history);incident_gains=[]
-  for prior in history:
-   if prior.get('status')=='completed' and prior.get('effects'):
-    measured=json.loads(Path(prior['effects']).read_text());incident_gains.append(sum(measured.get('missing_before',{}).get(n,0)-measured.get('missing_after',{}).get(n,0) for n in prior['action']['nets']))
-  native_gain=max(incident_gains or [0])
-  scores.append((len(findings)/(1+penalty)+max(0,native_gain),group,findings,history))
- if not scores:state.update(status='needs_attention',reason='All available diagnostic group moves exhausted for current parent');break
- queue=json.loads((work/'queue.json').read_text()) if (work/'queue.json').exists() else []
- used={d.get('queued_id') for d in state['decisions']}|{d['id'] for d in state.get('skipped_queue',[])}
- queued=None
- for q in queue:
-  if q['id'] in used:continue
-  if any(x[1]==q['group'] for x in scores):queued=q;break
-  state.setdefault('skipped_queue',[]).append(dict(id=q['id'],group=q['group'],reason='No current failed endpoints or no untried legal proposal for this parent',parent_board_sha256=board_hash,recorded_at=now()))
- write(path,state)
- if queued:scores=[x for x in scores if x[1]==queued['group']]
- _,group,findings,history=max(scores,key=lambda x:(not state['decisions'] and x[1]=='can_channel_0',x[0]));index=len(state['decisions']);label=f'{index:03d}-{group}';proposal=LOCAL/'proposals'/('campaign-'+label+'.json')
- code=run([krt,str(ROOT/'scripts/copperhead_pose_proposals.py'),str(epoch_parent),'--manifest',str(manifest),'--output',str(proposal),'--group',group,'--steps='+queued.get('steps','-0.5,0.5,-1,1') if queued else '--steps=-0.5,0.5,-1,1,-2,2,-3,3,-5,5',*(['--move-refs',queued['move_refs'],'--rotations',queued.get('rotations','0')] if queued and queued.get('move_refs') else []),'--feedback',str(LOCAL/'loop/feedback.json'),'--allow-proxy-regression'],label+'-generate')
- if code:exhausted.add(group);continue
- action=json.loads(proposal.read_text());action.update(reason=f'{len(findings)} native missing endpoint pairs touch {group}; {len(history)} earlier moves on this exact parent inform priority and excluded translations',hypothesis='Change connected-group relative spacing to improve remaining interface access; native full-board and incident-net outcomes decide retention',diagnostic_endpoints=findings,matched_control=control['attempt'],matched_control_after={k:control['after'][k] for k in ('unconnected','errors','warnings')});action['research_context']=queued;write(proposal,action)
- decision=dict(index=index,queued_id=queued['id'] if queued else None,parent=str(epoch_parent),parent_board_sha256=board_hash,group=group,translation_mm=action['translation_mm'],proposal=str(proposal),matched_control=control['attempt'],diagnostic_pair_count=len(findings),prior_group_attempts=[r['attempt'] for r in history],started_at=now());state['decisions'].append(decision);write(path,state)
- run([python,'-m','copper_scar.tools.copperhead.stage1','--source',str(epoch_parent),'--proposal',str(proposal),'--route-seconds',str(a.route_seconds),'--budget',str(a.route_seconds+300)],label+'-evaluate')
- records=[json.loads(p.read_text()) for p in (LOCAL/'runs').glob('stage1-*/attempt.json')];matching=[r for r in records if r.get('action',{}).get('proposal_sha256')==hashlib.sha256(proposal.read_bytes()).hexdigest()]
- if not matching:state.update(status='needs_attention',reason='Evaluation produced no attributable attempt');break
- result=matching[-1];decision.update(attempt=result['attempt'],status=result['status'],finished_at=now(),became_incumbent=result.get('became_incumbent',False),error=result.get('error'),after={k:result.get('after',{}).get(k) for k in ('unconnected','errors','warnings','invariants_ok')})
- if result.get('effects'):
-  effects=json.loads(Path(result['effects']).read_text());before=effects.get('missing_before',{});after=effects.get('missing_after',{});decision['incident_net_changes']={n:dict(before=before.get(n,0),after=after.get(n,0)) for n in action['nets'] if before.get(n,0)!=after.get(n,0)};decision['other_net_changes']={n:dict(before=before.get(n,0),after=after.get(n,0)) for n in before.keys()|after.keys() if n not in action['nets'] and before.get(n,0)!=after.get(n,0)}
- write(path,state);epoch_trials+=1
- if result.get('became_incumbent'):epoch_parent=None
- if result.get('status')=='failed' and 'Placement failed native' not in result.get('error',''):
-  state.update(status='needs_attention',reason='Execution failure requires supervisor inspection');break
- try:
-  from copper_scar.tools.copperhead.replay_service import start
-  state['replay']=start('outer')
- except Exception as e:state['replay_error']=repr(e)
-else:state.update(status='packaging_freeze',reason='No new full routing evaluation fits before the packaging deadline')
-state.update(heartbeat_at=now(),finished_at=now(),worker_pid=None);write(path,state);print(json.dumps(state,indent=2))
+import re
+import signal
+import subprocess
+import sys
+import time
+from datetime import datetime
+
+ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
+from copper_scar.tools.copperhead.stage1 import LOCAL,KIPY,copy_project,write,now
+from copper_scar.tools.copperhead.records import load_record
+from copper_scar.tools.copperhead.campaign_feedback import load_failures,score_preview
+from copper_scar.scars.store import save_scar
+
+
+def main():
+    ap=argparse.ArgumentParser()
+    ap.add_argument('--until',required=True)
+    ap.add_argument('--route-seconds',type=int,default=600)
+    ap.add_argument('--catalog',type=Path,required=True)
+    a=ap.parse_args();deadline=datetime.fromisoformat(a.until).timestamp()
+    work=LOCAL/'campaign';work.mkdir(exist_ok=True)
+    lock=(work/'supervisor.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    path=work/'state.json';state=json.loads(path.read_text()) if path.exists() else dict(decisions=[])
+    state.update(selector_version='native-feedback-v2',pid=os.getpid(),status='running',until=a.until,catalog=str(a.catalog.resolve()))
+    state.pop('finished_at',None)
+    python=str(ROOT/'.venv/bin/python');krt=str(LOCAL/'tools/krt-venv/bin/python')
+    manifest=LOCAL/'proposals/global-expanded.json';groups=json.loads(manifest.read_text())['groups']
+    membership={ref:group for group,refs in groups.items() for ref in refs}
+    catalog=json.loads(a.catalog.read_text())
+
+    def run(argv,label,timeout):
+        started=time.time()
+        with (work/(label+'.log')).open('w') as log:
+            child=subprocess.Popen(argv,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+            while child.poll() is None:
+                state.update(heartbeat_at=now(),worker_pid=child.pid,phase=label);write(path,state)
+                if time.time()-started>timeout or time.time()>deadline:
+                    os.killpg(child.pid,signal.SIGKILL);child.wait();break
+                time.sleep(2)
+        state.update(worker_pid=None,heartbeat_at=now());write(path,state)
+        return child.returncode
+
+    # Wait for the existing authorized writer; never kill or duplicate it.
+    with (LOCAL/'loop/runner.lock').open('a') as runner:
+        while time.time()<deadline:
+            try:
+                fcntl.flock(runner,fcntl.LOCK_EX|fcntl.LOCK_NB);fcntl.flock(runner,fcntl.LOCK_UN);break
+            except BlockingIOError:
+                state.update(phase='waiting for existing native worker',heartbeat_at=now());write(path,state);time.sleep(5)
+
+    while time.time()+a.route_seconds+240<deadline:
+        loop=json.loads((LOCAL/'loop/state.json').read_text());parent=Path(loop['best_feasibility']['candidate'])
+        board_hash=hashlib.sha256((parent/'pcbgolf.kicad_pcb').read_bytes()).hexdigest()
+        records=[load_record(p) for p in sorted((LOCAL/'runs').glob('stage1-*/attempt.json'))]
+        evaluation=next((r.get(k) for r in reversed(records) for k in ('after','before') if r.get(k,{}).get('files',{}).get('pcbgolf.kicad_pcb')==board_hash),None)
+        if not evaluation:state.update(status='needs_attention',reason='No native report for current retained board');break
+        if evaluation['unconnected']==0:state.update(status='native_connectivity_complete',reason='Full engineering qualification remains separate');break
+        failures=load_failures(LOCAL/'runs');feedback_ids=[f['attempt'] for f in failures]
+        # Native diagnostic scars reuse the store without fabricating official metrics.
+        for failure in failures:
+            save_scar(dict(schema_version='native-feedback-v1',created_at=now(),scar_id='scar_native_'+failure['attempt'],official_score=None,source_attempt=failure['attempt'],failure=failure),work/'scars'/('scar_native_'+failure['attempt']+'.json'))
+        used={d.get('catalog_id') for d in state['decisions']}|{s['id'] for s in state.get('screen_failures',[]) if s['parent_board_sha256']==board_hash}
+        queued=[s for s in catalog if s['id'] not in used]
+        endpoint_counts=collections.Counter()
+        for finding in evaluation['violations']:
+            if finding['type']=='unconnected_items':
+                for item in finding.get('items',[]):
+                    match=re.search(r' of ([RCL]\d+) on ',item.get('description',''))
+                    if match:endpoint_counts[match[1]]+=1
+        if queued:
+            specs=queued[:2]
+        else:
+            ranked=sorted(endpoint_counts,key=lambda ref:(-endpoint_counts[ref]/(1+sum(ref in f['action'].get('refs',[]) for f in failures)),ref))
+            specs=[dict(id='adaptive-'+ref,kind='group_pose',group=membership[ref],ref=ref,steps='-.5,.5,-1,1,-2,2',rotations='0,90,180') for ref in ranked[:3]]
+        index=len(state['decisions']);prefix=f'{index:03d}-{board_hash[:8]}-{int(time.time())}'
+        previews=[];screened_specs=[]
+        for spec in specs:
+            if time.time()+a.route_seconds+180>=deadline:break
+            label=prefix+'-'+spec['id'];proposal=LOCAL/'proposals'/('campaign-'+label+'.json')
+            if spec['kind']=='terminal_fanout':
+                action={**spec['action'],'parent_board_sha256':board_hash,'feedback_used':feedback_ids or spec['action']['feedback_used']}
+                write(proposal,action);previews.append(dict(action=action,proposal=str(proposal),catalog_id=spec['id'],score=0,eligible=True,feedback_record_ids=feedback_ids,reason='Untried distinct topology hypothesis from measured failures; native fanout and full-route gates required'));continue
+            argv=[krt,str(ROOT/'scripts/copperhead_pose_proposals.py'),str(parent),'--manifest',str(manifest),'--output',str(proposal),'--group',spec['group'],'--move-refs',spec['ref'],'--rotations',spec.get('rotations','0'),'--feedback',str(LOCAL/'loop/feedback.json'),'--allow-proxy-regression']
+            if 'translation_mm' in spec:
+                argv.extend(['--x-steps='+str(spec['translation_mm'][0]),'--y-steps='+str(spec['translation_mm'][1])])
+            else:argv.append('--steps='+spec.get('steps','-.5,.5,-1,1,-2,2'))
+            if run(argv,label+'-generate',90):
+                state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,reason='No untried geometry-screened proposal',feedback_record_ids=feedback_ids));write(path,state);continue
+            generated=json.loads(proposal.read_text());screened_specs.append(spec['id'])
+            for n,variant in enumerate(generated['finalists'][:2]):
+                if time.time()+a.route_seconds+150>=deadline:break
+                action={**generated,'translation_mm':variant['translation_mm'],'rotation_deg':variant['rotation_deg'],'proxy_after':variant['proxy'],'boundary_via_policy':'preserve_existing_sites','feedback_used':sorted(set(generated['feedback_used']+feedback_ids)),'research_context':spec,'matched_control':None,'causal_qualification':'No fresh unchanged-parent control; realized pose plus full-router outcome.'}
+                action['local_approach']={**generated['local_approach'],'after_mm':variant['local_approach_mm']}
+                trial=work/'previews'/(label+'-'+str(n));trial.mkdir(parents=True,exist_ok=False)
+                prepared=trial/'project';copy_project(parent,prepared);candidate_proposal=trial/'proposal.json';write(candidate_proposal,action)
+                if run([KIPY,str(ROOT/'scripts/copperhead_apply_pose.py'),str(prepared),'--proposal',str(candidate_proposal)],label+f'-{n}-apply',90):continue
+                if run([KIPY,str(ROOT/'scripts/copperhead_clear_placement_collisions.py'),str(prepared)],label+f'-{n}-collisions',300):continue
+                partition_path=trial/'pad-partitions.json'
+                if run([KIPY,str(ROOT/'scripts/copperhead_pad_partitions.py'),'--before',str(parent/'pcbgolf.kicad_pcb'),'--after',str(prepared/'pcbgolf.kicad_pcb'),'--output',str(partition_path)],label+f'-{n}-partitions',60):continue
+                collisions=json.loads((prepared/'placement-collisions/result.json').read_text());partitions=json.loads(partition_path.read_text())
+                rank=score_preview(action,collisions,partitions,failures)
+                rank.update(action=action,proposal=str(candidate_proposal),catalog_id=spec['id'],native_preview=str(trial),collision_removals=collisions['removed'],split_groups=partitions['split_groups'])
+                previews.append(rank)
+        selection=work/(prefix+'-selection.json')
+        eligible=[p for p in previews if p['eligible']]
+        excluded=[dict(attempt=f['attempt'],refs=f['action'].get('refs'),translation_mm=f['action'].get('translation_mm'),rotation_deg=f['action'].get('rotation_deg',0),reason='Already evaluated unsuccessful pose on exact current parent') for f in failures if f['parent_board_sha256']==board_hash]
+        trace=dict(parent=str(parent),parent_board_sha256=board_hash,created_at=now(),feedback_record_ids=feedback_ids,exact_parent_exclusions=excluded,screened_specs=screened_specs,previews=previews,selection_policy='native-feedback-v2')
+        if not eligible:
+            write(selection,trace);state.update(status='needs_attention',reason='Finite candidate pool has no eligible native preview',selection=str(selection));break
+        chosen=min(eligible,key=lambda p:p['score']);trace['chosen']={k:v for k,v in chosen.items() if k!='action'};write(selection,trace)
+        action=chosen['action'];action['campaign_selection']=str(selection);action['feedback_used']=sorted(set(action['feedback_used']+feedback_ids));proposal=LOCAL/'proposals'/('campaign-selected-'+prefix+'.json');write(proposal,action)
+        decision=dict(index=index,catalog_id=chosen['catalog_id'],parent=str(parent),parent_board_sha256=board_hash,proposal=str(proposal),selection=str(selection),feedback_record_ids=feedback_ids,started_at=now());state['decisions'].append(decision);write(path,state)
+        run([python,'-m','copper_scar.tools.copperhead.stage1','--source',str(parent),'--proposal',str(proposal),'--route-seconds',str(a.route_seconds),'--budget',str(a.route_seconds+420)],prefix+'-evaluate',a.route_seconds+450)
+        digest=hashlib.sha256(proposal.read_bytes()).hexdigest()
+        matches=[load_record(p) for p in sorted((LOCAL/'runs').glob('stage1-*/attempt.json')) if json.loads(p.read_text()).get('action',{}).get('proposal_sha256')==digest]
+        if not matches:state.update(status='needs_attention',reason='No attributable native attempt');break
+        result=matches[-1];decision.update(attempt=result['attempt'],status=result['status'],finished_at=now(),became_incumbent=result.get('became_incumbent',False),after={k:result.get('after',{}).get(k) for k in ('unconnected','errors','warnings')},error=result.get('error'),selection_decision=result.get('selection_decision'))
+        if result.get('effects'):decision['effects']=json.loads(Path(result['effects']).read_text())
+        write(path,state)
+        try:
+            from copper_scar.tools.copperhead.replay_service import start
+            state['replay']=start('outer')
+        except Exception as error:state['replay_error']=repr(error)
+        if result['status']=='failed' and not any(x in result.get('error','') for x in ('Placement failed native','Fanout failed native','New via trial failed')):
+            state.update(status='needs_attention',reason='Execution failure requires inspection');break
+    else:state.update(status='routing_cutoff',reason='No full routing evaluation fits before the deadline')
+    state.update(heartbeat_at=now(),finished_at=now(),worker_pid=None);write(path,state)
+    print(json.dumps({k:state.get(k) for k in ('status','reason','finished_at')},indent=2))
+
+
+if __name__=='__main__':main()

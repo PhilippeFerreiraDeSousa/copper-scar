@@ -20,8 +20,8 @@ poses={r:{'x_mm':state.parts[r].x,'y_mm':state.parts[r].y,'angle_deg':state.part
 # Bind local approach proxies to a native report for these exact board bytes.
 local_targets=[];diagnostic_source=None
 for record_path in sorted((LOCAL/'runs').glob('stage1-*/attempt.json'),reverse=True):
- record=json.loads(record_path.read_text());evaluation=record.get('before',{})
- if evaluation.get('files',{}).get('pcbgolf.kicad_pcb')!=before_hash:continue
+ record=json.loads(record_path.read_text());evaluation=next((record.get(key,{}) for key in ('after','before') if record.get(key,{}).get('files',{}).get('pcbgolf.kicad_pcb')==before_hash),{})
+ if not evaluation:continue
  diagnostic_source=evaluation.get('report')
  for finding in evaluation.get('violations',[]):
   if finding['type']!='unconnected_items' or len(finding.get('items',[]))!=2:continue

@@ -348,6 +348,10 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
             record['incumbent_after']=state.get('best_feasibility')
             state['exploratory_candidate']=dict(candidate=str(candidate),priority=priority(after),scope=scope,metric_version=VERSION)
             fact=dict(attempt=uid,scope=scope,geometry_scope=initial['geometry_scope'],input_design=initial['design_sha256'],output_design=after['design_sha256'],action=action['kind'],diagnostic_improved=improved,counts_before={k:initial[k] for k in ['unconnected','counts']},counts_after={k:after[k] for k in ['unconnected','counts']},objects=[dict(type=v['type'],items=v.get('items',[])) for v in after['violations']],hypothesis=action['hypothesis'],action_parameters=action,metric_version=VERSION,classification=classification,search_cost_before=initial['search_cost'],search_cost_after=after['search_cost'],interpretation='Diagnostic change only; no functional or official-score claim')
+            fact.update(parent_board_sha256=initial['files']['pcbgolf.kicad_pcb'],retained=retain,runtime_seconds=sum(x['elapsed_seconds'] for x in record['commands']),collision_removals=record.get('placement_delta',{}).get('collision_ripup',{}).get('removed',[]),selection_decision=record['selection_decision'])
+            if (run/'final-pad-partitions.json').exists():
+                proof=json.loads((run/'final-pad-partitions.json').read_text())
+                fact['native_pad_connectivity']=dict(proof=str(run/'final-pad-partitions.json'),no_connected_pad_group_split=proof['no_connected_pad_group_split'],split_groups=proof['split_groups'],before_group_count=len(proof['before']['groups']),after_group_count=len(proof['after']['groups']))
             feedback.append(fact);write(feedbackpath,feedback)
             write(run/'attempt.json',record);state['attempts'].append(str(run));state['stage']='feasibility';state['updated_at']=now();write(statepath,state)
             # Publish only after native recheck; viewer helper never opens another window.

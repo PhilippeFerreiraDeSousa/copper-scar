@@ -4,6 +4,7 @@ from pathlib import Path
 import pcbnew as p
 
 def inspect(path):
+ path=path.resolve()
  manager=p.SETTINGS_MANAGER();manager.LoadProject(str(path.with_suffix('.kicad_pro')))
  board=p.LoadBoard(str(path));board.SetProject(manager.GetProject(str(path.with_suffix('.kicad_pro'))));assert p.ZONE_FILLER(board).Fill(board.Zones())
  connectivity=board.GetConnectivity();connectivity.Build(board);connectivity.RecalculateRatsnest();seen=set();groups=[]
