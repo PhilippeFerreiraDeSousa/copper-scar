@@ -1,0 +1,11 @@
+# Native PCB Loop executor contract
+
+`execute_candidate(request, backend, new_folder, progress)` owns source binding, lifecycle/status, mandatory gate aggregation, qualified score retention, atomic completion, and immediate Stage1→2 transition. Family adapters own schematic coverage, model qualification and native tools; never substitute a small-board checker for a full-board check.
+
+Required request fields: size_family (`small-loop`, `medium-loop`, `large-loop`, or `original-full`), stage, source_epoch, source_sha, required_gates, eligible_layers, via_options, route_budget, action, source_files, incumbent. Include every executed script/config/constraint source in source_files; backend command receipts must additionally bind exact argv and scriptSHA at command start. Action includes primitive, diagnostic rationale and expected score-term effects; expected values are not measured scores.
+
+Backend result: gates keyed by required_gates, each `{passed: boolean, report: path}`; raw diagnostics; commands; optional diagnostic_retained; optional official_score and official_score_qualified. Missing gates fail. An invalid or unqualified candidate has null official score. Stage2requires a valid incumbent and retains only a strictly lower qualified actual score. Stage1firstvalid emits stop_stage_one immediately; historical post-zero policy analyses are separate studies, never ongoing Stage1progress.
+
+Full adapter retains all5root coverage, original physical pad UUID/local geometry/net/pose identity, required native/manufacturing checks and intrinsic51finding floor. Sixlayer/viaoptions are explicit configuration. Large adapter retains allnumbered+unnumbered pads and84intrinsicfindings in loss; visualization-onlymodels do not qualify official assembly volume. Each adapter restores exact authoritative .pro and retains full relative libraries/customrules. No shared code mutates other worktrees.
+
+The interface is additive. Existing running studies keep their committed workers; migrate a completed boundary through an adapter and verify parity before changing production callers. Medium is the first adapter target. Rendering can consume completed.json and gate/report paths without understanding family-specific native internals.

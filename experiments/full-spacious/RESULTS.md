@@ -1,4 +1,6 @@
-# Full-board spacious initialization: measured results
+# Full-board re-layout comparison: measured results
+
+**The earlier spaced grid changed arrangement and outline. It did not test uniform position scaling. A separate exact-uniform arm is now running.**
 
 All rows preserve the complete original 245-component/1,078-pad design and the full schematic net partition. These are invalid diagnostic boards with **51 unchanged original footprint errors**, not completed PCBs.
 
@@ -17,12 +19,19 @@ Verified spaced board: `74978e8565360327b9b3bd3aa7929390f320dfc322ee68a09d8ecbb0
 
 Prior-floorplan board: `a1eed6e10bfe3e89f22944733574e56db53ed82fea85d1f9445c1f4075f28341`, receipt under `.local/copperhead/full-spacious/v1/prior-floorplan-control/`.
 
-## Next outer placement, currently running
+## Diagnosed outer reordering, completed
 
 A finite deterministic search scored 480 whole-group orderings using the 140-open spaced result as feedback. It selected a 156×238 mm layout preserving each group's internal offsets and component angles. Failed-net weighted center span decreased from 13,204.02 to 11,524.15 mm; total center span decreased only from 15,235.07 to 15,025.99 mm. This exposes the tradeoff: several previously routed MCU/hub/SD spans become longer. The objective is a proposal heuristic, not proof of routability or high-speed suitability.
 
-Saved native preflight has the same 499 missing connections, exact non-open findings and complete original invariants. A full 600-second realization is running. Selection requires strict missing-count improvement **and restoration of every connected pad group in its 140-open routed parent**, with no new findings. The separate 111-open prior-floorplan checkpoint remains the best fresh baseline unless a candidate actually beats it. No Stage 2 begins while the required native validity gates fail.
+Saved native preflight has the same 499 missing connections, exact non-open findings and complete original invariants. The full 600-second realization finished at 122 missing connections and 516 legal vias, with the same 51 errors. It was rejected because previously connected pad groups from its 140-open routed parent split. A lower count alone did not pass the restoration gate. The separate 111-open prior-floorplan checkpoint remains the best fresh baseline unless a candidate actually beats it. No Stage 2 begins while the required native validity gates fail.
 
 The 51 errors are all intra-footprint: 31 J3 pad clearances, four U4 pad clearances, and four each at J5–J8. Translating components cannot remove them. Earlier experimental pad cleanup belongs to a different geometry epoch and still needs manufacturer/assembly review. The historical 44-open repaired board remains separate and unchanged; it is not joined to this study's curves.
 
 Official assembled-volume score is unavailable: a board with these native defects is ineligible, and assembled height/model qualification is incomplete. No parts, model dimensions, BOM entries or rule limits were changed to invent a score.
+
+
+## True uniform 1.2× test
+
+The user clarified that the intended experiment is one scalar transform about a fixed center, preserving the prior arrangement. The new arm uses the prior ring-floorplan control's un-routed input, with every anchor transformed as `p_next = (170,102.5) + 1.2 * (p - (170,102.5))` in millimeters. Its outline scales from 140×105 to 168×126 mm. All 245 anchor residuals are zero nanometers; footprint geometry, angles, sides, pads, nets and rules remain unchanged. Native preflight remains 499 opens and the same 51 inherited physical errors.
+
+The fixed-world-scale before/after/ghost-overlay image is `uniform-120/uniform-120-placement.png` under the study root. Full600-second routing is in progress. The earlier re-layout result must not be cited as evidence for or against uniform scaling.
