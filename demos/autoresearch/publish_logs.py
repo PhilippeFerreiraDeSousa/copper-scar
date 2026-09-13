@@ -31,5 +31,6 @@ def main():
  run.finish();api=wandb.Api();remote=api.run(PROJECT+'/'+a.run_id);files={f.name:f for f in remote.files()}
  expected=[str((dest/e['file']).relative_to(a.output)) for e in entries];assert all(n in files for n in expected)
  receipt={'run_id':a.run_id,'attempt_id':a.attempt,'logs_url':'https://wandb.ai/'+PROJECT+'/runs/'+a.run_id+'/logs','files_url':'https://wandb.ai/'+PROJECT+'/runs/'+a.run_id+'/files','artifact':artifact_name,'files':expected,'output_log_present':'output.log' in files,'snapshot_at':now,'sources':entries}
+ with (a.output/'router-log-publications.jsonl').open('a') as journal:journal.write(json.dumps(receipt)+'\n');journal.flush();os.fsync(journal.fileno())
  (dest/'remote-verified.json').write_text(json.dumps(receipt,indent=2));print(json.dumps(receipt))
 if __name__=='__main__':main()

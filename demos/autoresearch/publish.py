@@ -2,6 +2,7 @@
 """Event-sourced W&B/Weave adapter. Credentials stay in protected process memory."""
 import argparse,datetime,fcntl,hashlib,json,os,subprocess,uuid
 from pathlib import Path
+from trace_io import finish, read as read_trace, start
 from model import read_events,canon,sha
 PROJECT='philippe-fdesousa/copper-scar'
 def stamp(s):return datetime.datetime.fromisoformat(s)
@@ -16,12 +17,11 @@ def main():
  import requests,wandb,weave
  from PIL import Image
  response=requests.post('https://api.wandb.ai/graphql',auth=('api',os.environ['WANDB_API_KEY']),json={'query':'{ project(name:"copper-scar", entityName:"philippe-fdesousa") { name } }'},timeout=30);response.raise_for_status();assert response.json().get('data',{}).get('project')
- api=wandb.Api();client=weave.init(PROJECT);experiment=state['experiment_id'];policies={p['id']:p for p in state['policies']};calls={}
+ api=wandb.Api();client=None;experiment=state['experiment_id'];policies={p['id']:p for p in state['policies']};calls={}
  def call(id,name,inputs,parent,at,attributes=None):
   cid=stable(id)
   if cid in calls:return calls[cid]
-  found=list(client.get_calls(filter={'call_ids':[cid]},limit=1))
-  c=found[0] if found else client.create_call(name,inputs,parent=parent,attributes={'experiment_id':experiment,'event_sourced':True,**(attributes or {})},display_name=name.split('.')[-1],use_stack=False,_call_id_override=cid,started_at=stamp(at))
+  c=start(cid,name,inputs,parent,stamp(at),{'experiment_id':experiment,'event_sourced':True,**(attributes or {})})
   calls[cid]=c;return c
  root=call(experiment,'copperhead.policy_experiment',{'common_protocol':state['common_protocol'],'manifest_sha256':state['manifest_sha256']},None,events[0]['timestamp_utc'])
  parents={};lowercalls={}
@@ -63,14 +63,14 @@ def main():
     append(remote/'publication-journal.jsonl',{'state':'upload_intent','event_id':id,'event_sha256':digest,'run_id':run_id,'at':datetime.datetime.now(datetime.timezone.utc).isoformat()});run.log(metadata);new_events.append(event);print('[recorded experiment event] '+json.dumps({'timestamp':event['timestamp_utc'],'type':typ,'policy':pid,'decision':idx,'status':lower.get('status'),'attempted':lower.get('nativecost'),'retained':lower.get('retained'),'retained_best':lower.get('retainedbest')}),flush=True)
    else:assert all(row['event_sha256']==digest for row in byid[id]),'Conflicting remote event'
    parent=lowercalls.get((pid,idx),parents.get(pid,root));eventcall=call(experiment+'/event/'+id,'copperhead.policy_event',{'event_id':id,'event_sha256':digest,'type':typ},parent,event['timestamp_utc'])
-   if not eventcall.ended_at:client.finish_call(eventcall,output=event,ended_at=stamp(event['timestamp_utc']))
+   if not eventcall.ended_at:finish(client,eventcall,output=event,ended_at=stamp(event['timestamp_utc']))
    if typ=='lower_completed' and (pid,idx) in lowercalls:
     c=lowercalls[pid,idx]
-    if not c.ended_at:client.finish_call(c,output=lower,ended_at=stamp(event['timestamp_utc']))
+    if not c.ended_at:finish(client,c,output=lower,ended_at=stamp(event['timestamp_utc']))
    if typ=='policy_completed' and pid in parents:
     c=parents[pid]
-    if not c.ended_at:client.finish_call(c,output=lower,ended_at=stamp(event['timestamp_utc']))
-   if typ=='policy_decision' and not root.ended_at:client.finish_call(root,output=event['decision'],ended_at=stamp(event['timestamp_utc']))
+    if not c.ended_at:finish(client,c,output=lower,ended_at=stamp(event['timestamp_utc']))
+   if typ=='policy_decision' and not root.ended_at:finish(client,root,output=event['decision'],ended_at=stamp(event['timestamp_utc']))
   if new_events:
    snapshot=remote/(run_id+'-'+state['events_sha256'][:12]+'.jsonl');snapshot.write_text(''.join(json.dumps(e)+'\n' for e in new_events));artifact=wandb.Artifact(run_id+'-events',type='policy-experiment-events',metadata={'experiment_id':experiment,'source_events_sha256':state['events_sha256']});artifact.add_file(str(snapshot),name='events.jsonl');artifact.add_file(str(out/'manifests'/(state['manifest_sha256']+'.json')),name='manifest.json')
    for e in new_events:
@@ -89,9 +89,12 @@ def main():
    for row in matches:
     for name in ['board/attempted','board/best']:
      if name in row:assert row[name]['path'] in files and row[name].get('sha256')
-   cid=stable(experiment+'/event/'+event['event_id']);found=list(client.get_calls(filter={'call_ids':[cid]},limit=2));assert len(found)==1 and found[0].ended_at;assert dict(found[0].output)['event_id']==event['event_id']
+   cid=stable(experiment+'/event/'+event['event_id']);found=read_trace(cid);assert found and found.get('ended_at');assert found['output']['event_id']==event['event_id']
    receipt={'event_id':event['event_id'],'event_sha256':digest,'wandb_run_id':run_id,'wandb_url':'https://wandb.ai/'+PROJECT+'/runs/'+run_id,'weave_call_id':cid,'weave_url':'https://wandb.ai/'+PROJECT+'/r/call/'+cid,'remote_history_rows':len(matches),'media_verified':True,'weave_verified':True};verified.append(receipt)
   runlinks.append({'policy_id':pid,'run_id':run_id,'url':'https://wandb.ai/'+PROJECT+'/runs/'+run_id})
+ for expected in [root,*parents.values(),*lowercalls.values()]:
+  found=read_trace(expected.id);assert found,'Missing remote parent span'
+  if expected.ended_at:assert found.get('ended_at'),'Unflushed remote completed span'
  receipt={'experiment_id':experiment,'verified_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'verified_events':len(verified),'source_events_sha256':state['events_sha256'],'runs':runlinks,'events':verified,'root_weave_call_id':stable(experiment),'root_weave_url':'https://wandb.ai/'+PROJECT+'/r/call/'+stable(experiment)}
- (remote/'verified.json').write_text(json.dumps(receipt,indent=2));append(remote/'publication-journal.jsonl',{'state':'verified','verified_events':len(verified),'events_sha256':state['events_sha256'],'at':receipt['verified_at']});print(json.dumps({'verified_events':len(verified),'runs':runlinks}),flush=True);weave.finish()
+ (remote/'verified.json').write_text(json.dumps(receipt,indent=2));append(remote/'publication-journal.jsonl',{'state':'verified','verified_events':len(verified),'events_sha256':state['events_sha256'],'at':receipt['verified_at']});print(json.dumps({'verified_events':len(verified),'runs':runlinks}),flush=True);os._exit(0) # All runs finished and every explicit event/parent span remotely read back; avoid SDK shutdown hanging on open experiment spans.
 if __name__=='__main__':main()

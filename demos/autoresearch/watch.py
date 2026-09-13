@@ -6,7 +6,7 @@ from build import build
 from model import sha
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--source',type=Path,required=True);ap.add_argument('--output',type=Path,required=True);a=ap.parse_args();a.output.mkdir(parents=True,exist_ok=True);lock=(a.output/'build.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);scripts=Path(__file__).parent;seen={}
+ ap=argparse.ArgumentParser();ap.add_argument('--source',type=Path,required=True);ap.add_argument('--output',type=Path,required=True);ap.add_argument('--stop-after-decision',action='store_true');a=ap.parse_args();a.output.mkdir(parents=True,exist_ok=True);lock=(a.output/'build.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);scripts=Path(__file__).parent;seen={}
  while True:
   state=build(a.source,a.output);assert not state['fixture'];remote=a.output/'remote';receipt=remote/'verified.json';verified=json.loads(receipt.read_text()) if receipt.exists() else {}
   if verified.get('source_events_sha256')!=state['events_sha256']:
@@ -26,6 +26,6 @@ def main():
    run_id='policy-'+hashlib.sha256((state['experiment_id']+'/'+pid).encode()).hexdigest()[:16]
    subprocess.run([sys.executable,str(scripts/'publish_logs.py'),'--run-id',run_id,'--attempt',record['attempt'],'--output',str(remote)],check=True,timeout=90)
    seen[record['attempt']]=(signature,time.monotonic())
-  if state['decisions']:break
+  if state['decisions'] and a.stop_after_decision:break
   time.sleep(30)
 if __name__=='__main__':main()
