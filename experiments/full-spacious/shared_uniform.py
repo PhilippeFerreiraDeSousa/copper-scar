@@ -38,6 +38,12 @@ def backend(request,folder,emit):
     import sexpdata as sx
     tree=sx.loads((out/'routed/pcbgolf.kicad_pcb').read_text());layers=[v[1] for v in m.nodes(tree,'layers')[0][1:] if str(v[1]).endswith('.Cu')]
     checks['layers']=(layers==request['eligible_layers'],out/'after-audit.json')
+    original=sx.loads((out/'input/pcbgolf.kicad_pcb').read_text())
+    footprint_map=lambda t:{m.ref(fp):fp for fp in m.nodes(t,'footprint')}
+    old_fp,new_fp=footprint_map(original),footprint_map(tree)
+    exact_geometry=old_fp==new_fp and len(new_fp)==245
+    m.write(folder/'whole-footprint-geometry.json',dict(exact_whole_footprints=exact_geometry,input_sha256=m.sha(out/'input/pcbgolf.kicad_pcb'),output_sha256=m.sha(out/'routed/pcbgolf.kicad_pcb'),changed_refs=sorted(r for r in old_fp.keys()|new_fp.keys() if old_fp.get(r)!=new_fp.get(r))))
+    checks['whole_footprint_geometry']=(exact_geometry,folder/'whole-footprint-geometry.json')
     return dict(gates={k:dict(passed=bool(value),report=str(report)) for k,(value,report) in checks.items()},diagnostics=dict(result=result,raw_native=e,nested_command_receipts=[str(p) for p in out.glob('*.command.json')],assembly_qualification='not established; official score unavailable'),official_score=None,official_score_qualified=False,diagnostic_retained=result['strict_incumbent_replacement'],commands=[record])
 
 def main():
@@ -45,5 +51,6 @@ def main():
     sources=list(HERE.glob('*.py'))+[ROOT/'experiments/pcb-loop/executor.py']+list((ROOT/'copper_scar/tools/copperhead').glob('*.py'))+list((ROOT/'scripts').glob('copperhead_*.py'))+list((ROOT/'scripts/native').glob('Copperhead*.java'))+[ROOT/'copper_scar/real.py',out/'input/pcbgolf.kicad_pcb',out/'input/uniform-scale.json',out/'input/hierarchy-conversion.json',out/'input/routing-options.json',out/'before/evaluation.json',out/'before-audit.json',control]
     sources += [out/'input'/name for name in m.s.support(out/'input')]
     request=dict(size_family='original-full',stage=1,source_epoch='raw-original-footprints-uniform-position-scale-v1',source_sha=m.sha(out/'input/pcbgolf.kicad_pcb'),required_gates=['full_schematic_partition','original_rules','all_pad_identity','physical','connectivity','parity','erc','manufacturing','legal_vias','initial_groups_preserved','layers'],eligible_layers=['F.Cu','In1.Cu','In2.Cu','In3.Cu','In4.Cu','B.Cu'],via_options=[[.6,.3],[.45,.2]],route_budget=dict(seconds=a.seconds,passes=100,threads=1),action=dict(primitive='uniform_position_and_outline_scale',scale=scale['scale'],center_nm=scale['center_nm'],rationale='User-requested exact uniform spacing test at matched complete-board budget',expected_score_terms=dict(official_score=None,area_scale=float(__import__('fractions').Fraction(scale['scale']))**2,via_delta='measured after routing',copper_layer_delta=0,part_geometry_delta=0)),source_files=sorted(set(map(str,sources))),incumbent=dict(valid=False,official_score=None,folder=str(control.parent/'routed')),prepared_trial=str(out))
+    request['required_gates'].append('whole_footprint_geometry')
     result=execute_candidate(request,backend,out/'shared-executor');print(json.dumps({k:result[k] for k in ['valid','failed_gates','diagnostic_retained','stop_stage_one','official_score']}))
 if __name__=='__main__':main()
