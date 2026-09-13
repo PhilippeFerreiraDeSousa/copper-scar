@@ -28,7 +28,8 @@ def checkpoint(label,board,evaluation,record=None):
  subprocess.run([kicad,'pcb','export','svg','--layers','F.Cu,B.Cu,F.SilkS,Edge.Cuts','--mode-single','--page-size-mode','2','--exclude-drawing-sheet','-o',str(d/'board.svg'),str(d/'pcbgolf.kicad_pcb')],check=True,capture_output=True)
  subprocess.run(['/opt/homebrew/bin/rsvg-convert','-w','1000','-o',str(d/'board.png'),str(d/'board.svg')],check=True)
  frames.append(dict(label=label,directory=d,evaluation=evaluation,record=record,board_sha256=actual,source=str(board)))
-p,a=records[0];checkpoint('Earliest available native checkpoint',p.parent/'input/pcbgolf.kicad_pcb',a['before'])
+if not snapshot or snapshot.get('view')!='outer':
+ p,a=records[0];checkpoint('Earliest available native checkpoint',p.parent/'input/pcbgolf.kicad_pcb',a['before'])
 for p,a in records:
  e=a.get('after')
  if e and e.get('files') and e.get('report'):
@@ -57,7 +58,7 @@ for i,f in enumerate(frames):
   rr=frames[j].get('record');failed=rr and rr['status']=='failed';regressed=rr and rr.get('diagnostic_improved') is False
   ax.scatter(j,missing[j],s=70 if j==i else 28,marker='x' if failed else 'o',color=colors['red'] if failed else colors['amber'] if regressed else colors['teal'],zorder=5)
  ax.annotate(str(missing[i]),(i,missing[i]),xytext=(0,15),textcoords='offset points',ha='center',fontsize=18,weight='bold',color=colors['text'])
- ax.set_xlabel('Saved attempt (0 = starting checkpoint)',fontsize=15,labelpad=14);ax.set_ylabel('Native missing connections (endpoint pairs)',fontsize=15,labelpad=12)
+ ax.set_xlabel('Completed outer evaluation' if snapshot and snapshot.get('view')=='outer' else 'Saved attempt (0 = starting checkpoint)',fontsize=15,labelpad=14);ax.set_ylabel('Native missing connections (endpoint pairs)',fontsize=15,labelpad=12)
  ax.set_xticks(list(range(0,len(frames),max(1,len(frames)//8))));ax.grid(axis='y',alpha=.15);ax.tick_params(labelsize=12)
  for spine in ax.spines.values():spine.set_color('#355061')
  leg=ax.legend(loc='lower left',fontsize=13,frameon=False)
@@ -73,16 +74,16 @@ for i,f in enumerate(frames):
  fig.text(.06,.125,f'Physical errors {e["errors"]}   ·   warnings {e["warnings"]}   ·   reference invariants {"passed" if e["invariants_ok"] else "FAILED"}',fontsize=16,color=colors['muted'])
  move=r.get('placement_delta',{}).get('moves',[]) if r else []
  if move:
-  m=move[0];caption=f'{len(move)} moved/rotated: '+', '.join(x['ref'] for x in move)+'; first '+f'{m["ref"]}: {tuple(m["from_mm"])} → {tuple(m["to_mm"])} mm; {m["from_degrees"]:g}° → {m["to_degrees"]:g}°'
+  m=move[0];caption=f'{len(move)} moved/rotated: '+', '.join(x['ref'] for x in move[:6])+('…' if len(move)>6 else '')+'; first '+f'{m["ref"]}: {tuple(m["from_mm"])} → {tuple(m["to_mm"])} mm; {m["from_degrees"]:g}° → {m["to_degrees"]:g}°'
  elif not r:caption='Starting board from the first preserved native evaluation'
  else:caption='Saved copper state; component placements unchanged in this action' if r and action!='placement_repair' else 'Placement producer failed; see preserved native inspection'
  fig.text(.54,.17,caption,fontsize=14,color=colors['muted'],wrap=True)
  fig.text(.06,.055,f'Cutoff {cutoff.strftime("%Y-%m-%d %H:%M:%S UTC")}  ·  {len(records)} finalized attempts  ·  native-defects-v1',fontsize=12,color=colors['muted'])
  fig.text(.95,.055,f'{i+1} / {len(frames)}',fontsize=14,ha='right',color=colors['muted'])
  fig.savefig(run/f'frame-{i:02d}.png',facecolor=fig.get_facecolor());plt.close(fig)
-concat=run/'frames.txt';concat.write_text(''.join(f"file 'frame-{i:02d}.png'\nduration {(5 if i==len(frames)-1 else min(2.6,33/max(1,len(frames)-1)))/(5 if snapshot else 1)}\n" for i in range(len(frames)))+f"file 'frame-{len(frames)-1:02d}.png'\n")
-video=run/('copperhead-latest-replay-5x.mp4' if snapshot else 'copperhead-stage-one-replay.mp4');subprocess.run(['/opt/homebrew/bin/ffmpeg','-hide_banner','-loglevel','error','-f','concat','-safe','0','-i',str(concat),'-vf','fps=30','-c:v','libx264','-preset','medium','-crf','18','-pix_fmt','yuv420p','-movflags','+faststart',str(video)],check=True)
+concat=run/'frames.txt';concat.write_text(''.join(f"file 'frame-{i:02d}.png'\nduration {(5 if i==len(frames)-1 else min(2.6,33/max(1,len(frames)-1)))/5}\n" for i in range(len(frames)))+f"file 'frame-{len(frames)-1:02d}.png'\n")
+video=run/('copperhead-legacy-replay-5x.mp4' if snapshot and snapshot.get('view')=='legacy' else 'copperhead-latest-replay-5x.mp4' if snapshot else 'copperhead-stage-one-replay-5x.mp4');subprocess.run(['/opt/homebrew/bin/ffmpeg','-hide_banner','-loglevel','error','-f','concat','-safe','0','-i',str(concat),'-vf','fps=30','-c:v','libx264','-preset','medium','-crf','18','-pix_fmt','yuv420p','-movflags','+faststart',str(video)],check=True)
 manifest=dict(cutoff=cutoff.isoformat(),frames=[{k:str(v) if isinstance(v,Path) else v for k,v in f.items() if k not in ('evaluation','record')} for f in frames],attempt_count=len(records),video_sha256=hashlib.sha256(video.read_bytes()).hexdigest(),latest_attempt=records[-1][1]['attempt'],latest_completed_at=records[-1][1]['finished_at'],earliest='First preserved native evaluation; earlier preparation has no replay snapshots',method='Discrete verified board snapshots fitted to view; no geometry interpolation')
-(run/'manifest.json').write_text(json.dumps(manifest,indent=2));shutil.copyfile(video,OUT/video.name);shutil.copyfile(run/'manifest.json',OUT/('copperhead-latest-replay-manifest.json' if snapshot else 'copperhead-stage-one-replay-manifest.json'))
+(run/'manifest.json').write_text(json.dumps(manifest,indent=2));shutil.copyfile(video,OUT/video.name);shutil.copyfile(run/'manifest.json',OUT/(video.stem+'-manifest.json'))
 (run/'index.html').write_text('<!doctype html><html><head><meta name="viewport" content="width=device-width"><title>Copperhead checkpoint replay</title><style>html,body{margin:0;background:#0c141b;height:100%}video{width:100%;height:100%;object-fit:contain}</style></head><body><video controls autoplay muted loop playsinline src="' + video.name + '"></video></body></html>')
 print(json.dumps(dict(run=str(run),video=str(OUT/video.name),url='http://127.0.0.1:53918/file/'+str(run.relative_to(LOCAL))+'/index.html',frames=len(frames)),indent=2))

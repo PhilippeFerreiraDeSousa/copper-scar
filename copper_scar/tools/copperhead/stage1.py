@@ -29,7 +29,7 @@ KICAD = '/Users/philippe/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli'
 KIPY = '/Users/philippe/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.9/bin/python3.9'
 PYTHON = str(ROOT / '.venv/bin/python')
 REFERENCE = ROOT / '.local/pcbgolf-source'
-POLICY = 'native-feasibility-v7'
+POLICY = 'native-feasibility-v9'
 DEADLINE = None
 
 def now(): return datetime.now(timezone.utc).isoformat()
@@ -140,7 +140,7 @@ def evaluate(candidate, run, label, frozen_support):
     return result
 
 def validate_proposal(proposal, result):
-    if proposal.get('kind') not in ('krt_reconnect','placement_repair','placement_group','placement_trial') or not isinstance(proposal.get('net'),str):
+    if proposal.get('kind') not in ('krt_reconnect','placement_repair','placement_group','placement_trial','global_expand','group_pose') or not isinstance(proposal.get('net'),str):
         raise ValueError('Only a scoped native repair proposal is supported')
     if not result['invariants_ok'] or result['errors']:
         raise ValueError('Backend proposal requires preserved invariants and no physical errors')
@@ -149,12 +149,13 @@ def validate_proposal(proposal, result):
     if proposal['kind']=='placement_group':
         if not proposal.get('refs') or len(set(proposal['refs']))<2 or not proposal.get('anchors') or not proposal.get('nets'):
             raise ValueError('Group proposal requires explicit members, interface anchors and net scope')
+    if proposal['kind'] in ('global_expand','group_pose'):return proposal
     needle='['+proposal['net']+']'
     if not any(v['type']=='unconnected_items' and any(needle in i.get('description','') for i in v.get('items',[])) for v in result['violations']):
         raise ValueError('Proposed net has no current native missing connection')
     return proposal
 
-def execute(source, iterations, route_seconds, budget, proposal=None):
+def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inner=False):
     global DEADLINE
     DEADLINE=time.monotonic()+budget
     (LOCAL/'loop').mkdir(parents=True,exist_ok=True)
@@ -194,7 +195,8 @@ def execute(source, iterations, route_seconds, budget, proposal=None):
             if not state.get('best_feasibility') or state['best_feasibility'].get('scope')!=scope:
                 state['best_feasibility']=dict(candidate=str(current),priority=priority(initial),scope=scope,metric_version=VERSION,design_sha256=initial['design_sha256']) if initial['invariants_ok'] else None
             record['incumbent_before']=state.get('best_feasibility')
-            action=validate_proposal(proposal,initial) if proposal else choose_action(initial,feedback,scope);record.update(action=action,before=initial,metric_version=VERSION)
+            if not legacy_inner and (not initial['invariants_ok'] or initial['errors']):raise ValueError('Whole-board routing requires preserved native invariants and no physical errors')
+            action=validate_proposal(proposal,initial) if proposal else choose_action(initial,feedback,scope) if legacy_inner else dict(kind='initial_route',reason='Initial whole-board autoroute from preserved starting placement',hypothesis='Attempt all remaining connections with legal multilayer vias and explicit effort limit',feedback_used=[]);record.update(action=action,before=initial,metric_version=VERSION)
             write(run/'attempt.json',record)
             if action['kind']=='stop':
                 record.update(status='needs_proposal',stop_reason=action['reason']);state['stop_reason']=action['reason'];write(run/'attempt.json',record);state['attempts'].append(str(run));break
@@ -210,7 +212,16 @@ def execute(source, iterations, route_seconds, budget, proposal=None):
             if action['kind'] in ('placement_group','placement_trial'):
                 group_proposal=run/'placement-proposal.json';write(group_proposal,action)
                 commands=[('placement',[KIPY,str(ROOT/'scripts'/('copperhead_spacing_trial.py' if action['kind']=='placement_trial' else 'copperhead_group_move.py')),str(candidate),'--proposal',str(group_proposal)],300),('krt_reconnect',[PYTHON,str(ROOT/'scripts/copperhead_krt.py'),str(candidate),*[v for n in action['nets'] for v in ('--net',n)]],route_seconds+40)]
-            record['action_level']='outer_placement' if action['kind'] in ('placement_repair','placement_group','placement_trial') else 'inner_routing'
+            if action['kind'] in ('global_expand','group_pose'):
+                group_proposal=run/'placement-proposal.json';write(group_proposal,action)
+                commands=[('placement',[KIPY,str(ROOT/'scripts'/('copperhead_global_expand.py' if action['kind']=='global_expand' else 'copperhead_apply_pose.py')),str(candidate),'--proposal',str(group_proposal)],300)]
+            if not legacy_inner:
+                full_commands=[('export',[KIPY,'-c',"import pcbnew as p,sys;b=p.LoadBoard(sys.argv[1]);assert p.ExportSpecctraDSN(b,sys.argv[2])",str(candidate/'pcbgolf.kicad_pcb'),str(candidate/'pcbgolf.dsn')],60),('route',[PYTHON,str(ROOT/'scripts/copperhead_route.py'),str(candidate),'--seconds',str(route_seconds),'--passes','100','--whole-board','--skip-fanout'],route_seconds+40),('import',[KIPY,str(ROOT/'scripts/copperhead_native_board.py'),'import',str(candidate)],60)]
+                commands=[c for c in commands if c[0]=='placement']+full_commands
+                record['comparison_kind']='initial_routed_placement' if action['kind']=='initial_route' else 'routed_placement'
+                record['routing_scope']=dict(kind='whole_board',net_filter=None,fanout_enabled=False,via_count_limit=None,effort_limit_seconds=route_seconds,pass_limit=100,completion='pending')
+            else:record['comparison_kind']='legacy_inner'
+            record['action_level']='outer_placement' if action['kind'] in ('placement_repair','placement_group','placement_trial','global_expand','group_pose') else 'inner_routing'
             record['outer_candidate']=uid if record['action_level']=='outer_placement' else 'geometry:'+initial['geometry_scope']
             record['inner_effort']=[]
             record['commands']=[]
@@ -232,8 +243,11 @@ def execute(source, iterations, route_seconds, budget, proposal=None):
                 span.set_output({'commands':record['commands']})
             with tracer.span('native.stage1.evaluate_after',attributes={'attempt':uid,'policy_version':POLICY}) as span:
                 after=evaluate(candidate,run,'after',frozen);span.set_output({k:v for k,v in after.items() if k not in ['files','violations']})
+            if not legacy_inner:
+                record['routing_scope']['execution']=json.loads((candidate/'execution.json').read_text())
+                record['routing_scope']['completion']='routed_and_natively_evaluated'
             same_design,raw_decrease,improved,classification=classify_action(initial,after)
-            selected=action.get('nets') or ([action['net']] if action.get('net') else ['GND'] if action['kind']=='ground_escape' else ['*'])
+            selected=['*'] if not legacy_inner else action.get('nets') or ([action['net']] if action.get('net') else ['GND'] if action['kind']=='ground_escape' else ['*'])
             effects=compare_effects(run/'input/pcbgolf.kicad_pcb',candidate/'pcbgolf.kicad_pcb',selected)
             effects.update(missing_before=missing_by_net(initial),missing_after=missing_by_net(after))
             write(run/'effects.json',effects)
@@ -264,6 +278,8 @@ def execute(source, iterations, route_seconds, budget, proposal=None):
             # A producer failure still gets a fresh inspection when budget permits.
             # Failed actions never promote, even if partial copper looks better.
             record.update(status='failed',error=repr(exc))
+            if record.get('routing_scope') and (candidate/'execution.json').exists():
+                record['routing_scope'].update(execution=json.loads((candidate/'execution.json').read_text()),completion='failed_no_evaluated_session')
             if record.get('before') and candidate.exists():
                 try:record['after']=evaluate(candidate,run,'after_failure',frozen)
                 except Exception as check_exc:record['after_failure_error']=repr(check_exc)
@@ -279,10 +295,17 @@ def execute(source, iterations, route_seconds, budget, proposal=None):
     viewpath=LOCAL/'current-status.json'
     if viewpath.exists():
         view=json.loads(viewpath.read_text());view.update(actively_generating=None,phase='Stage 1 runner stopped: '+state.get('stop_reason','unknown'),updated_at=now());write(viewpath,view)
-    state['updated_at']=now();state['weave_enabled']=tracer.enabled;write(statepath,state);tracer.finish();print(json.dumps(state,indent=2))
+    state['updated_at']=now();state['weave_enabled']=tracer.enabled;write(statepath,state);tracer.finish()
+    config_path=LOCAL/'observability/config.json'
+    if config_path.exists():
+        config=json.loads(config_path.read_text())
+        with (LOCAL/'observability/latest-publication.log').open('w') as log:
+            publisher=subprocess.Popen([config['python'],str(ROOT/'scripts/copperhead_observability.py'),'--credential-file',config['credential_file']],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+        write(LOCAL/'observability/worker.json',dict(pid=publisher.pid,started_at=now(),mode='historical backfill after native evaluation'))
+    print(json.dumps(state,indent=2))
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--source',type=Path,required=True);ap.add_argument('--iterations',type=int,default=2);ap.add_argument('--route-seconds',type=int,default=120);ap.add_argument('--budget',type=int,default=600);ap.add_argument('--proposal',type=Path);a=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--source',type=Path,required=True);ap.add_argument('--iterations',type=int,default=1);ap.add_argument('--route-seconds',type=int,default=120);ap.add_argument('--budget',type=int,default=600);ap.add_argument('--proposal',type=Path);ap.add_argument('--legacy-inner',action='store_true');a=ap.parse_args()
     if not a.source.resolve().is_relative_to(LOCAL/'candidates'):raise SystemExit('Source must be a Copperhead candidate')
     if not 1<=a.iterations<=100 or not 10<=a.route_seconds<=900:raise SystemExit('Explicit bounded parameters required')
     proposal=None
@@ -291,5 +314,6 @@ def main():
         if not a.proposal.resolve().is_relative_to(LOCAL/'proposals'):raise SystemExit('Proposal must be in the owned proposal directory')
         proposal=json.loads(a.proposal.read_text())
         proposal['proposal_sha256']=hashlib.sha256(a.proposal.read_bytes()).hexdigest()
-    execute(a.source,a.iterations,a.route_seconds,a.budget,proposal)
+    if not a.legacy_inner and a.iterations!=1:raise SystemExit('Each outer invocation is one placement plus whole-board autoroute; propose the next placement after evaluation')
+    execute(a.source,a.iterations,a.route_seconds,a.budget,proposal,a.legacy_inner)
 if __name__=='__main__':main()

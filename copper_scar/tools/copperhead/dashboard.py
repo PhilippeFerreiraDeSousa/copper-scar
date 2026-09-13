@@ -14,7 +14,7 @@ def state():
  for p in sorted((LOCAL/'runs').glob('stage1-*/attempt.json')):
   r=read(p)
   if not r:continue
-  row={k:r.get(k) for k in ['attempt','status','stage','started_at','finished_at','action','candidate','error','stop_reason','diagnostic_improved','metric_version','constraint_scope','diagnostic_priority_before','diagnostic_priority_after','placement_delta','classification','became_incumbent','incumbent_before','incumbent_after']}
+  row={k:r.get(k) for k in ['attempt','status','stage','started_at','finished_at','action','candidate','error','stop_reason','diagnostic_improved','metric_version','constraint_scope','diagnostic_priority_before','diagnostic_priority_after','placement_delta','classification','became_incumbent','incumbent_before','incumbent_after','comparison_kind','routing_scope','action_level','policy']}
   row['mtime']=p.stat().st_mtime;row['record']=str(p.relative_to(LOCAL));row['running_process']=False
   if r.get('runner_pid'):
    try:os.kill(r['runner_pid'],0);row['running_process']=True
@@ -38,12 +38,12 @@ def state():
  for action in {r.get('action',{}).get('kind') for r in rows if r.get('action')}:
   durations=[r['duration'] for r in rows if r.get('action',{}).get('kind')==action and r['status']=='completed' and r['duration'] is not None]
   if durations:timings[action]=dict(n=len(durations),median=statistics.median(durations),minimum=min(durations),maximum=max(durations))
- return dict(controller=read(LOCAL/'controller-state.json',{}),timings=timings,now=datetime.now(timezone.utc).isoformat(),root=str(LOCAL),rows=rows,loop=read(LOCAL/'loop/state.json',{}),current=read(LOCAL/'current-status.json',{}),viewer=read(LOCAL/'viewer-state.json',{}))
+ return dict(observability=read(LOCAL/'observability/verified.json',{}),controller=read(LOCAL/'controller-state.json',{}),timings=timings,now=datetime.now(timezone.utc).isoformat(),root=str(LOCAL),rows=rows,loop=read(LOCAL/'loop/state.json',{}),current=read(LOCAL/'current-status.json',{}),viewer=read(LOCAL/'viewer-state.json',{}))
 class Handler(BaseHTTPRequestHandler):
  def do_POST(self):
-  if self.path!="/api/replay/build":self.send_error(404);return
+  if urlparse(self.path).path!="/api/replay/build":self.send_error(404);return
   from .replay_service import start
-  try:data=json.dumps(start()).encode()
+  try:data=json.dumps(start(parse_qs(urlparse(self.path).query).get('view',['outer'])[0])).encode()
   except Exception as e:data=json.dumps(dict(state="error",error=str(e))).encode()
   self.send_response(200);self.send_header("Content-Type","application/json");self.end_headers();self.wfile.write(data)
  def do_GET(self):
