@@ -11,7 +11,7 @@ def item(name,seconds,**extra): return dict(frame='video-frames/'+name,seconds=s
 with sync_playwright() as pw:
  b=pw.chromium.launch(executable_path=a.browser,headless=True);page=b.new_page(viewport={'width':1920,'height':1080},device_scale_factor=1)
  errors=[];page.on('pageerror',lambda e: errors.append(str(e)));page.goto((out/'index.html').as_uri())
- page.add_style_tag(content='main{padding:24px 42px}.intro{margin-bottom:18px}header{margin-bottom:18px}.board{height:470px}#feedback,.lower,details,footer{display:none}.flow{margin:16px 0}h1{font-size:38px}')
+ page.add_style_tag(content='main{padding:24px 42px}.intro{margin-bottom:18px}header{margin-bottom:18px}.board{height:470px}#diagnostics,#feedback,.lower,details,footer{display:none}.flow{margin:16px 0}h1{font-size:38px}')
  retained=max((i for i,r in enumerate(hist) if r.get('retained') and r.get('image') and not r.get('failed')),default=0)
  for i,r in enumerate(hist):
   page.evaluate('(i)=>showAttempt(i)',i);page.wait_for_function('document.querySelector("#board").hidden || (document.querySelector("#board").complete && document.querySelector("#board").naturalWidth>0)')
@@ -25,7 +25,7 @@ with sync_playwright() as pw:
   feedback=json.loads(feedback_path.read_text())
   for attempt_id in [feedback['prior_id'],feedback['following_id']]:
    i=next(i for i,r in enumerate(hist) if r['id']==attempt_id);manifest.append(item(f'{i:03}.png',10,chapter='Measured feedback chain: rejected placement result',attempt=hist[i]['id'],board_sha256=hist[i].get('board_sha256')))
-  page.goto((out/'index.html').as_uri());page.add_style_tag(content='.intro,.layout,.flow,.lower,details,footer,nav{display:none}#feedback{margin-top:110px;padding:35px}#feedback h2{font-size:32px}#feedback p{font-size:20px}#feedback a{font-size:17px}')
+  page.goto((out/'index.html').as_uri());page.add_style_tag(content='#diagnostics,.intro,.layout,.flow,.lower,details,footer,nav{display:none}#feedback{margin-top:110px;padding:35px}#feedback h2{font-size:32px}#feedback p{font-size:20px}#feedback a{font-size:17px}')
   page.screenshot(path=str(frames/'feedback-chain.png'));manifest.append(item('feedback-chain.png',10,chapter='Persisted diagnostics inform a changed proposal; both candidates rejected'))
  else:
   for suffix in ['183642-ca8dab','185217-d06b3b','185942-295ff2']:
@@ -37,7 +37,7 @@ with sync_playwright() as pw:
  else:
   page.goto((out/'index.html').as_uri());page.add_style_tag(content='.layout,.intro,.flow,details,footer{display:none}.lower{margin-top:100px}.lower h2{font-size:48px}.lower p{font-size:22px}.lower .panel{padding:35px}.eyebrow{font-size:15px}')
   page.screenshot(path=str(frames/'fixture-scope.png'));manifest.append(item('fixture-scope.png',30,chapter='Separate fixture scope; report-derived'))
- page.goto((out/'index.html').as_uri());page.evaluate("document.querySelector('.layout').remove();document.querySelector('.intro').remove();document.querySelector('.flow').remove();document.querySelector('#feedback').remove();document.querySelector('details').remove();document.querySelector('footer').style.fontSize='18px';document.querySelector('.lower').insertAdjacentHTML('beforebegin','<div style=\"margin:65px 0 40px\"><div class=\"eyebrow\">Inspect the chain of evidence</div><h1>One board. One evaluation. One decision.</h1><p style=\"font-size:24px\">Native board hash → rendered image → exact metrics → proposal / decision receipt</p><p style=\"font-size:20px;margin-top:25px\">The offline package preserves the evidence. Online observability links are optional.</p></div>')")
+ page.goto((out/'index.html').as_uri());page.evaluate("document.querySelector('.layout').remove();document.querySelector('.intro').remove();document.querySelector('.flow').remove();document.querySelector('#feedback').remove();document.querySelector('#diagnostics').remove();document.querySelector('details').remove();document.querySelector('footer').style.fontSize='18px';document.querySelector('.lower').insertAdjacentHTML('beforebegin','<div style=\"margin:65px 0 40px\"><div class=\"eyebrow\">Inspect the chain of evidence</div><h1>One board. One evaluation. One decision.</h1><p style=\"font-size:24px\">Native board hash → rendered image → exact metrics → proposal / decision receipt</p><p style=\"font-size:20px;margin-top:25px\">The offline package preserves the evidence. Online observability links are optional.</p></div>')")
  page.screenshot(path=str(frames/'provenance.png'));manifest.append(item('provenance.png',25,chapter='Evidence and limitations'))
  manifest.append(item(f'{retained:03}.png',15,chapter='Closing: incomplete product board',attempt=hist[retained]['id'],board_sha256=hist[retained].get('board_sha256')))
  if errors: raise RuntimeError(errors)
@@ -49,5 +49,5 @@ subprocess.run(['ffmpeg','-y','-loglevel','error','-i',str(out/'copper-scar-demo
 for name in ['copper-scar-demo-normal.mp4','copper-scar-demo-5x.mp4']:
  subprocess.run(['ffmpeg','-v','error','-i',str(out/name),'-f','null','-'],check=True)
  receipt=json.loads(subprocess.check_output(['ffprobe','-v','quiet','-show_streams','-show_format','-of','json',str(out/name)]));(out/(name+'.probe.json')).write_text(json.dumps(receipt,indent=2))
-(out/'video-manifest.json').write_text(json.dumps(dict(method='Scripted native snapshot presentation, not elapsed solver time; full history at equal dwell within 30-second chapter. No geometry interpolation. Silent: use presenter script.',normal_duration_seconds=180,speedup=5,frames=manifest,video_sha256={name:hashlib.sha256((out/name).read_bytes()).hexdigest() for name in ['copper-scar-demo-normal.mp4','copper-scar-demo-5x.mp4']}),indent=2))
+(out/'video-manifest.json').write_text(json.dumps(dict(method='Scripted native snapshot presentation, not elapsed solver time; full history at equal dwell within 30-second chapter. No geometry interpolation. Silent: use presenter script.',evidence_built_at=d['built_at'],normal_duration_seconds=180,speedup=5,frames=manifest,video_sha256={name:hashlib.sha256((out/name).read_bytes()).hexdigest() for name in ['copper-scar-demo-normal.mp4','copper-scar-demo-5x.mp4']}),indent=2))
 print(json.dumps(dict(frames=len(manifest),browser_errors=errors,decoded=True)))

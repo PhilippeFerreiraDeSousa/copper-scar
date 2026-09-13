@@ -32,3 +32,9 @@ The full historical trajectory is compressed into the video’s 0:50–1:20 chap
 The optional `--feedback-chain /path/to/copperhead-feedback-chain` argument on `build.py` verifies and packages the concrete native feedback → changed proposal → rejected result chain. Automatic exclusion of a failed pose is a separate mechanism from circuit reasoning; neither implies a retained placement win.
 
 After rebuilding, regenerate the normal and accelerated videos with `render_video.py PACKAGE`, run `verify_browser.py PACKAGE`, then `freeze.py PACKAGE` to verify source joins, record the current source commit and atomically replace the portable ZIP. Browser/video tools need Playwright, Chrome/Chromium and FFmpeg; presentation playback does not. The freeze rejects stale browser coverage or a video missing current attempt IDs. Existing ZIP stays intact until the replacement passes integrity checks.
+
+## Parent-specific diagnostic view
+
+`diagnostics/index.html` adds the saved native island analysis of the exact 55-open parent, covering nine nets and 32 missing pairs. It separates existing copper connectivity from unknown blocking cause and untested route/via legality. The root card explicitly indicates whether its parent hash matches the selected board. This additive view does not change the frozen video history or extend its duration.
+
+Package new saved diagnostic evidence with `package_diagnostics.py --source REPORT_FOLDER --output PACKAGE`, or pass `--diagnostic-source REPORT_FOLDER` when rebuilding. No native CAD execution or board changes occur.
