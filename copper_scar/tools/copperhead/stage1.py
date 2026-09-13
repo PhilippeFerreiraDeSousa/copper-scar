@@ -175,6 +175,12 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
         uid='stage1-'+datetime.now().strftime('%Y%m%d-%H%M%S')+'-'+uuid.uuid4().hex[:6]
         run=LOCAL/'runs'/uid;run.mkdir();candidate=LOCAL/'candidates'/uid
         record=dict(schema_version=1,attempt=uid,policy=POLICY,stage=1,started_at=now(),input=str(current),constraint_scope=scope,status='running',candidate=str(candidate))
+        source_paths=[Path(__file__)]+sorted((ROOT/'scripts').glob('copperhead_*.py'))
+        record['implementation_sources']={}
+        for source in source_paths:
+            relative=source.relative_to(ROOT);snapshot=run/'implementation'/relative;snapshot.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,snapshot)
+            record['implementation_sources'][str(relative)]=hashlib.sha256(source.read_bytes()).hexdigest()
+        record['source_revision']=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
         archive=run/'tool-source';archive.mkdir()
         codepaths=list((ROOT/'scripts').glob('copperhead_*.py'))+list(Path(__file__).parent.glob('*.py'))+[ROOT/'copper_scar/real.py',ROOT/'copper_scar/loop/weave_trace.py']
         record['tool_source_hashes']={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in codepaths}
