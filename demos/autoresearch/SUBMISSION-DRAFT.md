@@ -23,3 +23,5 @@ Local demo: two-level-autoresearch/index.html
 Offline video: two-level-autoresearch/two-level-replay.mp4
 
 Team name, additional members, contact details, public hosting/video link, eligibility declarations and final submission fields: not supplied; leave unanswered until provided by the team. Private W&B access has not been expanded. No submission has been sent.
+
+The matched pilot uses KiCad native evaluation and Freerouting. JITX source-authored routing and transfer proofs are separate supplemental work and did not realize these pilot routes.

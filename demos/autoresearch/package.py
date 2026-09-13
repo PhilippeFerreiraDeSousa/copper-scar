@@ -20,7 +20,7 @@ def main():
  def add_tree(folder,prefix,skip=lambda p:False):
   for p in folder.rglob('*'):
    if p.is_file() and not skip(p):files[prefix+'/'+str(p.relative_to(folder))]=p
- for folder in ['boards','attempts','manifests','decisions']:add_tree(pilot/folder,'two-level-autoresearch/'+folder)
+ for folder in ['boards','attempts','manifests','decisions','next-campaign']:add_tree(pilot/folder,'two-level-autoresearch/'+folder)
  for name in ['index.html','data.js','data.json','events.jsonl','ingestion-receipts.jsonl','two-level-replay.mp4','replay-verified.json','ui-verified.json']:files['two-level-autoresearch/'+name]=pilot/name
  for p in (pilot/'remote').glob('*verified.json'):files['two-level-autoresearch/remote/'+p.name]=p
  for folder in ['router-logs','complete-evidence']:add_tree(pilot/'remote'/folder,'two-level-autoresearch/remote/'+folder)
@@ -34,7 +34,10 @@ def main():
   dest=material/name;dest.write_bytes((scripts/name).read_bytes());files['demo-material/'+name]=dest
  # Exact Git trees, not the execution owner's working edits or runtime directories.
  owner=Path(state['source_path']).parents[2];frozen=state['common_protocol']['source_commit'];revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=scripts,text=True).strip();source_dir=root/'demo-source';source_dir.mkdir(exist_ok=True)
- for repo,commit,label in [(owner,frozen,'frozen-experiment'),(scripts,revision,'demo-presentation')]:
+ archives=[(owner,frozen,'frozen-experiment'),(scripts,revision,'demo-presentation')]
+ consumer_commit=(state.get('next_campaign') or {}).get('consumed',{}).get('consumer_source_commit')
+ if consumer_commit:archives.append((owner,consumer_commit,'next-campaign'))
+ for repo,commit,label in archives:
   dest=source_dir/(label+'-'+commit+'.tar.gz')
   if not dest.exists():subprocess.run(['git','-C',str(repo),'archive','--format=tar.gz','--prefix='+label+'/','-o',str(dest),commit],check=True)
   files['source/'+dest.name]=dest

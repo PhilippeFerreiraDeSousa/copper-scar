@@ -27,3 +27,5 @@ Open a linked Evidence summary and complete original files trace. Show its propo
 “The deliverable is a measurable, inspectable optimizer research loop. This board still has open connections and is not engineering-qualified. The offline package preserves the actual experiment, including rejected proposals and limitations.”
 
 Fallback: play `two-level-autoresearch/two-level-replay.mp4`. The frozen package opens offline, without W&B credentials or a local CAD installation.
+
+The matched pilot uses KiCad native evaluation and Freerouting. JITX source-authored routing and transfer proofs are separate supplemental work and did not realize these pilot routes.

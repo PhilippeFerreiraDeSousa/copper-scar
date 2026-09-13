@@ -31,3 +31,5 @@ The router exposes no verified random seed. Native UUID/item ordering can vary. 
 ## Remote publication
 
 `publish.py`, `publish_evidence.py`, `publish_logs.py` and `publish_media.py` require an authorized W&B account. The demo run used W&B 0.30.0 and Weave 0.53.9. The remote project uses complete-mode traces; `trace_io.py` uses synchronous v2 start/end writes with bounded readback of actual persisted outputs. Evidence uploads download the listed files again and compare SHA256 bytes. Source credentials are deliberately omitted.
+
+The matched pilot uses KiCad native evaluation and Freerouting. JITX source-authored routing and transfer proofs are separate supplemental work and did not realize these pilot routes.

@@ -130,6 +130,21 @@ def build(source,out):
    try:payload=json.loads(artifact_raw)
    except json.JSONDecodeError:continue
    digest=hashlib.sha256(artifact_raw).hexdigest();target=out/'decisions'/(source_file.stem+'-'+digest[:12]+'.json');atomic(target,artifact_raw.decode());state['decision_artifacts'].append({'kind':relative,'sha256':digest,'href':str(target.relative_to(out)),'payload':payload})
+ state['next_campaign']=None
+ artifacts={a['kind']:a for a in state['decision_artifacts']}
+ consumed=artifacts.get('next-campaign/consumed-decision.json',{}).get('payload')
+ if consumed:
+  result=artifacts.get('next-campaign/result.json',{}).get('payload');next_state={'consumed':consumed,'result':result,'stages':[]}
+  if consumed.get('input_board_path') and consumed.get('input_board_sha256'):next_state['stages'].append({'name':'Selected policy campaign input',**asset(consumed['input_board_path'],consumed['input_board_sha256'],out)})
+  chosen=(result or {}).get('selected') or {}
+  if chosen.get('preview_after_board_path') and chosen.get('preview_after_board_sha256'):next_state['stages'].append({'name':'Actual selected update before routing',**asset(chosen['preview_after_board_path'],chosen['preview_after_board_sha256'],out)})
+  rp=Path(result['receipt_path']) if result and result.get('receipt_path') else None
+  if rp and rp.exists():
+   assert sha(rp)==result['receipt_sha256'];record=json.loads(rp.read_text());dest=out/'next-campaign';dest.mkdir(exist_ok=True);shutil.copy2(rp,dest/'attempt.json');next_state['receipt_href']='next-campaign/attempt.json';next_state['receipt_sha256']=sha(rp)
+   for name in ['final-pad-partitions.json','final-via-geometry.json']:
+    if (rp.parent/name).exists():shutil.copy2(rp.parent/name,dest/name)
+   if record.get('after'):next_state['stages'].append({'name':'After separate campaign routing',**asset(Path(record['candidate'])/'pcbgolf.kicad_pcb',record['after']['files']['pcbgolf.kicad_pcb'],out)})
+  focus_stages(next_state['stages'],out);state['next_campaign']=next_state
  state['remote_receipts']=json.loads((out/'remote/verified.json').read_text()) if (out/'remote/verified.json').exists() else None
  atomic(out/'data.json',json.dumps(state,indent=2));atomic(out/'data.js','window.EXPERIMENT='+json.dumps(state)+';');shutil.copy2(Path(__file__).with_name('index.html'),out/'index.html')
  append(out/'ingestion-receipts.jsonl',json.dumps({'at':state['built_at'],'source_event_bytes':len(raw),'events_sha256':state['events_sha256'],'manifest_sha256':state['manifest_sha256'],'event_count':len(events),'data_sha256':sha(out/'data.json')})+'\n')
