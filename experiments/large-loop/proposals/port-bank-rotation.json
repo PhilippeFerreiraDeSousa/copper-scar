@@ -1,0 +1,7 @@
+{
+  "kind": "rotate_port_bank",
+  "rationale": "The retained 95-open board has 51 explicit open endpoints on J5-J8; shared CAN high-side buses each retain four open connections. The next preplanned Q7 move is pruned because its target drain net is now connected. Rotate each original vertical port 90 degrees in place to change dense-pad access from north/south to east/west relative to the shared horizontal buses. This tests a different placement primitive rather than repeating a failed transistor move. Native geometry/preflight must pass before routing.",
+  "diagnostic_nets": ["CAN0_H", "CAN1_H", "CAN2_H", "CAN3_H", "GND"],
+  "expected_score_terms": {"native_opens": "Hypothesis: improve port escape and shared-bus routing; exact change unknown until full native evaluation", "required_physical_findings": "No new findings; retain all 84 source findings", "official_assembled_score": "Not eligible in Stage1; no outline, layer, model or BOM change"},
+  "after": {"J5": [32, 29, 90], "J6": [57, 29, 90], "J7": [82, 29, 90], "J8": [107, 29, 90]}
+}

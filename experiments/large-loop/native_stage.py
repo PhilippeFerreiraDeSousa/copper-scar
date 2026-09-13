@@ -6,6 +6,10 @@ ap=argparse.ArgumentParser();ap.add_argument('action',choices=['export','import'
 def identity():return {fp.GetReference():{'pose':[fp.GetPosition().x,fp.GetPosition().y,fp.GetOrientationDegrees()],'pads':sorted((pad.GetNumber(),pad.GetNetname()) for pad in fp.Pads())} for fp in b.GetFootprints()}
 before=identity()
 if a.action=='export':
+ if (f/'placements.json').exists():
+  placements=json.loads((f/'placements.json').read_text())
+  for fp in b.GetFootprints():
+   pose=placements[fp.GetReference()];fp.SetOrientationDegrees(pose[2] if len(pose)>2 else 0);fp.SetPosition(p.VECTOR2I(p.FromMM(pose[0]),p.FromMM(pose[1])))
  # Repair only the original undersized LED polarity marking, preserving electrical land pattern.
  for fp in b.GetFootprints():
   for item in fp.GraphicalItems():

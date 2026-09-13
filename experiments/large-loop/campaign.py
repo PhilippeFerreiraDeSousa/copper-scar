@@ -51,7 +51,7 @@ def propose(ps,nets,policy,tried):
  _,candidate,action=min(options,key=lambda v:v[0]);tried.add(json.dumps(candidate,sort_keys=True));return candidate,action
 
 def realize(base,folder,placements,manifest,source,route=True):
- folder.mkdir();write(folder/'source-receipt.json',{'source_sha':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'source_files':{str(p.relative_to(ROOT)):sha(p) for p in (ROOT/'experiments/large-loop').rglob('*.py')},'input_board_sha256':sha(base/'input/large-loop.kicad_pcb'),'input_manifest_sha256':sha(manifest),'created_at':now()});shutil.copy2(base/'authoritative-project.json',folder/'pcbgolf.kicad_pro');shutil.copytree(base/'input/pcbgolf.pretty',folder/'pcbgolf.pretty');shutil.copy2(base/'input/fp-lib-table',folder/'fp-lib-table');putposes(base/'input/large-loop.kicad_pcb',folder/'pcbgolf.kicad_pcb',placements)
+ folder.mkdir();write(folder/'source-receipt.json',{'source_sha':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'source_files':{str(p.relative_to(ROOT)):sha(p) for p in (ROOT/'experiments/large-loop').rglob('*.py')},'input_board_sha256':sha(base/'input/large-loop.kicad_pcb'),'input_manifest_sha256':sha(manifest),'created_at':now()});shutil.copy2(base/'authoritative-project.json',folder/'pcbgolf.kicad_pro');shutil.copytree(base/'input/pcbgolf.pretty',folder/'pcbgolf.pretty');shutil.copy2(base/'input/fp-lib-table',folder/'fp-lib-table');shutil.copy2(base/'input/large-loop.kicad_pcb',folder/'pcbgolf.kicad_pcb');write(folder/'placements.json',placements)
  shutil.copytree(base/'input/models',folder/'models')
  shutil.copytree(base/'input/pcbgolf.3dshapes',folder/'pcbgolf.3dshapes')
  shutil.copy2(base/'input/large-loop.kicad_sch',folder/'pcbgolf.kicad_sch');shutil.copy2(base/'input/pcbgolf.kicad_sym',folder/'pcbgolf.kicad_sym');shutil.copy2(base/'input/sym-lib-table',folder/'sym-lib-table')
@@ -65,17 +65,19 @@ def realize(base,folder,placements,manifest,source,route=True):
  native('export');shutil.copy2(folder/'pcbgolf.kicad_pcb',folder/'preview.kicad_pcb')
  cmds.append(command([KICAD,'pcb','drc','--schematic-parity','--format','json','-o',folder/'preflight.json',folder/'pcbgolf.kicad_pcb'],folder,'preflight'))
  pre=json.loads((folder/'preflight.json').read_text())
+ cmds.append(command([KIPY,ROOT/'experiments/large-loop/native_geometry.py',source/'pcbgolf.kicad_pcb',folder/'pcbgolf.kicad_pcb',manifest,folder/'preflight-geometry.json'],folder,'preflight-geometry'))
+ geometry_ok=json.loads((folder/'preflight-geometry.json').read_text())['all_electrical_and_mechanical_pads_preserved']
  # Routing may investigate an input with a documented immutable intrinsic DRC floor.
  # This does not waive those violations from independent acceptance.
  def signature(v):return (v['type'],tuple(sorted(i['uuid'] for i in v['items'])))
  frozen=json.loads((base/'intrinsic-violations.json').read_text()) if (base/'intrinsic-violations.json').exists() else []
  known={signature(v) for v in frozen}
  new_required=[v for v in pre['violations'] if signature(v) not in known and (v['severity']=='error' or v['type'] in ['silk_over_copper','silk_overlap','text_height','text_thickness'])]
- legal=not new_required and not pre.get('schematic_parity',[{}])
+ legal=geometry_ok and not new_required and not pre.get('schematic_parity',[{}])
  if route and legal:
   cmds.append(command([sys.executable,ROOT/'scripts/copperhead_route.py',folder,'--seconds','240','--passes','100','--whole-board','--skip-fanout'],folder,'full-route'));native('import')
  native('audit');cmds.append(command([KICAD,'pcb','drc','--schematic-parity','--format','json','-o',folder/'drc.json',folder/'pcbgolf.kicad_pcb'],folder,'drc'))
- result=audit(folder,manifest,source);result['placement_legal']=legal;result['routing_attempted']=bool(route and legal);result['intrinsic_violation_count']=len(frozen);result['new_preflight_violations']=new_required
+ result=audit(folder,manifest,source);result['placement_legal']=legal;result['routing_attempted']=bool(route and legal);result['intrinsic_violation_count']=len(frozen);result['new_preflight_violations']=new_required;result['placement_legal_scope']='No new required findings beyond unchanged source-intrinsic findings; this is not manufacturing acceptance';result['preflight_geometry_preserved']=geometry_ok
  cmds.append(command([KICAD,'pcb','export','svg','--layers','F.Cu,B.Cu,F.SilkS,Edge.Cuts','--mode-single','--page-size-mode','2','--exclude-drawing-sheet','-o',folder/'board.svg',folder/'pcbgolf.kicad_pcb'],folder,'render'))
  command(['/opt/homebrew/bin/rsvg-convert','-w','1400','-o',folder/'board.png',folder/'board.svg'],folder,'raster')
  write(folder/'evaluation.json',result);return result,cmds
