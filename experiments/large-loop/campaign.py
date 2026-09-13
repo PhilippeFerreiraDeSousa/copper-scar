@@ -78,3 +78,12 @@ def realize(base,folder,placements,manifest,source,route=True):
  cmds.append(command([KICAD,'pcb','export','svg','--layers','F.Cu,B.Cu,F.SilkS,Edge.Cuts','--mode-single','--page-size-mode','2','--exclude-drawing-sheet','-o',folder/'board.svg',folder/'pcbgolf.kicad_pcb'],folder,'render'))
  command(['/opt/homebrew/bin/rsvg-convert','-w','1400','-o',folder/'board.png',folder/'board.svg'],folder,'raster')
  write(folder/'evaluation.json',result);return result,cmds
+
+def stage_one_terminal(evaluation):
+ """Only the independent native acceptance gate authorizes Stage2."""
+ return bool(evaluation.get('accepted')) and evaluation.get('native_open_count')==0 and evaluation.get('feasibility_cost')==0 and evaluation.get('schematic_parity_issues')==0 and evaluation.get('erc_violations')==0
+
+def require_stage_one_work(parent):
+ evaluation=json.loads((Path(parent)/'evaluation.json').read_text())
+ if stage_one_terminal(evaluation):
+  raise SystemExit('Stage1 already complete at this fully valid native checkpoint; hand off to Stage2 instead of making another feasibility proposal.')

@@ -2,7 +2,7 @@
 from pathlib import Path
 import argparse,copy,json,re,subprocess
 from collections import Counter
-from campaign import realize,poses,hpwl,write,now,sha,ROOT
+from campaign import realize,poses,hpwl,write,now,sha,ROOT,require_stage_one_work
 from record import finish
 from audit import inventory
 
@@ -33,7 +33,7 @@ def propose(parent,manifest,variant=0):
  return candidate,{'kind':'diagnostic_passive_group_placement','rationale':'Native unconnected-net incidence weights connected component groups; swap equal-footprint resistor locations to shorten congested net spans without shrinking spacing or altering rules. Six disjoint swaps form one outer proposal, followed by full-board routing.','diagnostic_net_counts':dict(weights),'weighted_hpwl_before':before_score,'weighted_hpwl_after':score(candidate),'swaps':changes,'signals_only':False,'routing_scope':'fresh whole board, both layers, no inherited copper'}
 
 if __name__=='__main__':
- ap=argparse.ArgumentParser();ap.add_argument('base',type=Path);ap.add_argument('source',type=Path);ap.add_argument('parent');ap.add_argument('output');ap.add_argument('--variant',type=int,default=0);a=ap.parse_args();base=a.base.resolve();parent=base/a.parent;out=base/a.output;m=json.loads((base/'input/circuit.json').read_text());candidate,action=propose(parent,m,a.variant);write(base/(a.output+'-proposal.json'),{'source_sha':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'parent_board_sha256':sha(parent/'pcbgolf.kicad_pcb'),'created_at':now(),'poses':candidate,'action':action});print(json.dumps(action),flush=True)
+ ap=argparse.ArgumentParser();ap.add_argument('base',type=Path);ap.add_argument('source',type=Path);ap.add_argument('parent');ap.add_argument('output');ap.add_argument('--variant',type=int,default=0);a=ap.parse_args();base=a.base.resolve();parent=base/a.parent;out=base/a.output;require_stage_one_work(parent);m=json.loads((base/'input/circuit.json').read_text());candidate,action=propose(parent,m,a.variant);write(base/(a.output+'-proposal.json'),{'source_sha':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),'parent_board_sha256':sha(parent/'pcbgolf.kicad_pcb'),'created_at':now(),'poses':candidate,'action':action});print(json.dumps(action),flush=True)
  try:
   result,commands=realize(base,out,candidate,base/'input/circuit.json',a.source.resolve())
   before=json.loads((parent/'evaluation.json').read_text());record=finish(base,out,a.source.resolve(),action,parent)
