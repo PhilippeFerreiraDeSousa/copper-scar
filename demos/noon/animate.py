@@ -89,7 +89,7 @@ def main():
      stair.append(point)
     d.line(stair,fill=CYAN,width=3)
    d.text((60,430),f'{vmax:,.0f}',font=font(12),fill=MUTED);d.text((40,538),'0',font=font(12),fill=MUTED)
-   for j in sorted(set([0,len(points)-1])):
+   for j in [len(points)-1]:
     px,py=points[j];d.text((px,py-22),f'{vals[j]:,.2f}' if score else str(vals[j]),font=font(15,True),fill=FG)
    d.text((60,600),'Initial → recorded checkpoints → current',font=font(13),fill=MUTED)
    for px,py in points:d.ellipse((px-4,py-4,px+4,py+4),fill=CYAN)

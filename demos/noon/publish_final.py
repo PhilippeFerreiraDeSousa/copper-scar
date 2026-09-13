@@ -17,7 +17,7 @@ def main():
  with tempfile.TemporaryDirectory(prefix='pcb-noon-video-readback-') as tmp:
   folder=Path(wandb.Api().artifact(qualified).download(root=tmp))
   for n,h in hashes.items():assert sha(folder/n)==h,n
- cid=str(uuid.uuid5(uuid.NAMESPACE_URL,rid));root=start(cid,'pcb_loop.frozen_demo',{'data_sha256':video['data_sha256'],'projects':[{'title':p['title'],'summary':p['summary']} for p in data['projects']],'__invalid__' if False else None,datetime.datetime.now(datetime.timezone.utc),attributes={'wb_run_id':rid},display_name='PCB Loop frozen demo · verified native states')
+ cid=str(uuid.uuid5(uuid.NAMESPACE_URL,rid));root=start(cid,'pcb_loop.frozen_demo',{'data_sha256':video['data_sha256'],'projects':[{'title':p['title'],'summary':p['summary']} for p in data['projects']]},None,datetime.datetime.now(datetime.timezone.utc),attributes={'wb_run_id':rid},display_name='PCB Loop frozen demo · verified native states')
  if not root.ended_at:finish(None,root,{'artifact':qualified,'files_sha256':hashes,'adaptive_margin_comparison':json.loads(comparison.read_text()) if comparison.exists() else None})
  result={'run_url':'https://wandb.ai/'+PROJECT+'/runs/'+rid,'trace_url':'https://wandb.ai/'+PROJECT+'/r/call/'+cid,'artifact':qualified,'downloaded_files_sha256_verified':hashes,'data_sha256':video['data_sha256'],'video_sha256':video['video_sha256']};(remote/'final-replay-verified.json').write_text(json.dumps(result,indent=2));print(json.dumps(result),flush=True);os._exit(0)
 if __name__=='__main__':main()
