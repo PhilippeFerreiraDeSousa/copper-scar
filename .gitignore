@@ -14,3 +14,5 @@ scars/store/*.json
 scars_out/
 demos/out/*
 !demos/out/.gitkeep
+
+.local/
