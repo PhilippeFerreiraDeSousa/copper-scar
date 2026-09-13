@@ -26,9 +26,12 @@ assert cfg['kind']=='local_topology_replan'
 assert hashlib.sha256(path.read_bytes()).hexdigest()==cfg['parent_board_sha256'],'Stale topology parent'
 options=json.loads((folder/'routing-options.json').read_text())
 context=dict(schema_version='effective-via-rules-v1',constraint_scope=options['constraint_scope'],allowed_via_options=sorted(set(options['allowed_via_options'])))
+if options.get('dsn_contact_normalization'):
+    contacts=options['dsn_contact_normalization'];assert contacts['version']=='split-existing-junctions-v1'
+    context.update(schema_version='effective-routing-recipe-v2',dsn_contact_normalization=dict(version=contacts['version'],nets=sorted(set(contacts['nets']))))
 assert cfg['realization_context_digest']==hashlib.sha256(json.dumps(context,sort_keys=True,separators=(',',':')).encode()).hexdigest(),'Wrong or missing recipe'
 removals=cfg['remove_items'];sites=cfg['via_sites']
-assert 1<=len(removals)<=8 and 1<=len(sites)<=8
+assert 0<=len(removals)<=8 and 1<=len(sites)<=8
 assert len({x['uuid'] for x in removals})==len(removals)
 project=folder/'pcbgolf.kicad_pro';project_hash=hashlib.sha256(project.read_bytes()).hexdigest()
 rules=json.loads(project.read_text())['board']['design_settings']['rules']

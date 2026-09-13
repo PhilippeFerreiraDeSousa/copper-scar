@@ -8,8 +8,11 @@ ORIGINAL='Via[0-5]_600:300_um'
 SMALL='Via[0-5]_450:200_um'
 
 
-def context(names,scope):
+def context(names,scope,contacts=None):
     normalized=dict(schema_version='effective-via-rules-v1',constraint_scope=scope,allowed_via_options=sorted(set(names)))
+    if contacts:
+        assert contacts['version']=='split-existing-junctions-v1' and contacts['nets']
+        normalized.update(schema_version='effective-routing-recipe-v2',dsn_contact_normalization=dict(version=contacts['version'],nets=sorted(set(contacts['nets']))))
     return {**normalized,'digest':hashlib.sha256(json.dumps(normalized,sort_keys=True,separators=(',',':')).encode()).hexdigest()}
 
 
@@ -27,7 +30,7 @@ def candidate_options(candidate,local,scope):
     options=json.loads(path.read_text()) if path else dict(schema_version=1,constraint_scope=scope,allowed_via_options=[ORIGINAL],qualification='Original export defaults only')
     assert options['constraint_scope']==scope,'Routing options belong to another original-rule scope'
     assert set(options['allowed_via_options']) in ({ORIGINAL},{ORIGINAL,SMALL}),'Unqualified via options'
-    return options,context(options['allowed_via_options'],scope)
+    return options,context(options['allowed_via_options'],scope,options.get('dsn_contact_normalization'))
 
 
 def record_context(record):

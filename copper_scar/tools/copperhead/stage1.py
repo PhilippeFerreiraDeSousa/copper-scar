@@ -50,7 +50,7 @@ def copy_project(source, dest):
                     '*-backups', 'router-userdata', '*.ses', '*.dsn', 'router.log',
                     'router-result.json', 'execution.json', 'board.svg', 'board.png',
                     'erc.json', 'reference.net.xml', 'reference-check.json',
-                    'stage1-drc.json', 'placement-collisions', 'terminal-fanout', 'via-definition', 'via-seed.json', 'via-consolidation.json', 'krt-*.json', 'placement-search.json', 'ground-escape.json'))
+                    'stage1-drc.json', 'placement-collisions', 'terminal-fanout', 'via-definition', 'via-seed.json', 'via-consolidation.json', 'topology-replan.json', 'krt-*.json', 'placement-search.json', 'ground-escape.json'))
 def command(argv, directory, label, timeout):
     if DEADLINE is not None:
         remaining = DEADLINE-time.monotonic()
@@ -191,12 +191,15 @@ def validate_proposal(proposal, result):
         raise ValueError('Proposed net has no current native missing connection')
     return proposal
 
-def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inner=False):
+def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inner=False, state_dir=None):
     global DEADLINE
     DEADLINE=time.monotonic()+budget
     (LOCAL/'loop').mkdir(parents=True,exist_ok=True)
     lock=(LOCAL/'loop/runner.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-    statepath=LOCAL/'loop/state.json';feedbackpath=LOCAL/'loop/feedback.json'
+    loopdir=Path(state_dir).resolve() if state_dir else LOCAL/'loop'
+    if state_dir and not loopdir.is_relative_to(LOCAL/'policy-experiment'):raise ValueError('Isolated state must belong to policy-experiment')
+    loopdir.mkdir(parents=True,exist_ok=True)
+    statepath=loopdir/'state.json';feedbackpath=loopdir/'feedback.json'
     state=json.loads(statepath.read_text()) if statepath.exists() else dict(stage='feasibility',attempts=[],best_feasibility=None,accepted_baseline=None)
     feedback=json.loads(feedbackpath.read_text()) if feedbackpath.exists() else []
     tracer=WeaveTracer.maybe_init(enable=None)
@@ -204,7 +207,7 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
     state.pop('stop_reason',None)
     if (state.get('best_feasibility') or {}).get('metric_version') not in (None,VERSION):
         raise RuntimeError('Metric version changed; explicitly reevaluate incumbent before resuming')
-    write(LOCAL/'loop/constraints.json',dict(scope=scope,support_files=frozen,reference_source=str(REFERENCE),policy=POLICY,qualification='Engineering/model requirements unknown; no relaxation permitted'))
+    write(loopdir/'constraints.json',dict(scope=scope,support_files=frozen,reference_source=str(REFERENCE),policy=POLICY,qualification='Engineering/model requirements unknown; no relaxation permitted'))
     for _ in range(iterations):
         if time.monotonic()-start+route_seconds+40>budget:
             state['stop_reason']='explicit wall-time budget';break
@@ -228,13 +231,13 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
         record['became_incumbent']=False
         write(run/'attempt.json',record)
         viewpath=LOCAL/'current-status.json'
-        if viewpath.exists():
+        if not state_dir and viewpath.exists():
             view=json.loads(viewpath.read_text());view.update(actively_generating=str(candidate),phase='Stage 1: evaluate, select bounded action, recheck',updated_at=now());write(viewpath,view)
         try:
             copy_project(current,run/'input');copy_project(current,candidate)
             options,expected_context=candidate_options(current,LOCAL,scope)
             if proposal and proposal.get('new_via_definition') and SMALL not in options['allowed_via_options']:
-                options={**options,'allowed_via_options':options['allowed_via_options']+[SMALL],'qualification':'Explicit experimental proposal; native gate required'};expected_context=routing_context(options['allowed_via_options'],scope)
+                options={**options,'allowed_via_options':options['allowed_via_options']+[SMALL],'qualification':'Explicit experimental proposal; native gate required'};expected_context=routing_context(options['allowed_via_options'],scope,options.get('dsn_contact_normalization'))
             write(candidate/'routing-options.json',options)
             record.update(routing_options=options,realization_context=expected_context,realization_context_verified=False)
             with tracer.span('native.stage1.evaluate_before',attributes={'policy_version':POLICY,'attempt':uid}) as span:
@@ -342,7 +345,7 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                         write(run/'attempt.json',record)
                         if not gate['invariants_ok'] or gate['errors'] or not gate['manufacturing_rules_clear']:raise RuntimeError('Topology replan failed native physical/invariant/manufacturing gate')
                     if name=='placement':
-                        if action.get('copper_policy')=='detach_moved_pad_incident':
+                        if action.get('copper_policy')=='detach_moved_pad_incident' and not action.get('preserve_foreign_copper',False):
                             clearance=command([KIPY,str(ROOT/'scripts/copperhead_clear_placement_collisions.py'),str(candidate)],run,'placement_collision_ripup',300)
                             record['commands'].append(clearance)
                             if clearance['returncode']!=0:raise RuntimeError('Placement collision ripup failed')
@@ -383,9 +386,9 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                 execution=record['routing_scope']['execution']
                 decision=manufacturing_repair_decision(initial,after,oldbest or {},backend_ok=execution.get('returncode')==0 and not execution.get('timeout') and execution.get('session_exists',False),pad_partitions_preserved=proof['no_connected_pad_group_split'])
                 decision.update(legacy_v1_priority_before=priority(initial),legacy_v1_priority_after=priority(after),pad_partition_proof=str(proof_path));record['selection_decision']=decision;retain=decision['eligible']
-            if action.get('new_via_definition') or action['kind'] in ('via_seed','local_topology_replan'):
+            if action.get('new_via_definition') or action['kind'] in ('via_seed','local_topology_replan') or (state_dir and action['kind']=='group_pose'):
                 proof_path=run/'final-via-geometry.json'
-                via_reference=run/('topology-replan-project' if action['kind']=='local_topology_replan' else 'via-seed-project' if action['kind']=='via_seed' else 'input')/'pcbgolf.kicad_pcb'
+                via_reference=run/('topology-replan-project' if action['kind']=='local_topology_replan' else 'via-seed-project' if action['kind']=='via_seed' else 'placement-project' if state_dir and action['kind']=='group_pose' else 'input')/'pcbgolf.kicad_pcb'
                 check=command([KIPY,str(ROOT/'scripts/copperhead_via_geometry.py'),'--before',str(via_reference),'--after',str(candidate/'pcbgolf.kicad_pcb'),'--output',str(proof_path)],run,'final_via_geometry',60)
                 if check['returncode']!=0:raise RuntimeError('Final native via geometry check failed')
                 proof=json.loads(proof_path.read_text());retain=retain and proof['existing_via_geometry_preserved'] and proof['new_vias_use_only_allowed_definitions']
@@ -429,9 +432,9 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
             write(run/'attempt.json',record);state['attempts'].append(str(run));state['stage']='feasibility';state['updated_at']=now();write(statepath,state)
             # Publish only after native recheck; viewer helper never opens another window.
             rel=Path(after['report']);shutil.copyfile(rel,candidate/'stage1-drc.json')
-            command([PYTHON,str(ROOT/'scripts/copperhead_publish.py'),str(candidate),'stage1-drc.json','--phase','Stage 1 feasibility loop: checked partial candidate'],run,'publish',60)
-            command([PYTHON,str(ROOT/'scripts/copperhead_viewer.py')],run,'viewer',30)
-            with (LOCAL/'loop/eval-rows.jsonl').open('a') as rows:
+            if not state_dir:command([PYTHON,str(ROOT/'scripts/copperhead_publish.py'),str(candidate),'stage1-drc.json','--phase','Stage 1 feasibility loop: checked partial candidate'],run,'publish',60)
+            if not state_dir:command([PYTHON,str(ROOT/'scripts/copperhead_viewer.py')],run,'viewer',30)
+            with (loopdir/'eval-rows.jsonl').open('a') as rows:
                 rows.write(json.dumps(dict(attempt=uid,stage=1,policy_version=POLICY,invariants_ok=after['invariants_ok'],unconnected=after['unconnected'],native_cad_ok=after['native_cad_ok'],validity_gate=False,official_score=None,diagnostic_improved=improved,search_cost=after['search_cost']))+'\n')
             # Keep incumbent separately. One safe exploratory continuation can
             # recover a connectivity tradeoff; never explore broken invariants/shorts.
@@ -465,11 +468,11 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
             record['finished_at']=now();write(run/'attempt.json',record);state['attempts'].append(str(run));state['stop_reason']='execution/evaluation failure; inspect preserved attempt';break
     else:state['stop_reason']='explicit iteration budget'
     viewpath=LOCAL/'current-status.json'
-    if viewpath.exists():
+    if not state_dir and viewpath.exists():
         view=json.loads(viewpath.read_text());view.update(actively_generating=None,phase='Stage 1 runner stopped: '+state.get('stop_reason','unknown'),updated_at=now());write(viewpath,view)
     state['updated_at']=now();state['weave_enabled']=tracer.enabled;write(statepath,state);tracer.finish()
     config_path=LOCAL/'observability/config.json'
-    if config_path.exists():
+    if not state_dir and config_path.exists():
         config=json.loads(config_path.read_text())
         with (LOCAL/'observability/latest-publication.log').open('w') as log:
             publisher=subprocess.Popen([config['python'],str(ROOT/'scripts/copperhead_observability.py'),'--credential-file',config['credential_file']],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
@@ -477,7 +480,7 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
     print(json.dumps(state,indent=2))
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--source',type=Path,required=True);ap.add_argument('--iterations',type=int,default=1);ap.add_argument('--route-seconds',type=int,default=120);ap.add_argument('--budget',type=int,default=600);ap.add_argument('--proposal',type=Path);ap.add_argument('--legacy-inner',action='store_true');a=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--source',type=Path,required=True);ap.add_argument('--iterations',type=int,default=1);ap.add_argument('--route-seconds',type=int,default=120);ap.add_argument('--budget',type=int,default=600);ap.add_argument('--proposal',type=Path);ap.add_argument('--legacy-inner',action='store_true');ap.add_argument('--state-dir',type=Path);a=ap.parse_args()
     if not a.source.resolve().is_relative_to(LOCAL/'candidates'):raise SystemExit('Source must be a Copperhead candidate')
     if not 1<=a.iterations<=100 or not 10<=a.route_seconds<=900:raise SystemExit('Explicit bounded parameters required')
     proposal=None
@@ -487,5 +490,5 @@ def main():
         proposal=json.loads(a.proposal.read_text())
         proposal['proposal_sha256']=hashlib.sha256(a.proposal.read_bytes()).hexdigest()
     if not a.legacy_inner and a.iterations!=1:raise SystemExit('Each outer invocation is one placement plus whole-board autoroute; propose the next placement after evaluation')
-    execute(a.source,a.iterations,a.route_seconds,a.budget,proposal,a.legacy_inner)
+    execute(a.source,a.iterations,a.route_seconds,a.budget,proposal,a.legacy_inner,a.state_dir)
 if __name__=='__main__':main()

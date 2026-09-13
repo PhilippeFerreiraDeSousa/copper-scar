@@ -1,0 +1,1 @@
+{"id":"placement_first","version":1,"hypothesis":"Baseline finite placement-first search ranks currently feasible R123 poses by disconnected endpoint distance before trying layer-access anchors.","ranking":"placement_then_endpoint","prior_evidence":"Shared existing CAN2 and R123 diagnostics; no policy-specific hidden inputs"}

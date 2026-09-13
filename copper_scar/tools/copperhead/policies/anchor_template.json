@@ -1,0 +1,139 @@
+{
+  "via_sites": [
+    {
+      "id": "CAN2-island-anchor",
+      "net": "CAN2_H",
+      "position_mm": [
+        141,
+        59.9297
+      ],
+      "target_track_uuid": "51f437ed-196b-4de1-bde4-b8f9a09158d5",
+      "target_layer": "In2.Cu",
+      "target_pad_uuid": "26fcdd7b-2062-4698-8def-d0f059dc5219",
+      "target_pad_position_mm": [
+        127.25,
+        59.83
+      ],
+      "target_pad": "J5.B2",
+      "diameter_mm": 0.45,
+      "drill_mm": 0.2,
+      "span": [
+        "F.Cu",
+        "B.Cu"
+      ],
+      "free": true,
+      "proof_via_uuid": "8fa1a29c-a95f-4c56-804f-f9f8e78468fa",
+      "target_track_geometry": {
+        "uuid": "51f437ed-196b-4de1-bde4-b8f9a09158d5",
+        "net": "CAN2_H",
+        "kind": "TRACK",
+        "position_mm": [
+          128.1097,
+          59.9297
+        ],
+        "layers": [
+          "In2.Cu"
+        ],
+        "start_mm": [
+          128.1097,
+          59.9297
+        ],
+        "end_mm": [
+          150.3903,
+          59.9297
+        ],
+        "width_mm": 0.2
+      },
+      "expected_original_island_item_uuids": [
+        "10a62ff4-1881-469f-9c26-6dc59aa7e1d7",
+        "11635195-bbf7-42ca-87d9-cc6f9cb10345",
+        "26fcdd7b-2062-4698-8def-d0f059dc5219",
+        "46c45a3f-a844-4311-a12c-6c0e318785d4",
+        "51f437ed-196b-4de1-bde4-b8f9a09158d5",
+        "7418f5e6-be2c-4219-893f-6d6666fc9046",
+        "924d6be9-963e-49d3-97ea-38d20282f025",
+        "9642ba2f-fd76-481e-964d-269c3c7c1f01",
+        "b4998477-dac3-4272-9313-2f96f506e581"
+      ]
+    },
+    {
+      "id": "CAN2-main-anchor",
+      "net": "CAN2_H",
+      "position_mm": [
+        141,
+        81.2432
+      ],
+      "target_track_uuid": "4210943d-c537-4879-a03e-b96b06efdd1f",
+      "target_layer": "In4.Cu",
+      "target_pad_uuid": "dff58d36-6934-425f-b51f-57ceda100d5b",
+      "target_pad_position_mm": [
+        110.27,
+        88.73
+      ],
+      "target_pad": "J4.6",
+      "diameter_mm": 0.45,
+      "drill_mm": 0.2,
+      "span": [
+        "F.Cu",
+        "B.Cu"
+      ],
+      "free": true,
+      "proof_via_uuid": "48c99795-c4af-4ace-8397-b2efa785bcda",
+      "target_track_geometry": {
+        "uuid": "4210943d-c537-4879-a03e-b96b06efdd1f",
+        "net": "CAN2_H",
+        "kind": "TRACK",
+        "position_mm": [
+          117.276,
+          81.2432
+        ],
+        "layers": [
+          "In4.Cu"
+        ],
+        "start_mm": [
+          117.276,
+          81.2432
+        ],
+        "end_mm": [
+          172.173,
+          81.2432
+        ],
+        "width_mm": 0.2
+      },
+      "expected_original_island_item_uuids": [
+        "012060f4-96a3-48c5-8c54-b1b99dd15d89",
+        "0aac283e-0a11-44c5-b43c-e4eef495e5cd",
+        "1781cf0f-79ad-469d-a3b5-36eaea47d80b",
+        "27f84013-2449-47bf-8b43-96fbcbb72749",
+        "2d4b0bda-ab33-491f-a410-b9612efa7e51",
+        "2dc732cd-9845-4ba2-824d-f9bcbcc483d9",
+        "30c1cccb-935c-493c-beb7-d8f9e4fac554",
+        "38b1cf3a-a5d7-478d-9d0e-09b2c3334985",
+        "41d49d73-462b-4e0d-98e5-f73f51ae4c23",
+        "4210943d-c537-4879-a03e-b96b06efdd1f",
+        "4349dd3d-d908-4f88-aa07-c730754a70d5",
+        "4535e1f2-fa75-4dff-b9d4-e40d0b35889a",
+        "4beb8877-2864-47b2-8b20-45712dbbec41",
+        "4e82293f-f73b-45e3-a9a3-a904f1056726",
+        "54682ef6-6705-4c74-afb2-3b0f1d16bea1",
+        "62b4c540-6e88-41c0-aa87-cd09f5f94689",
+        "64e09787-99f8-4835-95d4-013e5bdc949e",
+        "65e36d51-8a15-4487-a26f-07f06f95e61d",
+        "8760aa2d-6ad2-40a6-9c58-60c82d945401",
+        "a6a98e22-28fe-4337-bdb2-a94c323b9208",
+        "ab90da9a-b942-4fc7-9cd3-3e990fe60eb2",
+        "b19e378d-3c69-4b48-97bc-63f5bbb97f7b",
+        "b9bcf0c1-a371-42dd-aa0a-ea5cbc06e00f",
+        "b9de4867-94d0-4fa5-8906-06d40318bba9",
+        "be637e71-1b51-4b09-954e-f7469169105a",
+        "bf66c564-491c-4434-b928-2400188dec16",
+        "c3fe79dc-0ce2-455b-8a9e-5f8b8c5ca60b",
+        "dc1eb2d7-f456-43c7-ac0d-645b8e350dd8",
+        "dff58d36-6934-425f-b51f-57ceda100d5b",
+        "e60770de-3b83-4d08-9a7f-ac488bf3703f",
+        "f477f712-16dc-47d6-a309-c75169329ef0",
+        "f64d3ee0-0a0b-4c88-95fc-b1fdd57e91f4"
+      ]
+    }
+  ]
+}
