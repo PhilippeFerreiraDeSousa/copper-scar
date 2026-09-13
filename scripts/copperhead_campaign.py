@@ -66,6 +66,13 @@ def main():
         loop=json.loads((LOCAL/'loop/state.json').read_text());parent=Path(loop['best_feasibility']['candidate'])
         board_hash=hashlib.sha256((parent/'pcbgolf.kicad_pcb').read_bytes()).hexdigest()
         records=[load_record(p) for p in sorted((LOCAL/'runs').glob('stage1-*/attempt.json'))]
+        for pending in state['decisions']:
+            if pending.get('attempt') or not pending.get('proposal'):continue
+            digest=hashlib.sha256(Path(pending['proposal']).read_bytes()).hexdigest()
+            result=next((r for r in reversed(records) if r.get('action',{}).get('proposal_sha256')==digest and r['status']!='running'),None)
+            if result:
+                pending.update(attempt=result['attempt'],status=result['status'],finished_at=result.get('finished_at'),became_incumbent=result.get('became_incumbent',False),after={k:result.get('after',{}).get(k) for k in ('unconnected','errors','warnings')},selection_decision=result.get('selection_decision'))
+                if result.get('effects'):pending['effects']=json.loads(Path(result['effects']).read_text())
         evaluation=next((r.get(k) for r in reversed(records) for k in ('after','before') if r.get(k,{}).get('files',{}).get('pcbgolf.kicad_pcb')==board_hash),None)
         if not evaluation:state.update(status='needs_attention',reason='No native report for current retained board');break
         if evaluation['unconnected']==0:state.update(status='native_connectivity_complete',reason='Full engineering qualification remains separate');break
@@ -81,11 +88,17 @@ def main():
                 for item in finding.get('items',[]):
                     match=re.search(r' of ([RCL]\d+) on ',item.get('description',''))
                     if match:endpoint_counts[match[1]]+=1
+        component_priority=[dict(ref=ref,native_missing_endpoint_pairs=count,prior_failed_attempts=[f['attempt'] for f in failures if ref in f['action'].get('refs',[])],score=count/(1+sum(ref in f['action'].get('refs',[]) for f in failures))) for ref,count in endpoint_counts.items()]
         if queued:
-            specs=queued[:2]
+            specs=[spec for spec in queued if spec['kind']!='group_pose' or endpoint_counts[spec['ref']]][:2]
+            for spec in queued:
+                if spec['kind']=='group_pose' and not endpoint_counts[spec['ref']]:
+                    state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,reason='Current retained native report no longer has a missing endpoint on this component',feedback_record_ids=[r['attempt'] for r in records if r.get('after',{}).get('files',{}).get('pcbgolf.kicad_pcb')==board_hash]))
         else:
-            ranked=sorted(endpoint_counts,key=lambda ref:(-endpoint_counts[ref]/(1+sum(ref in f['action'].get('refs',[]) for f in failures)),ref))
-            specs=[dict(id='adaptive-'+ref,kind='group_pose',group=membership[ref],ref=ref,steps='-.5,.5,-1,1,-2,2',rotations='0,90,180') for ref in ranked[:3]]
+            specs=[]
+        if not specs:
+            ranked=sorted(component_priority,key=lambda row:(-row['score'],row['ref']))
+            specs=[dict(id='adaptive-'+row['ref'],kind='group_pose',group=membership[row['ref']],ref=row['ref'],steps='-.5,.5,-1,1,-2,2',rotations='0,90,180',component_priority=row) for row in ranked[:3]]
         index=len(state['decisions']);prefix=f'{index:03d}-{board_hash[:8]}-{int(time.time())}'
         previews=[];screened_specs=[]
         for spec in specs:
@@ -110,15 +123,21 @@ def main():
                 if run([KIPY,str(ROOT/'scripts/copperhead_apply_pose.py'),str(prepared),'--proposal',str(candidate_proposal)],label+f'-{n}-apply',90):continue
                 if run([KIPY,str(ROOT/'scripts/copperhead_clear_placement_collisions.py'),str(prepared)],label+f'-{n}-collisions',300):continue
                 partition_path=trial/'pad-partitions.json'
-                if run([KIPY,str(ROOT/'scripts/copperhead_pad_partitions.py'),'--before',str(parent/'pcbgolf.kicad_pcb'),'--after',str(prepared/'pcbgolf.kicad_pcb'),'--output',str(partition_path)],label+f'-{n}-partitions',60):continue
+                if run([KIPY,str(ROOT/'scripts/copperhead_preview_partitions.py'),'--before',str(parent/'pcbgolf.kicad_pcb'),'--after',str(prepared/'pcbgolf.kicad_pcb'),'--output',str(partition_path)],label+f'-{n}-partitions',60):continue
                 collisions=json.loads((prepared/'placement-collisions/result.json').read_text());partitions=json.loads(partition_path.read_text())
+                labels=partitions['before']['pad_labels'];source_islands=[]
+                for uid,label in labels.items():
+                    if label['terminal'].split('.')[0] in action['refs']:
+                        members=next(g for g in partitions['before']['groups'] if uid in g)
+                        source_islands.append(dict(**label,pad_uuid=uid,connected_pad_uuids=members,connected_pad_terminals=[labels[x]['terminal'] for x in members]))
+                action['native_source_pad_islands']=source_islands
                 rank=score_preview(action,collisions,partitions,failures)
                 rank.update(action=action,proposal=str(candidate_proposal),catalog_id=spec['id'],native_preview=str(trial),collision_removals=collisions['removed'],split_groups=partitions['split_groups'])
                 previews.append(rank)
         selection=work/(prefix+'-selection.json')
         eligible=[p for p in previews if p['eligible']]
         excluded=[dict(attempt=f['attempt'],refs=f['action'].get('refs'),translation_mm=f['action'].get('translation_mm'),rotation_deg=f['action'].get('rotation_deg',0),reason='Already evaluated unsuccessful pose on exact current parent') for f in failures if f['parent_board_sha256']==board_hash]
-        trace=dict(parent=str(parent),parent_board_sha256=board_hash,created_at=now(),feedback_record_ids=feedback_ids,exact_parent_exclusions=excluded,screened_specs=screened_specs,previews=previews,selection_policy='native-feedback-v2')
+        trace=dict(parent=str(parent),parent_board_sha256=board_hash,created_at=now(),feedback_record_ids=feedback_ids,component_priority=component_priority,exact_parent_exclusions=excluded,screened_specs=screened_specs,previews=previews,selection_policy='native-feedback-v2')
         if not eligible:
             write(selection,trace);state.update(status='needs_attention',reason='Finite candidate pool has no eligible native preview',selection=str(selection));break
         chosen=min(eligible,key=lambda p:p['score']);trace['chosen']={k:v for k,v in chosen.items() if k!='action'};write(selection,trace)
