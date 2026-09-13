@@ -38,3 +38,9 @@ After rebuilding, regenerate the normal and accelerated videos with `render_vide
 `diagnostics/index.html` adds the saved native island analysis of the exact 55-open parent, covering nine nets and 32 missing pairs. It separates existing copper connectivity from unknown blocking cause and untested route/via legality. The root card explicitly indicates whether its parent hash matches the selected board. This additive view does not change the frozen video history or extend its duration.
 
 Package new saved diagnostic evidence with `package_diagnostics.py --source REPORT_FOLDER --output PACKAGE`, or pass `--diagnostic-source REPORT_FOLDER` when rebuilding. No native CAD execution or board changes occur.
+
+## Completed terminal-topology checkpoint
+
+`topology-gain/` preserves the retained 54-open checkpoint, its exact final board/evaluation join, separate intermediate and final native graph proofs, and verified W&B/Weave readback. The U15 ground-island repair is a topology/routing gain with fixed component poses; the real board remains incomplete. `package_topology_gain.py` rebuilds this bounded case from its run directory, independent review directory and optional readback receipt.
+
+Use `build.py --through-attempt ATTEMPT_ID` to freeze the historical replay at a completed checkpoint while the owner continues optimizing. This avoids silently adding a newer state during a video refresh.

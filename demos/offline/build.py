@@ -6,7 +6,7 @@ from pathlib import Path
 def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
 def write(p,d): p.write_text(json.dumps(d,indent=2)+'\n')
 def main():
- p=argparse.ArgumentParser(); p.add_argument('--kicad',type=Path); p.add_argument('--rerender',action='store_true'); p.add_argument('--feedback-chain',type=Path); p.add_argument('--diagnostic-source',type=Path); p.add_argument('--source',type=Path,required=True); p.add_argument('--output',type=Path,required=True); a=p.parse_args()
+ p=argparse.ArgumentParser(); p.add_argument('--kicad',type=Path); p.add_argument('--rerender',action='store_true'); p.add_argument('--feedback-chain',type=Path); p.add_argument('--diagnostic-source',type=Path); p.add_argument('--through-attempt'); p.add_argument('--source',type=Path,required=True); p.add_argument('--output',type=Path,required=True); a=p.parse_args()
  out=a.output.resolve(); out.mkdir(parents=True,exist_ok=True)
  for f in ['index.html','README.md','serve.py']:
   src=Path(__file__).parent/f
@@ -14,6 +14,9 @@ def main():
  history=[]; skipped=[]; best_observed=None
  paths=sorted((a.source/'runs').glob('*/attempt.json'))
  entries=[(path,json.loads(path.read_text())) for path in paths]
+ if a.through_attempt:
+  cutoff=next(i for i,(_,d) in enumerate(entries) if d['attempt']==a.through_attempt and d.get('finished_at'))
+  entries=entries[:cutoff+1]
  if entries:
   first=entries[0][1]; baseline=dict(first); baseline.update(attempt='starting-six-layer-checkpoint',after=first['before'],candidate=first['input'],finished_at=first['started_at'],action={'kind':'starting native checkpoint'},action_level='baseline',status='completed',became_incumbent=False)
   entries.insert(0,(entries[0][0],baseline))
@@ -57,6 +60,7 @@ def main():
   from package_diagnostics import build as diagnostics_build
   diagnostics_build(a.diagnostic_source,out)
  elif not (out/'diagnostics-data.js').exists(): (out/'diagnostics-data.js').write_text('window.DIAGNOSTICS=null;\n')
+ if not (out/'gain-data.js').exists(): (out/'gain-data.js').write_text('window.GAIN=null;\n')
  docs=Path(__file__).parent/'docs'
  if docs.exists(): shutil.copytree(docs,out/'docs',dirs_exist_ok=True)
  hashes={str(f.relative_to(out)):sha(f) for f in sorted(out.rglob('*')) if f.is_file() and f != out/'SHA256SUMS.json'}
