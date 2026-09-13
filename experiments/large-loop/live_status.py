@@ -7,7 +7,7 @@ def update(base,current=None,state='idle'):
  base=Path(base);records=[]
  for f in base.glob('*/completed.json'):
   records.append(json.loads(f.read_text()))
- eligible=[r for r in records if r.get('retained') or Path(r['folder']).name=='routing-control-01']
+ eligible=[r for r in records if r.get('retained') or Path(r['folder']).name=='routing-control-01' or stage_one_terminal(r['after'])]
  best=min(eligible,key=lambda r:(r['after']['feasibility_cost'],r['after']['wire_length_mm'])) if eligible else None
  v=best['after'] if best else {};operation=None
  if current:

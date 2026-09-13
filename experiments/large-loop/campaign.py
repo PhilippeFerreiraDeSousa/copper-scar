@@ -90,6 +90,9 @@ def stage_one_terminal(evaluation):
  return bool(evaluation.get('accepted')) and evaluation.get('native_open_count')==0 and evaluation.get('feasibility_cost')==0 and evaluation.get('schematic_parity_issues')==0 and evaluation.get('erc_violations')==0
 
 def require_stage_one_work(parent):
- evaluation=json.loads((Path(parent)/'evaluation.json').read_text())
- if stage_one_terminal(evaluation):
-  raise SystemExit('Stage1 already complete at this fully valid native checkpoint; hand off to Stage2 instead of making another feasibility proposal.')
+ parent=Path(parent);evaluation=json.loads((parent/'evaluation.json').read_text())
+ valid=[parent] if stage_one_terminal(evaluation) else []
+ for completed in parent.parent.glob('*/completed.json'):
+  if stage_one_terminal(json.loads(completed.read_text())['after']):valid.append(completed.parent)
+ if valid:
+  raise SystemExit('Stage1 already complete at fully valid native checkpoint '+str(valid[0])+'. Hand off to Stage2; do not resume feasibility work from an older invalid parent.')
