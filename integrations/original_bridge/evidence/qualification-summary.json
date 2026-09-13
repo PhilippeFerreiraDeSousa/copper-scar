@@ -1,0 +1,1583 @@
+{
+  "scope": "original-board interface geometry qualification; no placement/routing trial",
+  "request": {
+    "parent_board_sha256": "684e7d7c2b23bd54c3d87cf51295e9575c7bb23ef4c6ab3d98d9e30f53037b2f",
+    "parent_project_sha256": "0ae138ed215336e425b2f907d739f02fca9c46495afbe6b124b646ca60bcf966",
+    "inventory_sha256": "1890710e3f0a17189b20b74d121e7b38228d19dbb78c53b38fdf1543cb7627b5",
+    "boundaries_sha256": "5960f3a9c9264fb76c93b1272ea55c1065f22b847cd84264b133fab9503960a6"
+  },
+  "parent_path": "/Users/philippe/dev/copper-scar-demo/.local/copperhead/candidates/stage1-20260912-182444-f54c2b",
+  "jitx_checkpoint_path": "/Users/philippe/dev/copper-scar-jitx/candidates/iteration-009-power-neighborhood-routed",
+  "jitx_board_sha256": "55f322cefea95659992382db38118566a0e93824790164809ba831b9d85e8fc0",
+  "interface": {
+    "R37": {
+      "pads": 2,
+      "local_pad_centers_exact": true,
+      "layers": {
+        "F.Cu": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        },
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.004430872911999995,
+          "hausdorff_mm": 0.021042083594549267,
+          "exact_native_polygon_union": false
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        },
+        "F.Paste": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        }
+      },
+      "correction_preserves_copper": true,
+      "correction_preserves_paste": true,
+      "correction_preserves_pose": true,
+      "body_and_obstacle_layers": {
+        "F.CrtYd": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        },
+        "F.Fab": {
+          "symmetric_difference_mm2": 3.209773453979126e-05,
+          "hausdorff_mm": 0.00036721635153768396,
+          "exact_native_polygon_union": false
+        },
+        "F.SilkS": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        }
+      },
+      "corrected_mask": {
+        "symmetric_difference_mm2": 2.560855350629457e-05,
+        "hausdorff_mm": 6.154373366840792e-05,
+        "exact_native_polygon_union": false
+      }
+    },
+    "R42": {
+      "pads": 2,
+      "local_pad_centers_exact": true,
+      "layers": {
+        "F.Cu": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        },
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.004430872911999995,
+          "hausdorff_mm": 0.021042083594549267,
+          "exact_native_polygon_union": false
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        },
+        "F.Paste": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        }
+      },
+      "correction_preserves_copper": true,
+      "correction_preserves_paste": true,
+      "correction_preserves_pose": true,
+      "body_and_obstacle_layers": {
+        "F.CrtYd": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        },
+        "F.Fab": {
+          "symmetric_difference_mm2": 3.209773453979126e-05,
+          "hausdorff_mm": 0.00036721635153768396,
+          "exact_native_polygon_union": false
+        },
+        "F.SilkS": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        }
+      },
+      "corrected_mask": {
+        "symmetric_difference_mm2": 2.560855350629457e-05,
+        "hausdorff_mm": 6.154373366840792e-05,
+        "exact_native_polygon_union": false
+      }
+    },
+    "J2": {
+      "pads": 12,
+      "local_pad_centers_exact": true,
+      "layers": {
+        "F.Cu": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        },
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.026585237471999992,
+          "hausdorff_mm": 0.021042083594549718,
+          "exact_native_polygon_union": false
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        },
+        "F.Paste": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        }
+      },
+      "correction_preserves_copper": true,
+      "correction_preserves_paste": true,
+      "correction_preserves_pose": true,
+      "body_and_obstacle_layers": {
+        "F.CrtYd": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        },
+        "F.Fab": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        },
+        "F.SilkS": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        }
+      },
+      "corrected_mask": {
+        "symmetric_difference_mm2": 0.000153651321037675,
+        "hausdorff_mm": 6.154373366919232e-05,
+        "exact_native_polygon_union": false
+      }
+    },
+    "U3": {
+      "pads": 144,
+      "local_pad_centers_exact": true,
+      "layers": {
+        "F.Cu": {
+          "symmetric_difference_mm2": 0.021251706312764927,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": false
+        },
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.021251706312764927,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": false
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        },
+        "F.Paste": {
+          "symmetric_difference_mm2": 0.021251706312764927,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": false
+        }
+      },
+      "correction_preserves_copper": true,
+      "correction_preserves_paste": true,
+      "correction_preserves_pose": true,
+      "body_and_obstacle_layers": {
+        "F.CrtYd": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        },
+        "F.Fab": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        },
+        "F.SilkS": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": 0.0,
+          "exact_native_polygon_union": true
+        }
+      },
+      "pad114_corner_difference": {
+        "symmetric_difference_mm2": 0.0001475812938386528,
+        "hausdorff_mm": 0.00047183849754840046,
+        "exact_native_polygon_union": false
+      }
+    }
+  },
+  "unnamed_holes": [
+    {
+      "ref": "J1",
+      "local_center": [
+        0.0,
+        0.0
+      ],
+      "diameter": 1.6,
+      "one_physical_drill": true,
+      "extra_is_mask_only": true,
+      "mask_unions": {
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        }
+      }
+    },
+    {
+      "ref": "J1",
+      "local_center": [
+        4.5,
+        0.0
+      ],
+      "diameter": 1.8,
+      "one_physical_drill": true,
+      "extra_is_mask_only": true,
+      "mask_unions": {
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        }
+      }
+    },
+    {
+      "ref": "J3",
+      "local_center": [
+        -3.6,
+        0.0
+      ],
+      "diameter": 0.75,
+      "one_physical_drill": true,
+      "extra_is_mask_only": true,
+      "mask_unions": {
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        }
+      }
+    },
+    {
+      "ref": "J3",
+      "local_center": [
+        3.6,
+        0.0
+      ],
+      "diameter": 0.75,
+      "one_physical_drill": true,
+      "extra_is_mask_only": true,
+      "mask_unions": {
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        }
+      }
+    },
+    {
+      "ref": "J5",
+      "local_center": [
+        -3.75,
+        0.0
+      ],
+      "diameter": 0.66,
+      "one_physical_drill": true,
+      "extra_is_mask_only": true,
+      "mask_unions": {
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        }
+      }
+    },
+    {
+      "ref": "J5",
+      "local_center": [
+        3.75,
+        0.0
+      ],
+      "diameter": 0.66,
+      "one_physical_drill": true,
+      "extra_is_mask_only": true,
+      "mask_unions": {
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        }
+      }
+    },
+    {
+      "ref": "J6",
+      "local_center": [
+        -3.75,
+        0.0
+      ],
+      "diameter": 0.66,
+      "one_physical_drill": true,
+      "extra_is_mask_only": true,
+      "mask_unions": {
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        }
+      }
+    },
+    {
+      "ref": "J6",
+      "local_center": [
+        3.75,
+        0.0
+      ],
+      "diameter": 0.66,
+      "one_physical_drill": true,
+      "extra_is_mask_only": true,
+      "mask_unions": {
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        }
+      }
+    },
+    {
+      "ref": "J7",
+      "local_center": [
+        -3.75,
+        0.0
+      ],
+      "diameter": 0.66,
+      "one_physical_drill": true,
+      "extra_is_mask_only": true,
+      "mask_unions": {
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        }
+      }
+    },
+    {
+      "ref": "J7",
+      "local_center": [
+        3.75,
+        0.0
+      ],
+      "diameter": 0.66,
+      "one_physical_drill": true,
+      "extra_is_mask_only": true,
+      "mask_unions": {
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        }
+      }
+    },
+    {
+      "ref": "J8",
+      "local_center": [
+        -3.75,
+        0.0
+      ],
+      "diameter": 0.66,
+      "one_physical_drill": true,
+      "extra_is_mask_only": true,
+      "mask_unions": {
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        }
+      }
+    },
+    {
+      "ref": "J8",
+      "local_center": [
+        3.75,
+        0.0
+      ],
+      "diameter": 0.66,
+      "one_physical_drill": true,
+      "extra_is_mask_only": true,
+      "mask_unions": {
+        "F.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        },
+        "B.Mask": {
+          "symmetric_difference_mm2": 0.0,
+          "hausdorff_mm": null,
+          "exact_native_polygon_union": true
+        }
+      }
+    }
+  ],
+  "boundary_summary": {
+    "touched_nets": 112,
+    "externally_open_nets": 70,
+    "external_pad_memberships": 383,
+    "included_physical_pads": 160,
+    "omitted_footprints": 241
+  },
+  "coordinate_correspondence": {
+    "R37": {
+      "group_id": "FtENT4t6RqB6eBVuDhZRSi",
+      "native_center": {
+        "x": -98.7827,
+        "y": 67.423
+      },
+      "accepted_export_pose": [
+        333.2173,
+        212.077,
+        0.0
+      ],
+      "offset_x": 432.0,
+      "offset_y": 279.5,
+      "retained_parent_pose": [
+        171.25,
+        98.5,
+        0.0
+      ]
+    },
+    "U3": {
+      "group_id": "CRCms7TuoTqNV45NchJepD",
+      "native_center": {
+        "x": 59.46405,
+        "y": 30.3205
+      },
+      "accepted_export_pose": [
+        491.46405,
+        249.1795,
+        0.0
+      ],
+      "offset_x": 432.0,
+      "offset_y": 279.5,
+      "retained_parent_pose": [
+        135.0,
+        105.0,
+        0.0
+      ]
+    },
+    "R42": {
+      "group_id": "FQg9ouGjhEZpbqnbKC7saj",
+      "native_center": {
+        "x": -98.7827,
+        "y": 57.288
+      },
+      "accepted_export_pose": [
+        333.2173,
+        222.212,
+        0.0
+      ],
+      "offset_x": 432.0,
+      "offset_y": 279.5,
+      "retained_parent_pose": [
+        146.25,
+        92.34,
+        0.0
+      ]
+    },
+    "J2": {
+      "group_id": "5xuFP8XW1AeCivWbF8Zdi8",
+      "native_center": {
+        "x": -49.2301,
+        "y": 57.95
+      },
+      "accepted_export_pose": [
+        382.7699,
+        221.55,
+        0.0
+      ],
+      "offset_x": 432.0,
+      "offset_y": 279.5,
+      "retained_parent_pose": [
+        130.0,
+        134.0,
+        0.0
+      ]
+    }
+  },
+  "layer_profiles": {
+    "copperhead": [
+      "F.Cu",
+      "In1.Cu",
+      "In2.Cu",
+      "In3.Cu",
+      "In4.Cu",
+      "B.Cu"
+    ],
+    "jitx": [
+      "F.Cu",
+      "B.Cu"
+    ]
+  },
+  "via_definitions_on_accepted_native": [],
+  "rules": {
+    "retained_parent_rules": {
+      "max_error": 0.005,
+      "min_clearance": 0.0762,
+      "min_connection": 0.0,
+      "min_copper_edge_clearance": 0.025,
+      "min_groove_width": 0.0,
+      "min_hole_clearance": 0.25,
+      "min_hole_to_hole": 0.25,
+      "min_microvia_diameter": 0.2,
+      "min_microvia_drill": 0.1,
+      "min_resolved_spokes": 2,
+      "min_silk_clearance": 0.0,
+      "min_text_height": 0.8,
+      "min_text_thickness": 0.08,
+      "min_through_hole_diameter": 0.2,
+      "min_track_width": 0.1016,
+      "min_via_annular_width": 0.0762,
+      "min_via_diameter": 0.3524,
+      "solder_mask_to_copper_clearance": 0.0,
+      "use_height_for_length_calcs": true
+    },
+    "retained_parent_netclasses": [
+      {
+        "bus_width": 12,
+        "clearance": 0.2,
+        "diff_pair_gap": 0.25,
+        "diff_pair_via_gap": 0.25,
+        "diff_pair_width": 0.2,
+        "line_style": 0,
+        "microvia_diameter": 0.3,
+        "microvia_drill": 0.1,
+        "name": "Default",
+        "pcb_color": "rgba(0, 0, 0, 0.000)",
+        "priority": 2147483647,
+        "schematic_color": "rgba(0, 0, 0, 0.000)",
+        "track_width": 0.2,
+        "tuning_profile": "",
+        "via_diameter": 0.6,
+        "via_drill": 0.3,
+        "wire_width": 6
+      }
+    ],
+    "jitx_export_rules": {
+      "max_error": 0.005,
+      "min_clearance": 0.0762,
+      "min_connection": 0.0,
+      "min_copper_edge_clearance": 0.025,
+      "min_groove_width": 0.0,
+      "min_hole_clearance": 0.25,
+      "min_hole_to_hole": 0.25,
+      "min_microvia_diameter": 0.2,
+      "min_microvia_drill": 0.1,
+      "min_resolved_spokes": 2,
+      "min_silk_clearance": 0.0,
+      "min_text_height": 0.8,
+      "min_text_thickness": 0.08,
+      "min_through_hole_diameter": 0.2,
+      "min_track_width": 0.1016,
+      "min_via_annular_width": 0.0762,
+      "min_via_diameter": 0.3524,
+      "solder_mask_to_copper_clearance": 0.0,
+      "use_height_for_length_calcs": true
+    },
+    "project_bytes_equal": false,
+    "six_layer_assumptions": {
+      "copper_layers": 6,
+      "signal_layers": [
+        "F.Cu",
+        "In2.Cu",
+        "In3.Cu",
+        "B.Cu"
+      ],
+      "ground_planes": [
+        "In1.Cu",
+        "In4.Cu"
+      ],
+      "reason": "Four-layer run lost signal-routing capacity when both inner layers became ground planes; retain two reference planes plus four signal layers",
+      "dielectric_stackup": "unqualified",
+      "electrical_current_pair_constraints": "not yet qualified"
+    }
+  },
+  "accepted_jitx_errors": {
+    "count": 44,
+    "involving_retained_parent_repaired_pad": 44,
+    "details": [
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "U4",
+            "1"
+          ],
+          [
+            "U4",
+            "64"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "U4",
+            "16"
+          ],
+          [
+            "U4",
+            "17"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B10"
+          ],
+          [
+            "J3",
+            "B11T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B10"
+          ],
+          [
+            "J3",
+            "B8T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B10T"
+          ],
+          [
+            "J3",
+            "B11"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B10T"
+          ],
+          [
+            "J3",
+            "B11T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B10T"
+          ],
+          [
+            "J3",
+            "B8"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B10T"
+          ],
+          [
+            "J3",
+            "B8T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "U4",
+            "32"
+          ],
+          [
+            "U4",
+            "33"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "U4",
+            "48"
+          ],
+          [
+            "U4",
+            "49"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B10T"
+          ],
+          [
+            "J3",
+            "B9T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J7",
+            "S11"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J7",
+            "S12"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J7",
+            "S13"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J7",
+            "S14"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J8",
+            "S11"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J8",
+            "S12"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J8",
+            "S13"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J8",
+            "S14"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J6",
+            "S11"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J6",
+            "S12"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J6",
+            "S13"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J6",
+            "S14"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J5",
+            "S11"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J5",
+            "S12"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J5",
+            "S13"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "hole_clearance",
+        "pads": [
+          [
+            "J5",
+            "S14"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B2"
+          ],
+          [
+            "J3",
+            "B3T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B2T"
+          ],
+          [
+            "J3",
+            "B3"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B2T"
+          ],
+          [
+            "J3",
+            "B3T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B3"
+          ],
+          [
+            "J3",
+            "B5T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B3T"
+          ],
+          [
+            "J3",
+            "B5T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B3T"
+          ],
+          [
+            "J3",
+            "B5"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B4"
+          ],
+          [
+            "J3",
+            "B6T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B4T"
+          ],
+          [
+            "J3",
+            "B6"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B4T"
+          ],
+          [
+            "J3",
+            "B6T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B5"
+          ],
+          [
+            "J3",
+            "B6T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B5T"
+          ],
+          [
+            "J3",
+            "B6T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B6"
+          ],
+          [
+            "J3",
+            "B7T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B6T"
+          ],
+          [
+            "J3",
+            "B7T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B7"
+          ],
+          [
+            "J3",
+            "B9T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B7T"
+          ],
+          [
+            "J3",
+            "B9"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B7T"
+          ],
+          [
+            "J3",
+            "B9T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      },
+      {
+        "type": "clearance",
+        "pads": [
+          [
+            "J3",
+            "B8T"
+          ],
+          [
+            "J3",
+            "B9T"
+          ]
+        ],
+        "touches_parent_repaired_pad": true
+      }
+    ]
+  },
+  "source_correction": [
+    {
+      "file": "landpatterns/LandpatternU0402_R.py",
+      "before_sha256": "137ff6c8c15fd716c1f093a4643f0118d9061c9bbf2e7ee5e68fa90fa5002f52",
+      "after_sha256": "01cbe62e6d3e00676b90644559fe62370a01e7e9b5d1ef5a209734af63289d3d",
+      "change": "Round mask offset corners to match native KiCad margin semantics; copper and pad poses unchanged"
+    },
+    {
+      "file": "components/UNKNOWN/Comp_47219_2001.py",
+      "before_sha256": "77d607cdbd2b4bd15e3b981d42981c0c708365f35cd73a92ce4423fa70056d6f",
+      "after_sha256": "5f07bcad3d986818a6e20c7827b9ef95c53c054d69a9039e1be8d0d473fe169c",
+      "change": "Round mask offset corners to match native KiCad margin semantics; copper and pad poses unchanged"
+    }
+  ],
+  "gates": {
+    "complete_named_interface_mapping": true,
+    "same_full_parent_state": false,
+    "same_layer_profile": false,
+    "full_obstacle_context_on_probe": false,
+    "representation_differences_qualified": false
+  },
+  "trial_gate": {
+    "may_mutate": false,
+    "decision": "reject_before_mutation",
+    "failed_gates": [
+      "same_full_parent_state",
+      "same_layer_profile",
+      "full_obstacle_context_on_probe",
+      "representation_differences_qualified"
+    ],
+    "routing_mode": "single-layer proxy permitted only after geometry/parent/constraints qualification",
+    "generic_multilayer_planner_is_a_gate": false
+  },
+  "candidate_architecture": "Future candidate must bind authored component poses, concrete via sites/spans/net attachments and feature-to-feature route intent; native per-layer routing realizes it. Not implemented by this geometry audit.",
+  "native_routing_started": false,
+  "evidence_root": "/Users/philippe/.codex/worktrees/ff86/copper-scar/.local/original-board-qualification-reproduction",
+  "qualification_sha256": "979c0dbb9e1ae4c8bf8fddd5d61e0207db16df6843a1b5e8d92f1d5b61188dc7",
+  "source_revisions": {
+    "copperhead": "b1473ba00fec9c78045e632fdc7a7ff52d1c250c",
+    "jitx": "d1e545cfc30a324e075dc2c6e76e004e512d16da"
+  },
+  "independent_drc": {
+    "copperhead": {
+      "source_board_sha256": "684e7d7c2b23bd54c3d87cf51295e9575c7bb23ef4c6ab3d98d9e30f53037b2f",
+      "runs": [
+        {
+          "opens": 55,
+          "counts": {
+            "warning": 18
+          },
+          "by_type": {
+            "track_dangling": 7,
+            "via_dangling": 9,
+            "hole_to_hole": 1,
+            "lib_footprint_mismatch": 1
+          },
+          "ignored_checks": [
+            {
+              "description": "Footprint has no courtyard defined",
+              "key": "missing_courtyard"
+            },
+            {
+              "description": "Track endpoint not centered on via",
+              "key": "track_not_centered_on_via"
+            },
+            {
+              "description": "Tuning profile track geometries",
+              "key": "tuning_profile_track_geometries"
+            },
+            {
+              "description": "Footprint doesn't match symbol's footprint filters",
+              "key": "footprint_filters_mismatch"
+            },
+            {
+              "description": "Footprint component type doesn't match footprint pads",
+              "key": "footprint_type_mismatch"
+            }
+          ],
+          "elapsed_s": 2.040685708001547
+        },
+        {
+          "opens": 55,
+          "counts": {
+            "warning": 18
+          },
+          "by_type": {
+            "track_dangling": 7,
+            "via_dangling": 9,
+            "hole_to_hole": 1,
+            "lib_footprint_mismatch": 1
+          },
+          "ignored_checks": [
+            {
+              "description": "Footprint has no courtyard defined",
+              "key": "missing_courtyard"
+            },
+            {
+              "description": "Track endpoint not centered on via",
+              "key": "track_not_centered_on_via"
+            },
+            {
+              "description": "Tuning profile track geometries",
+              "key": "tuning_profile_track_geometries"
+            },
+            {
+              "description": "Footprint doesn't match symbol's footprint filters",
+              "key": "footprint_filters_mismatch"
+            },
+            {
+              "description": "Footprint component type doesn't match footprint pads",
+              "key": "footprint_type_mismatch"
+            }
+          ],
+          "elapsed_s": 1.7393914580025012
+        }
+      ],
+      "repeated_agreement": true,
+      "zones_refilled_in_memory": true,
+      "board_saved": false,
+      "scope": "all objects/terminals in supplied project copy; geometry probes have omitted external boundaries"
+    },
+    "jitx": {
+      "source_board_sha256": "55f322cefea95659992382db38118566a0e93824790164809ba831b9d85e8fc0",
+      "runs": [
+        {
+          "opens": 310,
+          "counts": {
+            "error": 44,
+            "warning": 237
+          },
+          "by_type": {
+            "clearance": 28,
+            "hole_clearance": 16,
+            "lib_footprint_mismatch": 199,
+            "text_height": 9,
+            "silk_overlap": 19,
+            "silk_over_copper": 10
+          },
+          "ignored_checks": [
+            {
+              "description": "Footprint has no courtyard defined",
+              "key": "missing_courtyard"
+            },
+            {
+              "description": "Track endpoint not centered on via",
+              "key": "track_not_centered_on_via"
+            },
+            {
+              "description": "Tuning profile track geometries",
+              "key": "tuning_profile_track_geometries"
+            },
+            {
+              "description": "Footprint doesn't match symbol's footprint filters",
+              "key": "footprint_filters_mismatch"
+            },
+            {
+              "description": "Footprint component type doesn't match footprint pads",
+              "key": "footprint_type_mismatch"
+            }
+          ],
+          "elapsed_s": 1.37644666700362
+        },
+        {
+          "opens": 310,
+          "counts": {
+            "error": 44,
+            "warning": 237
+          },
+          "by_type": {
+            "hole_clearance": 16,
+            "clearance": 28,
+            "lib_footprint_mismatch": 199,
+            "text_height": 9,
+            "silk_overlap": 19,
+            "silk_over_copper": 10
+          },
+          "ignored_checks": [
+            {
+              "description": "Footprint has no courtyard defined",
+              "key": "missing_courtyard"
+            },
+            {
+              "description": "Track endpoint not centered on via",
+              "key": "track_not_centered_on_via"
+            },
+            {
+              "description": "Tuning profile track geometries",
+              "key": "tuning_profile_track_geometries"
+            },
+            {
+              "description": "Footprint doesn't match symbol's footprint filters",
+              "key": "footprint_filters_mismatch"
+            },
+            {
+              "description": "Footprint component type doesn't match footprint pads",
+              "key": "footprint_type_mismatch"
+            }
+          ],
+          "elapsed_s": 1.4268875830020988
+        }
+      ],
+      "repeated_agreement": true,
+      "zones_refilled_in_memory": true,
+      "board_saved": false,
+      "scope": "all objects/terminals in supplied project copy; geometry probes have omitted external boundaries"
+    },
+    "probe-before": {
+      "source_board_sha256": "caf70c74c142a35ff60a0cba06bbad89dfb29b4c39c6f97c99a134301c7a3644",
+      "runs": [
+        {
+          "opens": 48,
+          "counts": {},
+          "by_type": {},
+          "ignored_checks": [
+            {
+              "description": "Footprint has no courtyard defined",
+              "key": "missing_courtyard"
+            },
+            {
+              "description": "Track endpoint not centered on via",
+              "key": "track_not_centered_on_via"
+            },
+            {
+              "description": "Tuning profile track geometries",
+              "key": "tuning_profile_track_geometries"
+            },
+            {
+              "description": "Footprint doesn't match symbol's footprint filters",
+              "key": "footprint_filters_mismatch"
+            },
+            {
+              "description": "PTH inside courtyard",
+              "key": "pth_inside_courtyard"
+            },
+            {
+              "description": "NPTH inside courtyard",
+              "key": "npth_inside_courtyard"
+            }
+          ],
+          "elapsed_s": 0.8218421249985113
+        },
+        {
+          "opens": 48,
+          "counts": {},
+          "by_type": {},
+          "ignored_checks": [
+            {
+              "description": "Footprint has no courtyard defined",
+              "key": "missing_courtyard"
+            },
+            {
+              "description": "Track endpoint not centered on via",
+              "key": "track_not_centered_on_via"
+            },
+            {
+              "description": "Tuning profile track geometries",
+              "key": "tuning_profile_track_geometries"
+            },
+            {
+              "description": "Footprint doesn't match symbol's footprint filters",
+              "key": "footprint_filters_mismatch"
+            },
+            {
+              "description": "PTH inside courtyard",
+              "key": "pth_inside_courtyard"
+            },
+            {
+              "description": "NPTH inside courtyard",
+              "key": "npth_inside_courtyard"
+            }
+          ],
+          "elapsed_s": 0.8160627500037663
+        }
+      ],
+      "repeated_agreement": true,
+      "zones_refilled_in_memory": true,
+      "board_saved": false,
+      "scope": "all objects/terminals in supplied project copy; geometry probes have omitted external boundaries"
+    },
+    "probe-corrected": {
+      "source_board_sha256": "a28ba458518bd6bf87e2346cc9db2924c37edef3a10fb9bfb26919f043f14a9e",
+      "runs": [
+        {
+          "opens": 48,
+          "counts": {},
+          "by_type": {},
+          "ignored_checks": [
+            {
+              "description": "Footprint has no courtyard defined",
+              "key": "missing_courtyard"
+            },
+            {
+              "description": "Track endpoint not centered on via",
+              "key": "track_not_centered_on_via"
+            },
+            {
+              "description": "Tuning profile track geometries",
+              "key": "tuning_profile_track_geometries"
+            },
+            {
+              "description": "Footprint doesn't match symbol's footprint filters",
+              "key": "footprint_filters_mismatch"
+            },
+            {
+              "description": "PTH inside courtyard",
+              "key": "pth_inside_courtyard"
+            },
+            {
+              "description": "NPTH inside courtyard",
+              "key": "npth_inside_courtyard"
+            }
+          ],
+          "elapsed_s": 0.8402048330026446
+        },
+        {
+          "opens": 48,
+          "counts": {},
+          "by_type": {},
+          "ignored_checks": [
+            {
+              "description": "Footprint has no courtyard defined",
+              "key": "missing_courtyard"
+            },
+            {
+              "description": "Track endpoint not centered on via",
+              "key": "track_not_centered_on_via"
+            },
+            {
+              "description": "Tuning profile track geometries",
+              "key": "tuning_profile_track_geometries"
+            },
+            {
+              "description": "Footprint doesn't match symbol's footprint filters",
+              "key": "footprint_filters_mismatch"
+            },
+            {
+              "description": "PTH inside courtyard",
+              "key": "pth_inside_courtyard"
+            },
+            {
+              "description": "NPTH inside courtyard",
+              "key": "npth_inside_courtyard"
+            }
+          ],
+          "elapsed_s": 0.8246754170031636
+        }
+      ],
+      "repeated_agreement": true,
+      "zones_refilled_in_memory": true,
+      "board_saved": false,
+      "scope": "all objects/terminals in supplied project copy; geometry probes have omitted external boundaries"
+    }
+  },
+  "validation": {
+    "focused_tests_passed": 9,
+    "fresh_full_qualification_reproducer_completed": true,
+    "placement_or_routing_trial_run": false,
+    "native_runtimes": "stopped"
+  }
+}

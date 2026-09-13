@@ -1,0 +1,22 @@
+--- a/landpatterns/LandpatternU0402_R.py
++++ b/landpatterns/LandpatternU0402_R.py
+@@ -17,7 +17,7 @@
+     if amount is None:
+         amount = jitx.current.substrate.constraints.solder_mask_registration if layer_func is Soldermask \
+             else 0.0  # default Paste Mask expansion amount
+-    mask_shape = pad_shape.to_shapely().buffer(amount, join_style=JOIN_STYLE.mitre)
++    mask_shape = pad_shape.to_shapely().buffer(amount, join_style=JOIN_STYLE.round)
+     if mask_shape.is_empty:
+         return []
+     layers = [layer_func(mask_shape)]
+--- a/components/UNKNOWN/Comp_47219_2001.py
++++ b/components/UNKNOWN/Comp_47219_2001.py
+@@ -26,7 +26,7 @@
+     if amount is None:
+         amount = jitx.current.substrate.constraints.solder_mask_registration if layer_func is Soldermask \
+             else 0.0  # default Paste Mask expansion amount
+-    mask_shape = pad_shape.to_shapely().buffer(amount, join_style=JOIN_STYLE.mitre)
++    mask_shape = pad_shape.to_shapely().buffer(amount, join_style=JOIN_STYLE.round)
+     if mask_shape.is_empty:
+         return []
+     layers = [layer_func(mask_shape)]
