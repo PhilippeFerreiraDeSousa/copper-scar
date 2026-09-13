@@ -158,6 +158,16 @@ def build(source,out):
    for name in ['final-pad-partitions.json','final-via-geometry.json']:
     if (rp.parent/name).exists():shutil.copy2(rp.parent/name,dest/name)
    if record.get('after'):next_state['stages'].append({'name':'After separate campaign routing',**asset(Path(record['candidate'])/'pcbgolf.kicad_pcb',record['after']['files']['pcbgolf.kicad_pcb'],out)})
+  if len(next_state['stages'])>=2 and all(x.get('board') for x in next_state['stages'][:2]):
+   maps=[]
+   for stage in next_state['stages'][:2]:
+    path=out/stage['board'];netnames={x[1]:x[2] for x in nodes(parse(path),'net') if len(x)>2};_,vias,_=inventory(path);maps.append({uid:{**v,'net_name':netnames.get(v['net'][0],v['net'][0])} for uid,v in vias.items()})
+   before_vias,preview_vias=maps;next_state['via_net_changes']=[{'uuid':uid,'position_mm':before_vias[uid]['at'],'before_net':before_vias[uid]['net_name'],'preview_net':preview_vias[uid]['net_name']} for uid in before_vias.keys() & preview_vias.keys() if before_vias[uid]['net_name']!=preview_vias[uid]['net_name']]
+  audit_source=out.parent/'higher-loop-provenance-audit/consumer-audit.json'
+  if audit_source.exists() and result:
+   audit=json.loads(audit_source.read_text())
+   if audit.get('hashes',{}).get(result.get('receipt_path'))==result.get('receipt_sha256'):
+    dest=out/'next-campaign';dest.mkdir(exist_ok=True);shutil.copy2(audit_source,dest/'independent-audit.json');next_state['independent_audit']={'href':'next-campaign/independent-audit.json','sha256':sha(audit_source),'payload':audit}
   if not result:next_state['stages'].append({'name':'After separate campaign routing','missing':'PENDING: no completed native result'})
   focus_stages(next_state['stages'],out);state['next_campaign']=next_state
  state['remote_receipts']=json.loads((out/'remote/verified.json').read_text()) if (out/'remote/verified.json').exists() else None

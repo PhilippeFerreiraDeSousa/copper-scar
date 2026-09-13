@@ -31,3 +31,5 @@ Fallback: play `two-level-autoresearch/two-level-replay.mp4`. The frozen package
 The matched pilot uses KiCad native evaluation and Freerouting. JITX source-authored routing and transfer proofs are separate supplemental work and did not realize these pilot routes.
 
 Verified R89 outcome: the separate trial finished at 09:35:07 Pacific after 674.45 seconds overall. Native evaluation found 45 missing pairs, zero physical errors and 21 warnings, with an original connected pad group split. It was rejected; the selected board remains at 44 missing pairs. This proves selected-policy consumption and executed evaluation, not an improvement from that follow-on trial.
+
+R89 audit limitation: the preview also reassigned the existing via at (205.05,86.75) from Net-(LED13-AR) to CH4_SBU1_IGN. The existing guard checked preview-to-final, so it did not establish parent-to-preview via net preservation. The rejected result split R89.2 from Q5.1/U3.84/R81.1 on CH4_SBU1_IGN. The independent audit is packaged; no claim of preserving all original via net identities is made for R89.
