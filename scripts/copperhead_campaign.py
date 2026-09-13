@@ -115,8 +115,8 @@ def main():
             if time.time()+a.route_seconds+180>=deadline:break
             label=prefix+'-'+spec['id'];proposal=LOCAL/'proposals'/('campaign-'+label+'.json')
             if spec['kind'] in ('terminal_fanout','via_seed','local_topology_replan'):
-                if spec['kind']=='local_topology_replan' and spec['action']['parent_board_sha256']!=board_hash:
-                    state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,realization_context_digest=context_digest,reason='Declared topology removal requires exact qualified parent; requalification needed'));continue
+                if spec['kind']=='local_topology_replan' and (spec['action']['parent_board_sha256']!=board_hash or spec['action'].get('realization_context_digest')!=context_digest):
+                    state.setdefault('screen_failures',[]).append(dict(id=spec['id'],parent_board_sha256=board_hash,realization_context_digest=context_digest,reason='Declared topology removal requires exact qualified parent and recipe; requalification needed'));continue
                 action={**spec['action'],'parent_board_sha256':board_hash,'realization_context_digest':context_digest,'feedback_used':sorted(set(feedback_ids+spec['action']['feedback_used']))}
                 if spec.get('requires_successful_seed'):
                     precedent=next((r for r in records if r['attempt']==spec['requires_successful_seed']),None)

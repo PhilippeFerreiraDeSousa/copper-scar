@@ -25,6 +25,7 @@ from .effects import compare as compare_effects, missing_by_net, geometry_scope
 from .manufacturing import findings as manufacturing_findings
 from .selection import manufacturing_repair_decision, VERSION as SELECTION_VERSION
 from .routing_options import candidate_options,context as routing_context,SMALL,verify_after_exports
+from .topology_contract import check as check_topology_contract
 
 ROOT = Path(__file__).resolve().parents[3]
 LOCAL = ROOT / '.local/copperhead'
@@ -174,6 +175,8 @@ def validate_proposal(proposal, result):
         raise ValueError('Backend proposal requires preserved invariants and no physical errors')
     if not all(proposal.get(k) for k in ('reason','hypothesis','feedback_used')):
         raise ValueError('Proposal requires rationale and measured feedback references')
+    if proposal['kind']=='local_topology_replan' and not proposal.get('realization_context_digest'):
+        raise ValueError('Topology replan requires an explicit qualified realization context')
     if proposal['kind']=='placement_group':
         if not proposal.get('refs') or len(set(proposal['refs']))<2 or not proposal.get('anchors') or not proposal.get('nets'):
             raise ValueError('Group proposal requires explicit members, interface anchors and net scope')
@@ -334,6 +337,7 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                     if name=='local_topology_replan':
                         snapshot=run/'topology-replan-project';copy_project(candidate,snapshot)
                         record['topology_replan']=json.loads((candidate/'topology-replan.json').read_text())
+                        record['topology_authored_items']=check_topology_contract(run/'input/pcbgolf.kicad_pcb',candidate/'pcbgolf.kicad_pcb',[row['uuid'] for row in action['remove_items']],[row['uuid'] for row in record['topology_replan']['created_vias']])
                         gate=evaluate(snapshot,run,'after_topology_replan',frozen);record['topology_preflight']=gate
                         write(run/'attempt.json',record)
                         if not gate['invariants_ok'] or gate['errors'] or not gate['manufacturing_rules_clear']:raise RuntimeError('Topology replan failed native physical/invariant/manufacturing gate')
@@ -386,6 +390,16 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
                 if check['returncode']!=0:raise RuntimeError('Final native via geometry check failed')
                 proof=json.loads(proof_path.read_text());retain=retain and proof['existing_via_geometry_preserved'] and proof['new_vias_use_only_allowed_definitions']
                 record['selection_decision'].update(via_geometry_proof=str(proof_path),existing_via_geometry_preserved=proof['existing_via_geometry_preserved'],eligible=retain)
+            if action['kind']=='local_topology_replan':
+                width_path=run/'final-topology-widths.json'
+                check=command([KIPY,str(ROOT/'scripts/copperhead_topology_widths.py'),str(candidate/'pcbgolf.kicad_pcb'),'--proposal',str(run/'topology-proposal.json'),'--output',str(width_path)],run,'final_topology_widths',60)
+                if check['returncode']!=0:raise RuntimeError('Final topology width inspection failed')
+                widths=json.loads(width_path.read_text());partitions=json.loads((run/'final-pad-partitions.json').read_text())
+                target_pads={site['target_pad_uuid'] for site in action['via_sites'] if site.get('target_pad_uuid')}
+                target_joined=bool(target_pads) and any(target_pads<=set(group) for group in partitions['after']['groups'])
+                cap=action['final_acceptance']['maximum_retained_missing_links']
+                retain=retain and widths['ok'] and target_joined and after['unconnected']<=cap
+                record['selection_decision'].update(eligible=retain,scoped_widths_preserved=widths['ok'],width_proof=str(width_path),target_islands_joined=target_joined,maximum_retained_missing_links=cap)
             record.update(status='completed',after=after,diagnostic_improved=improved,diagnostic_priority_before=priority(initial),diagnostic_priority_after=priority(after),official_score=None,validity_gate=False,finished_at=now())
             if retain:
                 state['best_feasibility']=dict(candidate=str(candidate),priority=priority(after),attempt=uid,scope=scope,metric_version=VERSION,design_sha256=after['design_sha256'])
@@ -400,6 +414,9 @@ def execute(source, iterations, route_seconds, budget, proposal=None, legacy_inn
             if not retain:
                 if not record['selection_decision'].get('no_connected_pad_group_split',True):fact['rejection_reasons'].append('Previously connected pad group split')
                 if not record['selection_decision'].get('existing_via_geometry_preserved',True):fact['rejection_reasons'].append('Exact existing or seeded via geometry changed')
+                if not record['selection_decision'].get('scoped_widths_preserved',True):fact['rejection_reasons'].append('Scoped minimum trace width not preserved')
+                if not record['selection_decision'].get('target_islands_joined',True):fact['rejection_reasons'].append('Declared target islands remain disconnected')
+                if after['unconnected']>record['selection_decision'].get('maximum_retained_missing_links',after['unconnected']):fact['rejection_reasons'].append('Required native open-count improvement not achieved')
                 if not fact['rejection_reasons']:fact['rejection_reasons'].append('Did not pass native feasibility and improvement selection')
             if (run/'final-via-geometry.json').exists():
                 via_proof=json.loads((run/'final-via-geometry.json').read_text())
